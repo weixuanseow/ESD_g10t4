@@ -64,14 +64,15 @@ DROP PROCEDURE IF EXISTS delete_expired_bookings;
 DELIMITER //
 CREATE PROCEDURE delete_expired_bookings()
 BEGIN
-    DELETE FROM bookings WHERE slot < NOW();
+    DELETE FROM bookings;
 END //
 DELIMITER ;
 
 DROP EVENT IF EXISTS delete_expired_bookings_event;
 CREATE EVENT delete_expired_bookings_event
 ON SCHEDULE
-EVERY 1 HOUR
+EVERY 1 DAY
+STARTS '2023-03-13 00:00:00'
 DO
 CALL delete_expired_bookings();
 
@@ -108,6 +109,7 @@ ON SCHEDULE
 DO
     CALL create_booking_slots();
 
+CALL create_booking_slots();
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
