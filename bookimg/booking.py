@@ -63,7 +63,7 @@ def get_all():
         }
     ), 404
 
-# Update a booking slot to unavailable
+# Update a booking slot to unavailable dsv
 @app.route('/bookings/<int:id>/unavailable', methods=['PUT'])
 def mark_slot_unavailable(id):
     booking = bookings.query.get_or_404(id)
