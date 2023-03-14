@@ -91,11 +91,26 @@ def get_available_slots():
     print(now)
 
     # query the database for available booking slots
-    available_slots = bookings.query.filter(bookings.slot >= now,
+    booking_list = bookings.query.filter(bookings.slot >= now,
                                             bookings.available == True).all()
 
-    # serialize the results as JSON and return
-    return jsonify([booking.json() for booking in available_slots])
+    if len(booking_list):
+        return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        # we use for book to perform an iteration and create a JSON representation of it using book.json() function.
+                        "bookings": [booking.json() for booking in booking_list]
+                    }
+                }
+            )
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no booking slot."
+            }
+        ), 404
+
 
 # We run our application behind an if guard. 
 if __name__ == '__main__':
