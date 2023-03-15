@@ -112,42 +112,51 @@ def get_available_slots():
         ), 404
 
 
+
+# ----------------------------------------------------------------
+# Delete the booking slot from the database
+@app.route('/bookings/<int:id>', methods=['DELETE'])
+def delete_booking(id):
+    cursor = conn.cursor()
+    query = 'DELETE FROM bookings WHERE id = %s'
+    cursor.execute(query, (id,))
+    conn.commit()
+    cursor.close()
+    return jsonify({'message': 'Booking deleted successfully'})
+
+# Add booking slot back into the database
+@app.route('/bookings/<int:id>', methods=['POST'])
+def add_booking(id, slot):
+    slot = request.json['slot']
+    # Format datetime object into string for SQL table
+    # Convert JSON date string to datetime object
+    json_date = datetime.datetime.strptime(slot, '%Y-%m-%dT%H:%M:%S.%fZ')
+    # Format datetime object into string for SQL table
+    slot = json_date.strftime('%Y-%m-%d %H:%M:%S')
+
+    available = request.json['available']
+    
+    # Insert the booking slot into the bookings table
+    cursor = mydb.cursor()
+    sql = "INSERT INTO bookings (slot, user, available) VALUES (%s, %s, %s)"
+    values = (slot, user, available)
+    cursor.execute(sql, values)
+    mydb.commit()
+    return jsonify({'message': 'Booking slot added successfully'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+
+
+
+
+
+
+
 # We run our application behind an if guard. 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-
-# ----------------------------------------------------------------
-# @app.route('/bookings/<int:id>', methods=['DELETE'])
-# def delete_booking(id):
-#     cursor = conn.cursor()
-#     query = 'DELETE FROM bookings WHERE id = %s'
-#     cursor.execute(query, (id,))
-#     conn.commit()
-#     cursor.close()
-#     return jsonify({'message': 'Booking deleted successfully'})
-
-
-# @app.route('/bookings/<int:', methods=['POST'])
-# def add_booking(id, slot):
-#     slot = request.json['slot']
-#     # Format datetime object into string for SQL table
-#     # Convert JSON date string to datetime object
-#     json_date = datetime.datetime.strptime(slot, '%Y-%m-%dT%H:%M:%S.%fZ')
-#     # Format datetime object into string for SQL table
-#     slot = json_date.strftime('%Y-%m-%d %H:%M:%S')
-
-#     available = request.json['available']
-    
-#     # Insert the booking slot into the bookings table
-#     cursor = mydb.cursor()
-#     sql = "INSERT INTO bookings (slot, user, available) VALUES (%s, %s, %s)"
-#     values = (slot, user, available)
-#     cursor.execute(sql, values)
-#     mydb.commit()
-#     return jsonify({'message': 'Booking slot added successfully'})
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
-
-
