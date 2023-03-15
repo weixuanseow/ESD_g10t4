@@ -37,12 +37,51 @@ class Inventory(db.Model):
 #receive list of [(name, amt to reduce by)] frm complex microservice
 #find drug_full_name=name, update db with current_amt-=amt to reduce by
 #update db
-#check if current_amt<=threshold_amt
-#if yes: return (db updated success msg, [(topup_amt, drug_full_name)]
+#check if current_amt<=threshold_amt -- i made it <= cos i think == threshold shd be concerning enough alr
+#if yes: return (db updated success msg, [(drug_full_name, topup_amt)]
 #if no: return (db updated success msg, [])
 
 ##complex microservice shd read the success msg and read the list to see if anth needs to be topped up!
 
+@app.route('/ROUTE/<INPUT>', methods=['PUT'])
+def update_inventory(INPUT):
+    data = request.get_json()
+    ret_list=[]
+    if data:
+        for i in data: ##can json be a list???
+            drug_name = i[0]
+            qty = i[1]
+            drug_full_name = Inventory.query.filter_by(drug_full_name=drug_name).first()
+            drug_full_name.current_amt -= qty
+            if drug_full_name.current_amt<=drug_full_name.threshold_amt:
+                ret_list.append((drug_full_name.drug_full_name, drug_full_name.topup_amt))
+
+        db.session.commit()
+
+        #return ['inventory has been updated successfully', ret_list]
+        if len(ret_list)>0:
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": ret_list.json(),
+                    "message": 'Inventory has been updated successfully. Quantity of some medicines needs to be topped up.'
+                }
+            )
+        else:
+            return jsonify(
+                {
+                "code": 200,
+                "message": 'Inventory has been updated successfully.'
+                }
+            )
+    
+    #return ['error, no data was received and inventory was not updated']
+    return jsonify(
+        {
+        "code": 404,
+        "message": 'No data was received. Inventory was not updated.'
+        }
+    )
 
 if __name__ == '__main__':
      app.run(port=5000, debug=True)
