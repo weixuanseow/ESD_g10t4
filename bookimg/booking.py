@@ -43,7 +43,7 @@ class bookings(db.Model):
 
 
 # Get all booking slots
-@app.route("/bookings")
+@app.route("/bookings", methods=['GET'])
 def get_all():
     booking_list = bookings.query.all()
     if len(booking_list):
@@ -64,7 +64,7 @@ def get_all():
     ), 404
 
 # Update a booking slot to unavailable 
-@app.route('/bookings/<int:id>/unavailable', methods=['PUT'])
+@app.route('/bookings/unavailable<int:id>', methods=['PUT'])
 def mark_slot_unavailable(id):
     booking = bookings.query.get_or_404(id)
     booking.available = False
@@ -72,7 +72,7 @@ def mark_slot_unavailable(id):
     return jsonify({'message': 'Booking slot updated to unavailable'})
 
 # Update a booking slot to available
-@app.route('/mark_available/<int:booking_id>', methods=['PUT'])
+@app.route('/bookings/mark_available/<int:booking_id>', methods=['PUT'])
 def mark_available(booking_id):
     booking = bookings.query.get(booking_id)
     if not booking:
@@ -84,7 +84,7 @@ def mark_available(booking_id):
 
 # Query available booking slot from current time 
 from datetime import datetime, timedelta
-@app.route('/available_slots')
+@app.route('/bookings/available_slots', methods=['GET'])
 def get_available_slots():
     # get current time 
     now = datetime.utcnow()
@@ -93,7 +93,7 @@ def get_available_slots():
     # query the database for available booking slots
     booking_list = bookings.query.filter(bookings.slot >= now,
                                             bookings.available == True).all()
-
+    print(booking_list)
     if len(booking_list):
         return jsonify(
                 {
