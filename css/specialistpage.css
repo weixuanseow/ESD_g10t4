@@ -1,0 +1,27 @@
+#specialistlogin {
+    background-color: rgba(212,228,243,255);
+}
+
+#appointment h1, table{
+    margin: 20px;
+}
+
+
+table {
+	width: 75%;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+th,td {
+    vertical-align: top;
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: black;
+    word-wrap:break-word;
+}
+
+th {
+	text-align: left;
+}
