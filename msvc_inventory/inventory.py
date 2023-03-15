@@ -43,12 +43,12 @@ class Inventory(db.Model):
 
 ##complex microservice shd read the success msg and read the list to see if anth needs to be topped up!
 
-@app.route('/ROUTE/<INPUT>', methods=['PUT'])
+@app.route('/ROUTE/<INPUT>', methods=['PUT']) ### NEED TO FIX
 def update_inventory(INPUT):
     data = request.get_json()
     ret_list=[]
     if data:
-        for i in data: ##can json be a list???
+        for i in data: ###can json be a list???
             drug_name = i[0]
             qty = i[1]
             drug_full_name = Inventory.query.filter_by(drug_full_name=drug_name).first()
