@@ -3,6 +3,9 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
+# Query available booking slot from current time 
+from datetime import datetime, timedelta
+
 app = Flask(__name__)
 # specify the database URL. Here we use the mysql+mysqlconnector prefix to tell SQLAlchemy which database engine and connector we are using. 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/bookings'
@@ -23,7 +26,7 @@ mysql_config = {
 }
 conn = mysql.connector.connect(**mysql_config)
 
-# initialize a connection to the database and keep this in the db variable and use this to interact with the database.
+# --------------------------- object classes------------------------------------------------------------------------
 class bookings(db.Model):
     __tablename__ = 'bookings'
 
@@ -41,10 +44,12 @@ class bookings(db.Model):
     def json(self):
         return {"id": self.id, "slot": self.slot, "available": self.available}
 
+# ----------------------------Functions ----------------------------------------------------------------------------
 
 # Get all booking slots
-@app.route("/bookings", methods=['GET'])
+@app.route("/bookings/all", methods=['GET'])
 def get_all():
+
     booking_list = bookings.query.all()
     if len(booking_list):
         return jsonify(
@@ -64,7 +69,7 @@ def get_all():
     ), 404
 
 # Update a booking slot to unavailable 
-@app.route('/bookings/unavailable<int:id>', methods=['PUT'])
+@app.route('/bookings/unavailable/<int:id>', methods=['PUT'])
 def mark_slot_unavailable(id):
     booking = bookings.query.get_or_404(id)
     booking.available = False
@@ -111,7 +116,33 @@ def get_available_slots():
             }
         ), 404
 
+# Query unavailable booking slot - booked 
+from datetime import datetime, timedelta
+@app.route('/bookings/unavailable_slots', methods=['GET'])
+def get_unavailable_slots():
+    # get current time 
+    now = datetime.utcnow()
+    print(now)
 
+    # query the database for available booking slots
+    booking_list = bookings.query.filter(bookings.available == False).all()
+    print(booking_list)
+    if len(booking_list):
+        return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        # we use for book to perform an iteration and create a JSON representation of it using book.json() function.
+                        "bookings": [booking.json() for booking in booking_list]
+                    }
+                }
+            )
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no booking slot."
+            }
+        ), 404
 
 # ----------------------------------------------------------------
 # Delete the booking slot from the database
@@ -144,8 +175,7 @@ def add_booking(id, slot):
     mydb.commit()
     return jsonify({'message': 'Booking slot added successfully'})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
 
 
 
