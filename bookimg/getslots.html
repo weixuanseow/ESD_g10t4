@@ -62,19 +62,12 @@
     
     <h1 class="my-5 mx-3">Book a Test Appointment</h1>
     <div class = "container px-5 mx-auto" id="main-container">
-      <div class="form-group row border p-2 rounded">
+      <div class="form-group row border py-2 rounded">
         <label for="inputPassword" class="col-sm-4 col-form-label">Contact Number</label>
         <div class="col-sm-8">
-          <input type="password" class="form-control" id="inputPassword" placeholder="">
+          <input type="text" class="form-control" id="contact"required>
         </div>
       </div>
-    <select class="form-control my-3" id="visit_type">
-        <option selected value="consultation">Consultation</option>
-        <option value="xray">X-ray</option>
-        <option value="physiotherapy">Physiotherapy</option>
-        <option value ="orthopaedics">Orthopaedics</option>
-
-    </select>
 
         <table class="table">
             <thead>
@@ -99,6 +92,7 @@
 </div> <!--  End of table div-->
 
     <script>
+      const visit_type = urlParams.get('visit_type');
         // Helper function to display error message
         function showError(message) {
             // Hide the table and button in the event of error
@@ -116,13 +110,13 @@
         // - using await requires the function that calls it to be async
         $(async() => {           
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5000/bookings/available_slots";
+            var URL = "http://127.0.0.1:5000/"+ visit_type + "/available_slots";
     
     
             try {
                 const response =
                 await fetch(
-                    serviceURL, { method: 'GET' }
+                    URL, { method: 'GET' }
                 );
                 const result = await response.json();
                     if (response.status === 200) {
@@ -151,10 +145,18 @@
         ('There is a problem retrieving booking slots data, please try again later.<br />' + error);
                 } // error
         });
+        var location = {
+          "consulation": "room A",
+          "xray": "room B",
+          "physiotherapy": "room C",
+          "orthopaedics": "room D",
 
+        }
         function make_booking(booking_id){
+          
           let visit_type = document.getElementById('visit_type')
-          let url =""
+          let visit_location = location[visit_type]
+          let url = "http://localhost:5001/book"
           axios.get(url,{
 
           })
