@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking a test appointment</title>
+    <!-- Bootstrap CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css' 
+        rel='stylesheet' integrity='sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx' 
+        crossorigin='anonymous'>
+
+      <!-- Vue 3 -->
+    <script src='https://cdn.jsdelivr.net/npm/vue@next'></script>
+
+    <!-- Axios -->
+    <script src='https://unpkg.com/axios/dist/axios.js'></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ 
+
+  </head>
+<body>
+    <!-- Nav Bar -->
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+    
+    <h1 class="my-5 mx-3">Book a Test Appointment</h1>
+    <div class = "container px-5 mx-auto" id="main-container">
+      <div class="form-group row border p-2 rounded">
+        <label for="inputPassword" class="col-sm-4 col-form-label">Contact Number</label>
+        <div class="col-sm-8">
+          <input type="password" class="form-control" id="inputPassword" placeholder="">
+        </div>
+      </div>
+    <select class="form-control my-3" id="visit_type">
+        <option selected value="consultation">Consultation</option>
+        <option value="xray">X-ray</option>
+        <option value="physiotherapy">Physiotherapy</option>
+        <option value ="orthopaedics">Orthopaedics</option>
+
+    </select>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Booking ID</th>
+                <th scope="col">Available Slots</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="slotsTable"> 
+              <!-- <tr>
+                <th scope="row">1</th>
+                <td>2023-03-12 09:00:00</td>
+                Each buttons are identified by the booking ID 
+                <td><button type="button" class="btn btn-outline-info">Book</button></td>
+              </tr> -->
+
+            </tbody>
+          </table>
+        
+
+</div> <!--  End of table div-->
+
+    <script>
+        // Helper function to display error message
+        function showError(message) {
+            // Hide the table and button in the event of error
+            $('#booksTable').hide();
+            $('#addBookBtn').hide();
+    
+    
+            // Display an error under the main container
+            $('#main-container')
+                .append("<label>"+message+"</label>");
+        }
+    
+    
+        // anonymous async function 
+        // - using await requires the function that calls it to be async
+        $(async() => {           
+            // Change serviceURL to your own
+            var serviceURL = "http://127.0.0.1:5000/bookings/available_slots";
+    
+    
+            try {
+                const response =
+                await fetch(
+                    serviceURL, { method: 'GET' }
+                );
+                const result = await response.json();
+                    if (response.status === 200) {
+                    // success case
+                    var bookings = result.data.bookings; 
+                    var rows = "";
+                    for (const booking of bookings) {
+                        eachRow ="<td>" + booking.id + "</td>" +
+                                "<td>" + booking.slot + "</td>" +
+                                "<td><button type='button' @click='make_booking(" + booking.id+ ")' class='btn btn-outline-info'>Book</button>"
+                        rows += "<tr>" + eachRow + "</tr>";
+                    }
+                        // add all the rows to the table
+                        $('#slotsTable').append(rows);
+                    } else if (response.status == 404) {
+                        // No books
+                        showError(result.message);
+                    } else {
+                        // unexpected outcome, throw the error
+                        throw response.status;
+                    }
+                } catch (error) {
+                    // Errors when calling the service; such as network error, 
+                    // service offline, etc
+                    showError
+        ('There is a problem retrieving booking slots data, please try again later.<br />' + error);
+                } // error
+        });
+
+        function make_booking(booking_id){
+          let visit_type = document.getElementById('visit_type')
+          let url =""
+          axios.get(url,{
+
+          })
+        }
+
+
+    </script>
+
+
+    
+    
+    <!-- Footer -->
+    <footer class="py-2 mt-auto border-top-1 border">
+        <p class="text-center text-muted pt-2">&copy; 2022 Specialist CLinic, Inc</p>
+        <ul class="nav justify-content-center  mb-3">
+            <li class="nav-item"><a href="" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-muted">Patient Records</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-muted">Book Appointment</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-muted">FAQs</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-muted">About</a></li>
+          </ul>
+      </footer>
+            
+</body>
+</html>
