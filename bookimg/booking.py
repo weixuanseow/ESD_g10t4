@@ -503,13 +503,13 @@ def get_unavailable_slots_orthopaedics():
 
 #     available = request.json['available']
     
-    # Insert the booking slot into the bookings table
-    cursor = mydb.cursor()
-    sql = "INSERT INTO bookings (slot, user, available) VALUES (%s, %s, %s)"
-    values = (slot, user, available)
-    cursor.execute(sql, values)
-    mydb.commit()
-    return jsonify({'message': 'Booking slot added successfully'})
+    # # Insert the booking slot into the bookings table
+    # cursor = mydb.cursor()
+    # sql = "INSERT INTO bookings (slot, user, available) VALUES (%s, %s, %s)"
+    # values = (slot, user, available)
+    # cursor.execute(sql, values)
+    # mydb.commit()
+    # return jsonify({'message': 'Booking slot added successfully'})
 
 
 
