@@ -92,7 +92,7 @@
 </div> <!--  End of table div-->
 
     <script>
-      const visit_type = urlParams.get('visit_type');
+  
         // Helper function to display error message
         function showError(message) {
             // Hide the table and button in the event of error
@@ -105,11 +105,14 @@
                 .append("<label>"+message+"</label>");
         }
     
-    
+        let visit_type = sessionStorage.getItem("visit_type")
+        console.log(visit_type)
         // anonymous async function 
         // - using await requires the function that calls it to be async
         $(async() => {           
             // Change serviceURL to your own
+            let visit_type = sessionStorage.getItem("visit_type")
+            console.log(visit_type)
             var URL = "http://127.0.0.1:5000/"+ visit_type + "/available_slots";
     
     

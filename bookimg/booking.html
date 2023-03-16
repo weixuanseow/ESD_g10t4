@@ -63,7 +63,7 @@
 <h1 class="my-5 mx-3">Please enter patient ID</h1>
 <div class = "container px-5 text-center" id="main-container">
 
-    <form action="">
+
         <input id="pid" class="form-control form-control-lg" type="text" placeholder="Patient ID">
         <select class="form-control my-3" id="visit_type">
             <option selected value="consultation">Consultation</option>
@@ -71,30 +71,34 @@
             <option value="physiotherapy">Physiotherapy</option>
             <option value ="orthopaedics">Orthopaedics</option>
         </select>
-        <button id="search"class="btn btn-outline-primary mb-2 mt-5 px-5 mx-auto" @click="getPatient">Search</button>
-    </form>
+        <button id="search"class="btn btn-outline-primary mb-2 mt-5 px-5 mx-auto" >Search</button>
+
         
 
     <script>
         let searchbtn = document.getElementById("search")
         searchbtn.addEventListener("click",getPatient);
-        async function getPatient(){
+        function getPatient(){
             patient_id = document.getElementById('pid').value
             visit_type = document.getElementById('visit_type').value
-            // url = "http://127.0.0.1:5000/"+ visit_type + "/available_slots"
-            // axios.get(url)
-            // .then(response =>{
-            //     console.log("Patient data retrieved")
-            //     sessionStorage.setItem("pid",pid)
-            //     window.location.href="getslots.html"
-            // })
-            // .catch((error) => {
-            //         const errorCode = error.code;
-            //         const errorMessage = error.message;
-            //         console.log(errorMessage)
-            //     });
-            sessionStorage.setItem("pid",pid)
-            window.location.href="getslots.html"
+            url = "http://127.0.0.1:5000/"+ visit_type + "/available_slots"
+            axios.get(url)
+            .then(response =>{
+                sessionStorage.setItem("pid",pid)
+                console.log(visit_type)
+                sessionStorage.setItem("visit_type",visit_type)
+                visit_type = sessionStorage.getItem("visit_type")
+                console.log(visit_type)
+                console.log("Visit Type retrieved")
+                window.location.href="getslots.html"
+
+            })
+            .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorMessage)
+                });
+
 
         }
     </script>
