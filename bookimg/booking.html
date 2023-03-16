@@ -21,7 +21,7 @@
  
 
   </head>
-<body>
+<body class="u-body u-xl-mode d-flex flex-column min-vh-100">
     <!-- Nav Bar -->
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
@@ -60,84 +60,40 @@
         </div>
       </nav>
     
-    <h1 class="my-5 mx-3">Book a Test Appointment</h1>
-    <div class = "container px-5" id="main-container">
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Booking ID</th>
-                <th scope="col">Available Slots</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody id="slotsTable"> 
-              <!-- <tr>
-                <th scope="row">1</th>
-                <td>2023-03-12 09:00:00</td>
-                Each buttons are identified by the booking ID 
-                <td><button type="button" class="btn btn-outline-info">Book</button></td>
-              </tr> -->
+<h1 class="my-5 mx-3">Please enter patient ID</h1>
+<div class = "container px-5 text-center" id="main-container">
 
-            </tbody>
-          </table>
+    <form action="">
+        <input id="patient_id" class="form-control form-control-lg" type="text" placeholder="Patient ID">
+        <button class="btn btn-outline-primary mb-2 mt-5 px-5 mx-auto" @click="getPatient()">Search</button>
+    </form>
         
 
-</div> <!--  End of table div-->
-
     <script>
-        // Helper function to display error message
-        function showError(message) {
-            // Hide the table and button in the event of error
-            $('#booksTable').hide();
-            $('#addBookBtn').hide();
-    
-    
-            // Display an error under the main container
-            $('#main-container')
-                .append("<label>"+message+"</label>");
+        function getPatient(){
+            patient_id = document.getElementById('patient_id')
+            url = ""
+            axios.get(url,{
+                params:{
+                    patient_id: patient_id
+                }
+            })
+            .then(response =>{
+                console.log(response.data)
+                sessionStorage.setItem("patient_id",patient_id)
+                window.location = "getslots.html";
+            })
+            .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorMessage)
+                });
+
         }
-    
-    
-        // anonymous async function 
-        // - using await requires the function that calls it to be async
-        $(async() => {           
-            // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5000/bookings/available_slots";
-    
-    
-            try {
-                const response =
-                await fetch(
-                    serviceURL, { method: 'GET' }
-                );
-                const result = await response.json();
-                    if (response.status === 200) {
-                    // success case
-                    var bookings = result.data.bookings; 
-                    var rows = "";
-                    for (const booking of bookings) {
-                        eachRow ="<td>" + booking.id + "</td>" +
-                                "<td>" + booking.slot + "</td>" +
-                                "<td><button type='button' value='" + booking.id+ "' class='btn btn-outline-info'>Book</button>"
-                        rows += "<tr>" + eachRow + "</tr>";
-                    }
-                        // add all the rows to the table
-                        $('#slotsTable').append(rows);
-                    } else if (response.status == 404) {
-                        // No books
-                        showError(result.message);
-                    } else {
-                        // unexpected outcome, throw the error
-                        throw response.status;
-                    }
-                } catch (error) {
-                    // Errors when calling the service; such as network error, 
-                    // service offline, etc
-                    showError
-        ('There is a problem retrieving booking slots data, please try again later.<br />' + error);
-                } // error
-        });
     </script>
+</div> 
+
+
 
 
     
