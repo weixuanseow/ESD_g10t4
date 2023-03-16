@@ -69,7 +69,7 @@
         </div>
       </div>
 
-        <table class="table">
+        <table class="table my-5">
             <thead>
               <tr>
                 <th scope="col">Booking ID</th>
@@ -124,7 +124,9 @@
                 const result = await response.json();
                     if (response.status === 200) {
                     // success case
-                    var bookings = result.data
+    
+                    var bookings = result.data.bookings
+                    console.log(bookings)
                     var rows = "";
                     for (const booking of bookings) {
                         eachRow ="<td>" + booking.bid + "</td>" +
@@ -154,6 +156,7 @@
           let visit_type = sessionStorage.getItem("visit_type")
           let pid = sessionStorage.getItem("pid")
           let visit_location = location[visit_type]
+          console.log('hi')
           let url = "http://127.0.0.1:5001/book_test/" + visit_type + "/" + bid + "/" + pid
           axios.post(url)
           .then(response =>{
@@ -174,7 +177,7 @@
     
     <!-- Footer -->
     <footer class="py-2 mt-auto border-top-1 border">
-        <p class="text-center text-muted pt-2">&copy; 2022 Specialist CLinic, Inc</p>
+        <p class="text-center text-muted pt-2">&copy; 2022 Specialist Clinic, Inc</p>
         <ul class="nav justify-content-center  mb-3">
             <li class="nav-item"><a href="" class="nav-link px-2 text-muted">Home</a></li>
             <li class="nav-item"><a href="" class="nav-link px-2 text-muted">Patient Records</a></li>
