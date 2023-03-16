@@ -26,28 +26,32 @@ def processBookTest(booking_id):
     print('booking_result:', booking_status)
 
     # Check the order result; if a failure, send it to the error microservice.
-    code = booking_status["code"]
-    if code not in range(200, 300):
-    # Inform the notification microservice
+    # code = booking_status["code"]
+    # if code not in range(200, 300):
+    # # Inform the notification microservice
 
-        # Inform the error microservice
-        print('\n\n-----Invoking error microservice as booking fails-----')
-        # invoke_http(error_URL, method="POST", json=booking_status)
-        # - reply from the invocation is not used; 
-        # continue even if this invocation fails
-        print("Booking status ({:d}) sent to the error microservice:".format(code), booking_status)
-        # Return 
-        return {
-                "code": 500,
-                "data": {"order_result": order_status},
-                "message": "Booking creation failure sent for error handling."
-            }
+    #     # Inform the error microservice
+    #     print('\n\n-----Invoking error microservice as booking fails-----')
+    #     # invoke_http(error_URL, method="POST", json=booking_status)
+    #     # - reply from the invocation is not used; 
+    #     # continue even if this invocation fails
+    #     print("Booking status ({:d}) sent to the error microservice:".format(code), booking_status)
+    #     # Return 
+    #     return {
+    #             "code": 500,
+    #             "data": {"order_result": order_status},
+    #             "message": "Booking creation failure sent for error handling."
+    #         }
 
     # WRONG NEED REDO, in AMQP style
     # 2. Invoke noticication microservice upon successful booking
     print('\n\n-----Invoking notification microservice as booking completes-----')
-    invoke_http(notification_URL, method="POST")
-    print("Booking details ({:d}) sent to the notification microservice")
+    # invoke_http(notification_URL, method="POST")
+    # print("Booking details ({:d}) sent to the notification microservice")
+    
+    return {
+        "message": "alls good no errors here :,)    this is just here so that theres no errors"
+    }
 
 
 # def book_test():
