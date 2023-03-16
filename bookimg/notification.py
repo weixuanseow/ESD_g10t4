@@ -11,7 +11,14 @@ account_sid = 'your_account_sid'
 auth_token = 'your_auth_token'
 client = Client(account_sid, auth_token)
 
-
+        # let visit_type = sessionStorage.getItem("visit_type")
+        # let visit_location = location[visit_type]
+        # var location = {
+        #   "consulation": "room A",
+        #   "xray": "room B",
+        #   "physiotherapy": "room C",
+        #   "orthopaedics": "room D",
+        # }
 
 # To send confirmation messages
 @app.route('/confirm', methods=['POST'])

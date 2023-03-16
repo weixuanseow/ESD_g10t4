@@ -124,12 +124,12 @@
                 const result = await response.json();
                     if (response.status === 200) {
                     // success case
-                    var bookings = result.data.bookings; 
+                    var bookings = result.data
                     var rows = "";
                     for (const booking of bookings) {
-                        eachRow ="<td>" + booking.id + "</td>" +
+                        eachRow ="<td>" + booking.bid + "</td>" +
                                 "<td>" + booking.slot + "</td>" +
-                                "<td><button type='button' @click='make_booking(" + booking.id+ ")' class='btn btn-outline-info'>Book</button>"
+                                "<td><button type='button' @click='make_booking(" + booking.bid+ ")' class='btn btn-outline-info'>Book</button>"
                         rows += "<tr>" + eachRow + "</tr>";
                     }
                         // add all the rows to the table
@@ -148,23 +148,24 @@
         ('There is a problem retrieving booking slots data, please try again later.<br />' + error);
                 } // error
         });
-        var location = {
-          "consulation": "room A",
-          "xray": "room B",
-          "physiotherapy": "room C",
-          "orthopaedics": "room D",
 
-        }
-        function make_booking(booking_id){
-          
-          let visit_type = document.getElementById('visit_type')
+    
+        function make_booking(bid){
+          let visit_type = sessionStorage.getItem("visit_type")
+          let pid = sessionStorage.getItem("pid")
           let visit_location = location[visit_type]
-          let url = "http://localhost:5001/book"
-          axios.get(url,{
-
-          })
+          let url = "http://127.0.0.1:5001/book_test/" + visit_type + "/" + bid + "/" + pid
+          axios.post(url)
+          .then(response =>{
+                console.log("Complex micoservice invoked")
+                window.location.href="confirmation.html"
+            })
+            .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorMessage)
+                });
         }
-
 
     </script>
 
