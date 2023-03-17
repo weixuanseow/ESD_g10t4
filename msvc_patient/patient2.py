@@ -19,8 +19,8 @@ class Patient(db.Model):
     phone_num = db.Column(db.String(20), nullable=False)
     allergies = db.Column(db.String(255))
 
-    def __init__(self, patient_id, patient_full_name, date_of_birth, gender, phone_num, allergies):
-        self.patient_id = patient_id
+    def __init__(self, patient_full_name, date_of_birth, gender, phone_num, allergies):
+        # self.patient_id = patient_id
         self.patient_full_name = patient_full_name
         self.date_of_birth = date_of_birth
         self.gender = gender
