@@ -177,4 +177,4 @@ def update_patient(patient_id):
 
 
 if __name__ == '__main__':
-    app.run(port=5050, debug=True)
+    app.run(port=5000, debug=True)
