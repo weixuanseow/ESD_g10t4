@@ -30,13 +30,14 @@ class Patient(db.Model):
     def json(self):
         return {
             "patient_id": self.patient_id,
-            "name": self.patient_full_name,
+            "patient_full_name": self.patient_full_name,
             "date_of_birth": self.date_of_birth,
             "gender": self.gender,
             "phone": self.phone_num,
             "allergies": self.allergies
         }
-    
+
+##############  PATIENT RELATED FUNCTIONS   ##############################################
 @app.route("/patient", methods=['GET'])
 def get_all():
     patient_list = Patient.query.all()
@@ -80,14 +81,15 @@ def find_patient(patient_id):
 def create_patient():
     
     data = request.get_json()
-    name = data['Patient_Full_Name']
-    date_of_birth = data['Date_Of_Birth']
-    gender = data['Gender']
-    phone_num = data['Phone_Num']
-    allergies = data['Allergies']
+    print(data)
+    patient_full_name = data['patient_full_name']
+    date_of_birth = data['date_of_birth']
+    gender = data['gender']
+    phone_num = data['phone_num']
+    allergies = data['allergies']
     
     # Check if patient already exists
-    if Patient.query.filter_by(name=name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num).first():
+    if Patient.query.filter_by(patient_full_name=patient_full_name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num).first():
         return jsonify(
             {
                 "code": 400,
@@ -96,7 +98,7 @@ def create_patient():
         ), 400
     
     # If patient doesn't exist, insert patient into database
-    new_patient = Patient(name=name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num, allergies=allergies)
+    new_patient = Patient(patient_full_name=patient_full_name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num, allergies=allergies)
     try:
         db.session.add(new_patient)
         db.session.commit()
@@ -105,7 +107,7 @@ def create_patient():
             {
                 "code": 500,
                 "data": {
-                    "name": name,
+                    "patient_full_name": patient_full_name,
                     "date_of_birth": date_of_birth,
                     "gender": gender,
                     "phone_num": phone_num,
@@ -172,8 +174,14 @@ def update_patient(patient_id):
 
     db.session.commit()
     return {"message": "Patient record updated successfully"}, 200
+###################################################################################################################
 
+#################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
+@app.route('/create_diagnostic_test/<int:patient_id>', methods=['POST'])
+def createDiagnosticTest(patient_id):
+    pass
+
 
 
 if __name__ == '__main__':
