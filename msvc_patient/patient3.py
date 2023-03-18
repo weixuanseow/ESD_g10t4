@@ -57,14 +57,18 @@ class DiagnosticTest(db.Model):
         self.test_results = test_results
         
     def json(self):
-        return {"date_time": self.test_datetime, "test_type": self.test_type, "result": self.test_results}
+        return {"tid": self.test_id, "date_time": self.test_datetime, "test_type": self.test_type, "result": self.test_results}
     
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
 @app.route('/create_diagnostic_test/xray/', methods=['POST'])
 def createDiagnosticTest():
     data = request.get_json()
-    test_instance = DiagnosticTest(**data)
+    # print(data)
+    test_datetime = data["test_datetime"]
+    test_type = data["test_type"]
+    test_results = data["test_results"]
+    test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results)
     try:
         db.session.add(test_instance)
         db.session.commit()
@@ -84,6 +88,8 @@ def createDiagnosticTest():
             "data": test_instance.json()
         }
     ), 201
+
+
 
 # just to view diagnostic_test database, 'test' table
 @app.route('/view_diagnostic_test/', methods=['GET'])
