@@ -50,14 +50,14 @@ class DiagnosticTest(db.Model):
     test_type = db.Column(db.String, nullable=False)
     test_results = db.Column(db.String, nullable=False)
     
-    def __init__(self, test_id, test_datetime, test_type, test_results):
-        self.test_id = test_id
+    def __init__(self, test_datetime, test_type, test_results):
+        # self.test_id = test_id
         self.test_datetime = test_datetime
         self.test_type = test_type
         self.test_results = test_results
         
     def json(self):
-        return {"tid": self.test_id, "date_time": self.test_datetime, "test_type": self.test_type, "result": self.test_results}
+        return {"date_time": self.test_datetime, "test_type": self.test_type, "result": self.test_results}
     
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
