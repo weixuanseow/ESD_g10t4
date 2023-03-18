@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
+# Query available booking slot from current time 
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
@@ -8,6 +11,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 db = SQLAlchemy(app)
+CORS(app)
+
+import mysql.connector
+# Configure MySQL connection
+mysql_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'bookings',
+    'port': 3306
+}
+conn = mysql.connector.connect(**mysql_config)
 
 class Patient(db.Model):
     __tablename__ = 'patient'
@@ -176,11 +191,14 @@ def update_patient(patient_id):
     return {"message": "Patient record updated successfully"}, 200
 ###################################################################################################################
 
-#################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
-# create diagnostic test for scenario 1
-@app.route('/create_diagnostic_test/<int:patient_id>', methods=['POST'])
-def createDiagnosticTest(patient_id):
-    pass
+# #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
+# # create diagnostic test for scenario 1
+# @app.route('/create_diagnostic_test/xray/<int:patient_id>', methods=['POST'])
+# def createDiagnosticTest(patient_id):
+#     variable = xray.query.get_or_404(patient_id)
+#     variable.available = False
+#     db.session.commit()
+#     return jsonify({'message': 'Booking slot updated to unavailable'})
 
 
 
