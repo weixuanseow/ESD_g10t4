@@ -101,13 +101,21 @@ def processBookTestXray(booking_id):
     print('\n\n-----Invoking booking microservice-----')
     booking_status = invoke_http(booking_URL, method="PUT")
     print('booking_result:', booking_status)
+    
+    # 1b. Add a new instance to diagnostic_test database
+    booking_URL = "http://localhost:5050/create_diagnostic_test/xray"
+    print('\n\n-----Invoking patient microservice-----')
+    booking_status = invoke_http(booking_URL, method="POST")
+    print('diagnostic_test_database_result:', booking_status)
 
     # WRONG NEED REDO, in AMQP style
     # 2. Invoke noticication microservice upon successful booking
     print('\n\n-----Invoking notification microservice as booking completes-----')   
     return {
-        "message": "alls good no errors here :,)    this is just here so that theres no errors"
+        "message": "successfully book an appointment and add to the goddamn diagnostic_test database"
     }
+    
+    
 ###############################################################################################################
 
 

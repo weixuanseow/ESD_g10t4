@@ -61,7 +61,7 @@ class DiagnosticTest(db.Model):
     
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
-@app.route('/create_diagnostic_test/xray/', methods=['POST'])
+@app.route('/create_diagnostic_test/xray', methods=['POST'])
 def createDiagnosticTest():
     data = request.get_json()
     # print(data)
@@ -92,7 +92,7 @@ def createDiagnosticTest():
 
 
 # just to view diagnostic_test database, 'test' table
-@app.route('/view_diagnostic_test/', methods=['GET'])
+@app.route('/view_diagnostic_test', methods=['GET'])
 def viewDiagnosticTest():
     test_list = DiagnosticTest.query.all()
     if len(test_list):
@@ -115,5 +115,5 @@ def viewDiagnosticTest():
     
     
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5050, debug=True)
 
