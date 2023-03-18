@@ -61,14 +61,32 @@ class DiagnosticTest(db.Model):
     
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
-@app.route('/create_diagnostic_test/xray/<int:patient_id>', methods=['POST'])
-def createDiagnosticTest(patient_id):
-    variable = xray.query.get_or_404(patient_id)
-    variable.available = False
-    db.session.commit()
-    return jsonify({'message': 'Booking slot updated to unavailable'})
+@app.route('/create_diagnostic_test/xray/', methods=['POST'])
+def createDiagnosticTest():
+    data = request.get_json()
+    test_instance = DiagnosticTest(**data)
+    try:
+        db.session.add(test_instance)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "test_id": "error message in the except portion"
+                },
+                "message": "An error occured creating the test instance"
+            }
+        ), 500
+    return jsonify(
+        {
+            "code": 201,
+            "data": test_instance.json()
+        }
+    ), 201
 
-@app.route('/view_diagnostic_test/xray', methods=['GET'])
+# just to view diagnostic_test database, 'test' table
+@app.route('/view_diagnostic_test/', methods=['GET'])
 def viewDiagnosticTest():
     test_list = DiagnosticTest.query.all()
     if len(test_list):
