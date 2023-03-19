@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 # specify the database URL. Here we use the mysql+mysqlconnector prefix to tell SQLAlchemy which database engine and connector we are using. 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/bookings'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/bookings'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #  disable modification tracking
@@ -20,9 +20,9 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    'password': 'root',
     'database': 'bookings',
-    'port': 3306
+    'port': 8889
 }
 conn = mysql.connector.connect(**mysql_config)
 
@@ -196,33 +196,45 @@ def get_all_orthopaedics():
     ), 404
 #------------------------------------------------------------------------------------------------------------------------
 # Update a booking slot to unavailable 
-@app.route('/consultation/unavailable/<int:bid>', methods=['PUT'])
+@app.route('/consultation/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_consultation(bid):
     booking = consultation.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
-    return jsonify({'message': 'Booking slot updated to unavailable'})
+    return jsonify({
+        'code': 200,
+        'message': 'Booking slot updated to unavailable'
+        })
 
-@app.route('/xray/unavailable/<int:bid>', methods=['PUT'])
+@app.route('/xray/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_xray(bid):
     booking = xray.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
-    return jsonify({'message': 'Booking slot updated to unavailable'})
+    return jsonify({
+    'code': 200,
+    'message': 'Booking slot updated to unavailable'
+    })
 
-@app.route('/physiotherapy/unavailable/<int:bid>', methods=['PUT'])
+@app.route('/physiotherapy/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_physiotherapy(bid):
     booking = physiotherapy.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
-    return jsonify({'message': 'Booking slot updated to unavailable'})
+    return jsonify({
+    'code': 200,
+    'message': 'Booking slot updated to unavailable'
+    })
 
-@app.route('/orthopaedics/unavailable/<int:bid>', methods=['PUT'])
+@app.route('/orthopaedics/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_orthopaedics(bid):
     booking = orthopaedics.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
-    return jsonify({'message': 'Booking slot updated to unavailable'})
+    return jsonify({
+    'code': 200,
+    'message': 'Booking slot updated to unavailable'
+    })
 #------------------------------------------------------------------------------------------------------------------------
 # Update a booking slot to available
 @app.route('/consultation/mark_available/<int:bid>', methods=['PUT'])
@@ -233,7 +245,10 @@ def mark_slot_available_consultation(bid):
     booking.available = True
     booking.user = None
     db.session.commit()
-    return jsonify({'message': 'Booking slot marked as available'})
+    return jsonify({
+    'code': 200,
+    'message': 'Booking slot updated to available'
+    })
 
 @app.route('/xray/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_xray(bid):
@@ -243,7 +258,10 @@ def mark_slot_available_xray(bid):
     booking.available = True
     booking.user = None
     db.session.commit()
-    return jsonify({'message': 'Booking slot marked as available'})
+    return jsonify({
+    'code': 200,
+    'message': 'Booking slot updated to unavailable'
+    })
 
 @app.route('/physiotherapy/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_physiotherapy(bid):
@@ -253,7 +271,10 @@ def mark_slot_available_physiotherapy(bid):
     booking.available = True
     booking.user = None
     db.session.commit()
-    return jsonify({'message': 'Booking slot marked as available'})
+    return jsonify({
+    'code': 200,
+    'message': 'Booking slot updated to unavailable'
+    })
 
 @app.route('/orthopaedics/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_orthopaedics(bid):
@@ -263,7 +284,10 @@ def mark_slot_available_orthopaedics(bid):
     booking.available = True
     booking.user = None
     db.session.commit()
-    return jsonify({'message': 'Booking slot marked as available'})
+    return jsonify({
+    'code': 200,
+    'message': 'Booking slot updated to unavailable'
+    })
 #------------------------------------------------------------------------------------------------------------------------
 # Query available booking slot from current time 
 from datetime import datetime, timedelta

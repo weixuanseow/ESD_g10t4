@@ -6,7 +6,7 @@ from flask_cors import CORS
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/diagnostic_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://roor:root@localhost:8889/diagnostic_test'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -18,9 +18,9 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    'password': 'root',
     'database': 'diagnostic_test',
-    'port': 3306
+    'port': 8889
 }
 conn = mysql.connector.connect(**mysql_config)
 
@@ -65,10 +65,10 @@ class DiagnosticTest(db.Model):
 def createDiagnosticTest():
     data = request.get_json()
     # print(data)
-    test_datetime = data["test_datetime"]
-    test_type = data["test_type"]
-    test_results = data["test_results"]
-    test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results)
+    pid = data['pid']
+    test_type = data["visit_type"]
+    slot = data['slot']
+    test_instance = DiagnosticTest(test_datetime=slot, test_type=visit_type, Patient_ID=pid)
     try:
         db.session.add(test_instance)
         db.session.commit()

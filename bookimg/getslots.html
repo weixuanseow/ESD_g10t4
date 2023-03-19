@@ -20,8 +20,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
  
 
+    </script>
   </head>
-<body>
+
+<body class="u-body u-xl-mode d-flex flex-column min-vh-100">
     <!-- Nav Bar -->
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
@@ -62,14 +64,12 @@
     
     <h1 class="my-5 mx-3">Book a Test Appointment</h1>
     <div class = "container px-5 mx-auto" id="main-container">
-      <div class="form-group row border py-2 rounded">
-        <label for="inputPassword" class="col-sm-4 col-form-label">Contact Number</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="contact"required>
-        </div>
-      </div>
+    <div class = "row border rounded text-center pt-2"> 
+        <div class = "col" id="pid"></div>
+        <div class = "col" id="phone"></div>
+    </div>
 
-        <table class="table my-5">
+        <table class="table my-4">
             <thead>
               <tr>
                 <th scope="col">Booking ID</th>
@@ -92,7 +92,9 @@
 </div> <!--  End of table div-->
 
     <script>
-  
+        // display patient details
+        $('#phone').append("<p>Phone: "+ sessionStorage.getItem('phone')+ "<p>")
+        $('#pid').append("<p>Patient ID: "+ sessionStorage.getItem('pid')+ "<p>")
         // Helper function to display error message
         function showError(message) {
             // Hide the table and button in the event of error
@@ -131,11 +133,16 @@
                     for (const booking of bookings) {
                         eachRow ="<td>" + booking.bid + "</td>" +
                                 "<td>" + booking.slot + "</td>" +
-                                "<td><button type='button' @click='make_booking(" + booking.bid+ ")' class='btn btn-outline-info'>Book</button>"
-                        rows += "<tr>" + eachRow + "</tr>";
+                                "<td><button id='button"+booking.bid +"' type='button' value='" + booking.bid + "," + booking.slot + "' class='btn btn-outline-info'>Book</button>"
+                                  // "<td><button id='button"+booking.bid +"' type='button' onclick='make_booking(" + booking.bid+ ")' class='btn btn-outline-info'>Book</button>"
+                                  rows += "<tr>" + eachRow + "</tr>";
                     }
                         // add all the rows to the table
                         $('#slotsTable').append(rows);
+                        var buttons = document.getElementsByTagName('button');
+                        for (var i = 0; i < buttons.length; i++) {
+                          buttons[i].addEventListener('click', make_booking);
+                        }
                     } else if (response.status == 404) {
                         // No books
                         showError(result.message);
@@ -151,24 +158,80 @@
                 } // error
         });
 
+
     
-        function make_booking(bid){
+        // function make_booking(event){
+        //   let visit_type = sessionStorage.getItem("visit_type")
+        //   let pid = sessionStorage.getItem("pid")
+        //   let phone = sessionStorage.getItem("phone")
+        //   let visit_location = location[visit_type]
+        //   bid = event.target.value
+        //   data ={
+        //     pid: pid,
+        //     phone: phone,
+        //     bid: bid,
+        //     visit_type: visit_type,
+        //   }
+        //   console.log('Function make_booking is invoked and data')
+        //   console.log(data)
+        //   let url = "http://127.0.0.1:5005/book_test/" 
+        //   axios.post(url,data, {
+        //       withCredentials: true,
+        //       crossDomain: true,
+        //     })
+        //   .then(response =>{
+        //         console.log(response.data);
+        //         console.log("Complex micoservice invoked")
+        //         // window.location.href="confirmation.html"
+        //     })
+        //     .catch((error) => {
+        //             const errorCode = error.code;
+        //             const errorMessage = error.message;
+        //             console.log(errorMessage)
+        //         });
+        // }
+            
+        function make_booking(event){
           let visit_type = sessionStorage.getItem("visit_type")
           let pid = sessionStorage.getItem("pid")
+          let phone = sessionStorage.getItem("phone")
           let visit_location = location[visit_type]
-          console.log('hi')
-          let url = "http://127.0.0.1:5001/book_test/" + visit_type + "/" + bid + "/" + pid
-          axios.post(url)
-          .then(response =>{
-                console.log("Complex micoservice invoked")
-                window.location.href="confirmation.html"
+          booking_details = event.target.value
+          booking_list = booking_details.split(',')
+          let bid = booking_list[0]
+          let slot = booking_list[2]
+          data ={
+            'pid': pid,
+            'phone': phone,
+            'bid': bid,
+            'visit_type': visit_type,
+            'slot': slot
+          }
+          console.log('Function make_booking is invoked and data')
+          console.log(data)
+          let url = "http://127.0.0.1:5050/book_test1" 
+          fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(data)
             })
-            .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorMessage)
-                });
-        }
+            .then(response => response.json())
+            .then(data => {
+              console.log(data)
+            })
+            .catch(error => {
+              // Handle any errors that occur during the AJAX request
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorMessage)
+            });
+          };
+
+
+
+
 
     </script>
 

@@ -80,17 +80,19 @@
         searchbtn.addEventListener("click",getPatient);
         function getPatient(){
             // Get patient phone number here and store in session
-            patient_id = document.getElementById('pid').value
+            pid = document.getElementById('pid').value
             visit_type = document.getElementById('visit_type').value
-            url = "http://127.0.0.1:5000/"+ visit_type + "/available_slots"
+            url = "http://127.0.0.1:5100/patient/" + pid
             axios.get(url)
             .then(response =>{
+                data = response.data
+                console.log(data)
+                //storing pid, phone and visit_type in session
+                let phone = data.data.phone
+                sessionStorage.setItem('phone',phone)
                 sessionStorage.setItem("pid",pid)
-                console.log(visit_type)
                 sessionStorage.setItem("visit_type",visit_type)
-                visit_type = sessionStorage.getItem("visit_type")
-                console.log(visit_type)
-                console.log("Visit Type retrieved")
+                console.log(visit_type + "Visit Type retrieved and "+ "patient details:" + pid + " and " + phone)
                 window.location.href="getslots.html"
 
             })
