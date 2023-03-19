@@ -1,8 +1,7 @@
 <?php
     session_start();
-    $_Session["username"] = $username
+    $username = $_SESSION["username"]
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +42,7 @@
                 <div class="col my-auto">
                     <form method="GET" >
                         <h4>
-                            WELCOME, <?php $username; ?>
+                            WELCOME, <?php echo $username; ?>
                         </h4>
                     </form>
                 </div>
