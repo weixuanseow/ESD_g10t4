@@ -62,21 +62,14 @@
     
     <h1 class="my-5 mx-3">Book a Test Appointment</h1>
     <div class = "container px-5 mx-auto" id="main-container">
-      <div class="form-group row border p-2 rounded">
+      <div class="form-group row border py-2 rounded">
         <label for="inputPassword" class="col-sm-4 col-form-label">Contact Number</label>
         <div class="col-sm-8">
-          <input type="password" class="form-control" id="inputPassword" placeholder="">
+          <input type="text" class="form-control" id="contact"required>
         </div>
       </div>
-    <select class="form-control my-3" id="visit_type">
-        <option selected value="consultation">Consultation</option>
-        <option value="xray">X-ray</option>
-        <option value="physiotherapy">Physiotherapy</option>
-        <option value ="orthopaedics">Orthopaedics</option>
 
-    </select>
-
-        <table class="table">
+        <table class="table my-5">
             <thead>
               <tr>
                 <th scope="col">Booking ID</th>
@@ -99,6 +92,7 @@
 </div> <!--  End of table div-->
 
     <script>
+  
         // Helper function to display error message
         function showError(message) {
             // Hide the table and button in the event of error
@@ -111,28 +105,33 @@
                 .append("<label>"+message+"</label>");
         }
     
-    
+        let visit_type = sessionStorage.getItem("visit_type")
+        console.log(visit_type)
         // anonymous async function 
         // - using await requires the function that calls it to be async
         $(async() => {           
             // Change serviceURL to your own
-            var serviceURL = "http://127.0.0.1:5000/bookings/available_slots";
+            let visit_type = sessionStorage.getItem("visit_type")
+            console.log(visit_type)
+            var URL = "http://127.0.0.1:5000/"+ visit_type + "/available_slots";
     
     
             try {
                 const response =
                 await fetch(
-                    serviceURL, { method: 'GET' }
+                    URL, { method: 'GET' }
                 );
                 const result = await response.json();
                     if (response.status === 200) {
                     // success case
-                    var bookings = result.data.bookings; 
+    
+                    var bookings = result.data.bookings
+                    console.log(bookings)
                     var rows = "";
                     for (const booking of bookings) {
-                        eachRow ="<td>" + booking.id + "</td>" +
+                        eachRow ="<td>" + booking.bid + "</td>" +
                                 "<td>" + booking.slot + "</td>" +
-                                "<td><button type='button' @click='make_booking(" + booking.id+ ")' class='btn btn-outline-info'>Book</button>"
+                                "<td><button type='button' @click='make_booking(" + booking.bid+ ")' class='btn btn-outline-info'>Book</button>"
                         rows += "<tr>" + eachRow + "</tr>";
                     }
                         // add all the rows to the table
@@ -152,14 +151,24 @@
                 } // error
         });
 
-        function make_booking(booking_id){
-          let visit_type = document.getElementById('visit_type')
-          let url =""
-          axios.get(url,{
-
-          })
+    
+        function make_booking(bid){
+          let visit_type = sessionStorage.getItem("visit_type")
+          let pid = sessionStorage.getItem("pid")
+          let visit_location = location[visit_type]
+          console.log('hi')
+          let url = "http://127.0.0.1:5001/book_test/" + visit_type + "/" + bid + "/" + pid
+          axios.post(url)
+          .then(response =>{
+                console.log("Complex micoservice invoked")
+                window.location.href="confirmation.html"
+            })
+            .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorMessage)
+                });
         }
-
 
     </script>
 
@@ -168,7 +177,7 @@
     
     <!-- Footer -->
     <footer class="py-2 mt-auto border-top-1 border">
-        <p class="text-center text-muted pt-2">&copy; 2022 Specialist CLinic, Inc</p>
+        <p class="text-center text-muted pt-2">&copy; 2022 Specialist Clinic, Inc</p>
         <ul class="nav justify-content-center  mb-3">
             <li class="nav-item"><a href="" class="nav-link px-2 text-muted">Home</a></li>
             <li class="nav-item"><a href="" class="nav-link px-2 text-muted">Patient Records</a></li>

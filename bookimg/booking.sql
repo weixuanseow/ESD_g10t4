@@ -24,16 +24,43 @@ CREATE DATABASE IF NOT EXISTS `bookings` DEFAULT CHARACTER SET utf8 COLLATE utf8
 USE `bookings`;
 
 -- Create the bookings table
-DROP TABLE IF EXISTS `bookings`;
-CREATE TABLE bookings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+DROP TABLE IF EXISTS `consultation`;
+CREATE TABLE consultation (
+    bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
     available BOOLEAN DEFAULT TRUE,
-    user VARCHAR(255) 
+    pid INT
+);
+
+DROP TABLE IF EXISTS `xray`;
+CREATE TABLE xray (
+    bid INT AUTO_INCREMENT PRIMARY KEY ,
+    slot DATETIME NOT NULL,
+    available BOOLEAN DEFAULT TRUE,
+    pid INT
+);
+
+DROP TABLE IF EXISTS `physiotherapy`;
+CREATE TABLE physiotherapy (
+    bid INT AUTO_INCREMENT PRIMARY KEY,
+    slot DATETIME NOT NULL,
+    available BOOLEAN DEFAULT TRUE,
+    pid INT
+);
+
+DROP TABLE IF EXISTS `orthopaedics`;
+CREATE TABLE orthopaedics (
+    bid INT AUTO_INCREMENT PRIMARY KEY,
+    slot DATETIME NOT NULL,
+    available BOOLEAN DEFAULT TRUE,
+    pid INT
 );
 
 -- Create an index on the slot column for faster querying
-CREATE INDEX slot_index ON bookings (slot);
+CREATE INDEX slot_index ON consultation (slot);
+CREATE INDEX slot_index ON xray (slot);
+CREATE INDEX slot_index ON physiotherapy (slot);
+CREATE INDEX slot_index ON orthopaedics (slot);
 
 -- Create a stored procedure to check for available slots
 DROP PROCEDURE IF EXISTS get_available_slots;
@@ -64,7 +91,10 @@ DROP PROCEDURE IF EXISTS delete_expired_bookings;
 DELIMITER //
 CREATE PROCEDURE delete_expired_bookings()
 BEGIN
-    DELETE FROM bookings;
+    DELETE FROM consultation;
+    DELETE FROM xray;
+    DELETE FROM physiotherapy;
+    DELETE FROM orthopaedics;
 END //
 DELIMITER ;
 
@@ -92,12 +122,46 @@ BEGIN
   SET the_start = start_time;
   SET the_end = the_start + INTERVAL 30 MINUTE;
   WHILE num_slots > 0 DO
-    INSERT INTO bookings (slot)
+    INSERT INTO consultation (slot)
     VALUES (the_start);
     SET the_start = the_end;
     SET the_end = the_start + INTERVAL 30 MINUTE;
     SET num_slots = num_slots - 1;
   END WHILE;
+  SET start_time = CURDATE() + INTERVAL 9 HOUR;
+  SET num_slots = 16;
+  SET the_start = start_time;
+  SET the_end = the_start + INTERVAL 30 MINUTE;
+    WHILE num_slots > 0 DO
+    INSERT INTO xray (slot)
+    VALUES (the_start);
+    SET the_start = the_end;
+    SET the_end = the_start + INTERVAL 30 MINUTE;
+    SET num_slots = num_slots - 1;
+  END WHILE;
+  SET start_time = CURDATE() + INTERVAL 9 HOUR;
+  SET num_slots = 16;
+  SET the_start = start_time;
+  SET the_end = the_start + INTERVAL 30 MINUTE;
+    WHILE num_slots > 0 DO
+    INSERT INTO physiotherapy (slot)
+    VALUES (the_start);
+    SET the_start = the_end;
+    SET the_end = the_start + INTERVAL 30 MINUTE;
+    SET num_slots = num_slots - 1;
+  END WHILE;
+  SET start_time = CURDATE() + INTERVAL 9 HOUR;
+  SET num_slots = 16;
+  SET the_start = start_time;
+  SET the_end = the_start + INTERVAL 30 MINUTE;
+    WHILE num_slots > 0 DO
+    INSERT INTO orthopaedics (slot)
+    VALUES (the_start);
+    SET the_start = the_end;
+    SET the_end = the_start + INTERVAL 30 MINUTE;
+    SET num_slots = num_slots - 1;
+  END WHILE;
+
 END //
 DELIMITER ;
 

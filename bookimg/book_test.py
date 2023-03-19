@@ -11,126 +11,187 @@ CORS(app)
 
 # make sure the port numbers dont clash
 patient_URL = "http://localhost:5004/patient/<int:patient_id>"
-booking_URL = "http://localhost:5000/bookings/unavailable/"
+consultation_URL = "http://localhost:5000/consultation/unavailable/"
 notification_URL = "http://localhost:5002/confirm"
 
 
-@app.route("/book_test/<int:booking_id>", methods=['PUT'])
-def processBookTest(booking_id):
+################## make slot unavailable |   access function in booking.py ##############################
+# consultation
+@app.route("/book_test/consultation/<int:booking_id>", methods=['PUT'])
+def processBookTestConsultation(booking_id):
 
     # 1. Update new booking
     # Invoke the booking microservice
-    booking_URL = "http://localhost:5000/bookings/unavailable/" + str(booking_id)
+    booking_URL = "http://localhost:5000/consultation/unavailable/" + str(booking_id)
     print('\n\n-----Invoking booking microservice-----')
     booking_status = invoke_http(booking_URL, method="PUT")
     print('booking_result:', booking_status)
 
     # Check the order result; if a failure, send it to the error microservice.
-    code = booking_status["code"]
-    if code not in range(200, 300):
-    # Inform the notification microservice
+    # code = booking_status["code"]
+    # if code not in range(200, 300):
+    # # Inform the notification microservice
 
-        # Inform the error microservice
-        print('\n\n-----Invoking error microservice as booking fails-----')
-        # invoke_http(error_URL, method="POST", json=booking_status)
-        # - reply from the invocation is not used; 
-        # continue even if this invocation fails
-        print("Booking status ({:d}) sent to the error microservice:".format(code), booking_status)
-        # Return 
-        return {
-                "code": 500,
-                "data": {"order_result": order_status},
-                "message": "Booking creation failure sent for error handling."
-            }
+    #     # Inform the error microservice
+    #     print('\n\n-----Invoking error microservice as booking fails-----')
+    #     # invoke_http(error_URL, method="POST", json=booking_status)
+    #     # - reply from the invocation is not used; 
+    #     # continue even if this invocation fails
+    #     print("Booking status ({:d}) sent to the error microservice:".format(code), booking_status)
+    #     # Return 
+    #     return {
+    #             "code": 500,
+    #             "data": {"order_result": order_status},
+    #             "message": "Booking creation failure sent for error handling."
+    #         }
 
     # WRONG NEED REDO, in AMQP style
     # 2. Invoke noticication microservice upon successful booking
     print('\n\n-----Invoking notification microservice as booking completes-----')
-    invoke_http(notification_URL, method="POST")
-    print("Booking details ({:d}) sent to the notification microservice")
+    # invoke_http(notification_URL, method="POST")
+    # print("Booking details ({:d}) sent to the notification microservice")
+    
+    return {
+        "message": "alls good no errors here :,)    this is just here so that theres no errors"
+    }
 
-
-# def book_test():
-#     # Get booking id
-#     booking_id = bookings.query.get_or_404(id)
-
-#     # what about patient id , get from session or ?
-
-
-#     if not booking:
-#         return jsonify({'error': 'Booking not found'}), 404
-
-
-#     # Simple check of input format and data of the request are JSON
-#     if request.is_json:
-#         try:
-#             order = request.get_json()
-#             print("\nReceived a booking in JSON:", order)
-
-#             # do the actual work
-#             # 1. Send order info {cart items}
-#             result = processBookTest(booking_id)
-#             return jsonify(result), result["code"]
-
-#         except Exception as e:
-#             # Unexpected error in code
-#             exc_type, exc_obj, exc_tb = sys.exc_info()
-#             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-#             ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
-#             print(ex_str)
-
-#             return jsonify({
-#                 "code": 500,
-#                 "message": "booktest.py internal error: " + ex_str
-#             }), 500
-#     # if reached here, not a JSON request.
-#     return jsonify({
-#         "code": 400,
-#         "message": "Invalid JSON input: " + str(request.get_data())
-#     }), 400
-
-@app.route("/book_test", methods=['GET'])
-def process():
+# orthopaedics
+@app.route("/book_test/orthopaedics/<int:booking_id>", methods=['PUT'])
+def processBookTestOrthopaedics(booking_id):
 
     # 1. Update new booking
     # Invoke the booking microservice
-    URL = "http://localhost:5000/bookings/all"
-    print('\n\n-----Invoking booking microservice TEST TEST TEST-----')
-    booking_status = invoke_http(URL, method="GET")
+    booking_URL = "http://localhost:5000/orthopaedics/unavailable/" + str(booking_id)
+    print('\n\n-----Invoking booking microservice-----')
+    booking_status = invoke_http(booking_URL, method="PUT")
     print('booking_result:', booking_status)
-
-    # Check the order result; if a failure, send it to the error microservice.
-    code = booking_status["code"]
-    if code not in range(200, 300):
-    # Inform the notification microservice
-
-        # Inform the error microservice
-        print('\n\n-----Invoking error microservice as booking fails-----')
-        # invoke_http(error_URL, method="POST", json=booking_status)
-        # - reply from the invocation is not used; 
-        # continue even if this invocation fails
-        print("Booking status ({:d}) sent to the error microservice:".format(code), booking_status)
-        # Return 
-        return {
-                "code": 500,
-                "data": {"order_result": order_status},
-                "message": "Booking creation failure sent for error handling."
-            }
 
     # WRONG NEED REDO, in AMQP style
     # 2. Invoke noticication microservice upon successful booking
-    print('\n\n-----Invoking notification microservice as booking completes-----')
-    invoke_http(notification_URL, method="POST")
-    print("Booking details ({:d}) sent to the notification microservice")
+    print('\n\n-----Invoking notification microservice as booking completes-----')   
     return {
-        "code": 201,
-        "data": {
-            "order_result": "UESSSSSSSSSSSSSSS",
-            "shipping_result": "HHHHHHHHHOOOOOOOOOOOOOOOOOOO"
-        }
+        "message": "alls good no errors here :,)    this is just here so that theres no errors"
     }
 
+# physiotherapy
+@app.route("/book_test/physiotherapy/<int:booking_id>", methods=['PUT'])
+def processBookTestPhysiotherapy(booking_id):
 
+    # 1. Update new booking
+    # Invoke the booking microservice
+    booking_URL = "http://localhost:5000/physiotherapy/unavailable/" + str(booking_id)
+    print('\n\n-----Invoking booking microservice-----')
+    booking_status = invoke_http(booking_URL, method="PUT")
+    print('booking_result:', booking_status)
+
+    # WRONG NEED REDO, in AMQP style
+    # 2. Invoke noticication microservice upon successful booking
+    print('\n\n-----Invoking notification microservice as booking completes-----')   
+    return {
+        "message": "alls good no errors here :,)    this is just here so that theres no errors"
+    }
+
+# xray
+@app.route("/book_test/xray/<int:booking_id>", methods=['PUT', 'POST'])
+def processBookTestXray(booking_id):
+
+    # 1. Update new booking
+    # Invoke the booking microservice
+    booking_URL = "http://localhost:5000/xray/unavailable/" + str(booking_id)
+    print('\n\n-----Invoking booking microservice-----')
+    booking_status = invoke_http(booking_URL, method="PUT")
+    print('booking_result:', booking_status)
+
+    # 1b. Add a new instance to diagnostic_test database
+    booking_URL = "http://localhost:5050/create_diagnostic_test/xray"
+    print('\n\n-----Invoking patient microservice-----')
+    booking_status = invoke_http(booking_URL, method="POST")
+    print('diagnostic_test_database_result:', booking_status)
+    
+    # WRONG NEED REDO, in AMQP style
+    # 2. Invoke noticication microservice upon successful booking
+    print('\n\n-----Invoking notification microservice as booking completes-----')   
+    return {
+        "message": "successfully book an appointment and add to the goddamn diagnostic_test database"
+    }
+
+###############################################################################################################
+
+
+################## make slot available |   access function in booking.py ##############################
+
+# consultation
+@app.route("/book_test/unbook/consultation/<int:booking_id>", methods=['PUT'])
+def UnbookTestConsultation(booking_id):
+
+    # 1. Update new booking
+    # Invoke the booking microservice
+    booking_URL = "http://localhost:5000/consultation/mark_available/" + str(booking_id)
+    print('\n\n-----Invoking booking microservice-----')
+    booking_status = invoke_http(booking_URL, method="PUT")
+    print('booking_result:', booking_status)
+
+    # WRONG NEED REDO, in AMQP style
+    # 2. Invoke noticication microservice upon successful booking
+    print('\n\n-----Invoking notification microservice as booking completes-----')   
+    return {
+        "message": "Session unbooked fk yea"
+    }
+
+# orthopaedics
+@app.route("/book_test/unbook/orthopaedics/<int:booking_id>", methods=['PUT'])
+def UnbookTestOrthopaedics(booking_id):
+
+    # 1. Update new booking
+    # Invoke the booking microservice
+    booking_URL = "http://localhost:5000/orthopaedics/mark_available/" + str(booking_id)
+    print('\n\n-----Invoking booking microservice-----')
+    booking_status = invoke_http(booking_URL, method="PUT")
+    print('booking_result:', booking_status)
+
+    # WRONG NEED REDO, in AMQP style
+    # 2. Invoke noticication microservice upon successful booking
+    print('\n\n-----Invoking notification microservice as booking completes-----')   
+    return {
+        "message": "Session unbooked fk yea"
+    }
+    
+# physiotherapy
+@app.route("/book_test/unbook/physiotherapy/<int:booking_id>", methods=['PUT'])
+def UnbookTestPhysiotherapy(booking_id):
+
+    # 1. Update new booking
+    # Invoke the booking microservice
+    booking_URL = "http://localhost:5000/physiotherapy/mark_available/" + str(booking_id)
+    print('\n\n-----Invoking booking microservice-----')
+    booking_status = invoke_http(booking_URL, method="PUT")
+    print('booking_result:', booking_status)
+
+    # WRONG NEED REDO, in AMQP style
+    # 2. Invoke noticication microservice upon successful booking
+    print('\n\n-----Invoking notification microservice as booking completes-----')   
+    return {
+        "message": "Session unbooked fk yea"
+    }
+
+# xray
+@app.route("/book_test/unbook/xray/<int:booking_id>", methods=['PUT'])
+def UnbookTestXray(booking_id):
+
+    # 1. Update new booking
+    # Invoke the booking microservice
+    booking_URL = "http://localhost:5000/xray/mark_available/" + str(booking_id)
+    print('\n\n-----Invoking booking microservice-----')
+    booking_status = invoke_http(booking_URL, method="PUT")
+    print('booking_result:', booking_status)
+
+    # WRONG NEED REDO, in AMQP style
+    # 2. Invoke noticication microservice upon successful booking
+    print('\n\n-----Invoking notification microservice as booking completes-----')   
+    return {
+        "message": "Session unbooked fk yea"
+    }
+#####################################################################################################################
 
 
 # Execute this program if it is run as a main script (not by 'import')
