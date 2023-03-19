@@ -1,3 +1,7 @@
+<?php
+session_start()
+$_Session["name"] = $_GET["login"]
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,12 +48,12 @@
               </div>
           
               <!-- Login Form -->
-              <form method="POST" action="../Specialist_Page/specialist_page.html?">
-                <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
+              <form method="GET" action="login.php">
+                <input type="text" id="username" class="fadeIn second" name="login" placeholder="login">
                 <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
                 <input type="submit" class="fadeIn fourth" value="Submit">
               </form>
-          
+              
               <!-- Remind Passowrd -->
               <div id="formFooter">
                 <a class="underlineHover" href="#">Forgot Password?</a>

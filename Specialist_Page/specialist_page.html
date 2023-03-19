@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    $_Session["username"] = $username
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +41,11 @@
                     <iframe src="https://embed.lottiefiles.com/animation/107925"></iframe>
                 </div>
                 <div class="col my-auto">
-                    <h4>WELCOME, SPECIALIST_NAME</h4>
+                    <form method="GET" >
+                        <h4>
+                            WELCOME, <?php $username; ?>
+                        </h4>
+                    </form>
                 </div>
 
             </div>
@@ -54,13 +63,13 @@
                     <a class="nav-link" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Test</a>
+                    <a class="nav-link" href="#">Book a Test</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Test</a>
+                    <a class="nav-link" href="#">Prescribe Medicine</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Test</a>
+                    <a class="nav-link" href="#">Dispense and Restock</a>
                 </li>
             </ul>
         </div>
@@ -94,7 +103,7 @@
                 <tr>
                     <td>Wednesday,15 March 2023</td>
                     <td> 0900Hrs</td>
-                    <td>Bryan Low</td>
+                    <td>Bryan Low Chee Theng</td>
                     <td>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Similique consectetur magni tenetur distinctio expedita ipsum fuga non incidunt earum! Incidunt laboriosam atque perferendis voluptatum id maiores voluptatibus quaerat, voluptates laudantium.</td>
                 </tr>
                 <tr>
@@ -106,7 +115,7 @@
                 <tr>
                     <td>Wednesday,15 March 2023</td>
                     <td> 1100Hrs</td>
-                    <td>Jayme Lek</td>
+                    <td>Jayme Lek Jie Min</td>
                     <td>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Similique consectetur magni tenetur distinctio expedita ipsum fuga non incidunt earum! Incidunt laboriosam atque perferendis voluptatum id maiores voluptatibus quaerat, voluptates laudantium.</td>
                 </tr>
                 <tr>
