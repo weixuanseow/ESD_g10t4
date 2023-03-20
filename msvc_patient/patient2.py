@@ -6,7 +6,7 @@ from flask_cors import CORS
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -18,9 +18,9 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'root',
-    'database': 'bookings',
-    'port': 8889
+    'password': '',
+    'database': 'patient_records',
+    'port': 3306
 }
 conn = mysql.connector.connect(**mysql_config)
 

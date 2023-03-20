@@ -6,7 +6,7 @@ from flask_cors import CORS
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://roor:root@localhost:8889/diagnostic_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/diagnostic_test'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -18,9 +18,9 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'root',
+    'password': '',
     'database': 'diagnostic_test',
-    'port': 8889
+    'port': 3306
 }
 conn = mysql.connector.connect(**mysql_config)
 
@@ -57,18 +57,23 @@ class DiagnosticTest(db.Model):
         self.test_results = test_results
         
     def json(self):
-        return {"tid": self.test_id, "date_time": self.test_datetime, "test_type": self.test_type, "result": self.test_results}
+        return {"tid": self.test_id, "test_datetime": self.test_datetime, "test_type": self.test_type, "test_results": self.test_results}
     
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
 @app.route('/create_diagnostic_test/xray', methods=['POST'])
 def createDiagnosticTest():
     data = request.get_json()
-    # print(data)
-    pid = data['pid']
+    print(data)
+    # pid = data['pid']
+    
+    test_datetime = data['test_datetime']
     test_type = data["visit_type"]
-    slot = data['slot']
-    test_instance = DiagnosticTest(test_datetime=slot, test_type=visit_type, Patient_ID=pid)
+    test_results = data['test_results']
+    
+    test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results)
+    print(db.session)
+    # test_type=visit_type
     try:
         db.session.add(test_instance)
         db.session.commit()
@@ -77,7 +82,10 @@ def createDiagnosticTest():
             {
                 "code": 500,
                 "data": {
-                    "test_id": "error message in the except portion"
+                    "test_id": "error message in the except portion",
+                    "test_datetime": test_datetime,
+                    "test_type": test_type,
+                    "test_results": test_results,
                 },
                 "message": "An error occured creating the test instance"
             }
@@ -85,7 +93,8 @@ def createDiagnosticTest():
     return jsonify(
         {
             "code": 201,
-            "data": test_instance.json()
+            "data": test_instance.json(),
+            "message": "Donezo mina san"
         }
     ), 201
 
