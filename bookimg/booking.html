@@ -22,6 +22,7 @@
     <!-- local css -->
     <!-- <link rel="stylesheet" href="../css/specialistpage.css"> -->
     <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../bookimg/booking.css">
 
   </head>
 <body class="u-body u-xl-mode d-flex flex-column min-vh-100">
@@ -69,11 +70,12 @@
         </div>
     </nav>
     
-    <h1 class="my-5 mx-3">Please enter patient ID</h1>
-    <div class = "container px-5 text-center" id="main-container">
+    <div class = "container px-5 " id="main-container">
+    
+    <!--Selection of Tests-->
 
     <form>
-        <p>Select Test:</p>
+        <h3 class="my-3">Select Test:</h3>
         <input type="radio" id="X-ray" name="selected_test" value="HTML" style="margin: 1%">
         <label for="X-ray" style="margin: 1%">X-ray</label>
 
@@ -85,29 +87,50 @@
 
         <input type="radio" id="bloodtest" name="selected_test" value="bloodtest" style="margin: 1%">
         <label for="bloodtest" style="margin: 1%">Blood Test</label>
-
-        <input type="radio" id="bloodtest" name="selected_test" value="bloodtest" style="margin: 1%">
-        <label for="bloodtest" style="margin: 1%">Blood Test</label>
     </form>
-        
+
+    <!--Input Patient ID-->
+
+    <h3 class="my-4">Enter patient ID:</h3>
+    <input id="pid" class="form-control form-control-lg my-3" type="text" placeholder="Patient ID">
 
 
-
-
-
-
-        <input id="pid" class="form-control form-control-lg" type="text" placeholder="Patient ID">
-        <select class="form-control my-3" id="visit_type">
+        <!-- <select class="form-control my-3" id="visit_type">
             <option selected value="consultation">Consultation</option>
             <option value="xray">X-ray</option>
             <option value="physiotherapy">Physiotherapy</option>
             <option value ="orthopaedics">Orthopaedics</option>
-        </select>
-        <button id="search"class="btn btn-outline-primary mb-2 mt-5 px-5 mx-auto" >Search</button>
+        </select> -->
 
+    <!--Select Time Slot-->
+    <h3 class="my-3">Select Timeslot:</h3>
+    <div class="my-3">
+        <select id="timeslot" class="my-3">
+            <option>0900Hrs</option>
+            <option>1000Hrs</option>
+            <option>1100Hrs</option>
+            <option>1200Hrs</option>
+            <option>1300Hrs</option>
+            <option>1400Hrs</option>
+            <option>1500Hrs</option>
+            <option>1600Hrs</option>
+            <option>1700Hrs</option>
+        </select>
+    </div>
+
+    <h3 class="my-3">Select Date:</h3>
+
+    <div class="my-3">
+        <input name="setTodaysDate" type="date">
+    </div>
+
+    <button id="search" class="btn btn-outline-primary px-5 my-3" >Search</button>
         
 
     <script>
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementsByName("setTodaysDate")[0].setAttribute('min', today);
+
         let searchbtn = document.getElementById("search")
         searchbtn.addEventListener("click",getPatient);
         function getPatient(){
