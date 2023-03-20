@@ -13,27 +13,17 @@ connection = pika.BlockingConnection(
 
 channel = connection.channel()
 
-#For Place Order MS -> Find Driver MS 
-exchangename="driver_topic"
+# Find Drug to be restocked (From DispenseAndRestock MS -> Inventory MS)
+exchangename="find_drug"
 exchangetype="direct"
 channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, durable=True)
 
-#For Prepare Order MS -> Email MS
-exchangename="email_topic"
-exchangetype="direct"
-channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, durable=True)
-
-############   Find Driver queue   #############
-#declare Find Driver queue
-queue_name = 'find_driver'
+############   Approve Order queue   #############
+#declare Approve Order queue
+queue_name = 'approve_order'
 channel.queue_declare(queue=queue_name, durable=True) 
-channel.queue_bind(exchange="driver_topic", queue="find_driver", routing_key='driver.exchange') 
+channel.queue_bind(exchange="find_drug", queue="approve_order", routing_key='order.exchange') 
 
-############   Email queue    #############
-#declare Email queue
-queue_name = 'send_email'
-channel.queue_declare(queue=queue_name, durable=True)
-channel.queue_bind(exchange="email_topic", queue="send_email", routing_key='email.exchange') 
 
 def check_setup():
     global connection, channel, hostname, port, exchangename, exchangetype

@@ -8,6 +8,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 cursor = db.cursor()
 
+dispense_restock_URL = "http://localhost:5202"
+
 # Models
 
 class Inventory(db.Model):
@@ -63,7 +65,7 @@ def update_inventory(INPUT):
             return jsonify(
                 {
                     "code": 200,
-                    "data": ret_list.json(),
+                    "data": ret_list.json(), 
                     "message": 'Inventory has been updated successfully. Quantity of some medicines needs to be topped up.'
                 }
             )
@@ -83,5 +85,9 @@ def update_inventory(INPUT):
         }
     )
 
+# need to have one that sends 
+requests.post(url, data=None, json=None, **kwargs)
+
+
 if __name__ == '__main__':
-     app.run(port=5000, debug=True)
+     app.run(port=5200, debug=True)

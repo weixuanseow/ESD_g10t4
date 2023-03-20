@@ -19,7 +19,7 @@ mysql_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'bookings',
+    'database': 'patient_records',
     'port': 3306
 }
 conn = mysql.connector.connect(**mysql_config)
@@ -203,4 +203,4 @@ def update_patient(patient_id):
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5100, debug=True)

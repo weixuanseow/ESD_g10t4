@@ -19,49 +19,58 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
  
+    <!-- local css -->
+    <!-- <link rel="stylesheet" href="../css/specialistpage.css"> -->
+    <link rel="stylesheet" href="../css/general.css">
 
   </head>
 <body class="u-body u-xl-mode d-flex flex-column min-vh-100">
     <!-- Nav Bar -->
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <nav id="navbarspecialist" class="navbar sticky-top navbar-light">
+
+        <!-- Website Name -->
+        <a class="navbar-brand ">
+            <div class="row" style="margin:0;">
+                <div class="col">
+                    <iframe src="https://embed.lottiefiles.com/animation/107925"></iframe>
+                </div>
+                <div class="col my-auto">
+                    <form method="GET" >
+                        <h4>
+                            BOOK A TEST
+                        </h4>
+                    </form>
+                </div>
+
+            </div>
+        </a>
+
+        <!-- Menu Icon -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled">Disabled</a>
-              </li>
+        </button>
+        
+        <!-- NavBar Items -->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav" id="navbar">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="../Specialist_Page/specialist_page.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Book a Test</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Prescribe Medicine</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Dispense and Restock</a>
+                </li>
             </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
         </div>
-      </nav>
+    </nav>
     
-<h1 class="my-5 mx-3">Please enter patient ID</h1>
-<div class = "container px-5 text-center" id="main-container">
+    <h1 class="my-5 mx-3">Please enter patient ID</h1>
+    <div class = "container px-5 text-center" id="main-container">
 
 
         <input id="pid" class="form-control form-control-lg" type="text" placeholder="Patient ID">
@@ -80,17 +89,19 @@
         searchbtn.addEventListener("click",getPatient);
         function getPatient(){
             // Get patient phone number here and store in session
-            patient_id = document.getElementById('pid').value
+            pid = document.getElementById('pid').value
             visit_type = document.getElementById('visit_type').value
-            url = "http://127.0.0.1:5000/"+ visit_type + "/available_slots"
+            url = "http://127.0.0.1:5100/patient/" + pid
             axios.get(url)
             .then(response =>{
+                data = response.data
+                console.log(data)
+                //storing pid, phone and visit_type in session
+                let phone = data.data.phone
+                sessionStorage.setItem('phone',phone)
                 sessionStorage.setItem("pid",pid)
-                console.log(visit_type)
                 sessionStorage.setItem("visit_type",visit_type)
-                visit_type = sessionStorage.getItem("visit_type")
-                console.log(visit_type)
-                console.log("Visit Type retrieved")
+                console.log(visit_type + "Visit Type retrieved and "+ "patient details:" + pid + " and " + phone)
                 window.location.href="getslots.html"
 
             })
@@ -121,6 +132,13 @@
             <li class="nav-item"><a href="" class="nav-link px-2 text-muted">About</a></li>
           </ul>
       </footer>
+
+  <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
+        <!-- Font Awesome JS -->
+        <script src="https://kit.fontawesome.com/c7ddd7a650.js" crossorigin="anonymous"></script>
+
+        <!-- bootstrap js -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
             
 </body>
 </html>
