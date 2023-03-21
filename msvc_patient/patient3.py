@@ -2,14 +2,16 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
+import logging
+
 # Query available booking slot from current time 
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/diagnostic_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
+app.logger.setLevel(logging.DEBUG)
 db = SQLAlchemy(app)
 CORS(app)
 
@@ -18,53 +20,135 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-<<<<<<< Updated upstream
     'password': '',
-    'database': 'diagnostic_test',
+    'database': 'patient_records',
     'port': 3306
-=======
-    'password': 'root',
-    'database': 'patient',
-    'port': 8889
->>>>>>> Stashed changes
+
 }
 conn = mysql.connector.connect(**mysql_config)
-
-class xray(db.Model):
-    __tablename__ = 'xray'
-
-    bid = db.Column(db.Integer, primary_key=True)
-    slot = db.Column(db.DateTime, nullable=False)
-    available = db.Column(db.Boolean, default=True)
-    pid = db.Column(db.String(255))
-
-    def __init__(self, bid, slot, available, pid):
-        self.bid = bid
-        self.slot = slot
-        self.available = available
-        self.pid = pid
-
-
+        
+class ApptHist(db.Model):
+    __tablename__ = 'appointment_history'
+    
+    patient_id = db.Column(db.ForeignKey(
+        'patient_records.patient', ondelete='CASCADE', onupdate='CASCADE'), 
+                           nullable=False, primary_key = True)
+    appt_datetime = db.Column(db.DateTime, primary_key=True)
+    diagnosis = db.Column(db.String(255), nullable=False)
+    
+    def __init__(self, appt_datetime, diagnosis):
+        # self.patient_id = patient_id
+        self.appt_datetime = appt_datetime
+        self.diagnosis = diagnosis
+    
     def json(self):
-        return {"bid": self.bid, "slot": self.slot, "available": self.available, 'pid':self.pid}
-
+        return {
+            'patient_id': self.patient_id,
+            'appt_datetime': self.appt_datetime,
+            'diagnosis': self.diagnosis
+        }
+    
+class Patient(db.Model):
+    __tablename__ = 'patient'
+    
+    patient_id = db.Column(db.Integer, primary_key=True)
+    patient_full_name = db.Column(db.String(64), nullable=False)
+    date_of_birth = db.Column(db.DateTime, nullable=False)
+    gender = db.Column(db.String(3), nullable=False)
+    phone_num = db.Column(db.String(20), nullable=False)
+    allergies = db.Column(db.String(64))
+    
+    def __init__(self, patient_full_name, date_of_birth, gender, phone_num, allergies):
+        # self.patient_id = patient_id
+        self.patient_full_name = patient_full_name
+        self.date_of_birth = date_of_birth
+        self.gender = gender
+        self.phone_num = phone_num
+        self.allergies = allergies
+    
+    def json(self):
+        return {
+            'patient_id': self.patient_id,
+            'patient_fullname': self.patient_full_name,
+            'date_of_birth': self.date_of_birth,
+            'gender': self.gender,
+            'phone_num': self.phone_num,
+            'allergies': self.allergies
+        }
+        
+class PrescriptionMedicine(db.Model):
+    __tablename__ = 'prescription_medicines'
+    
+    prescription_id = db.Column(db.Integer, primary_key=True)
+    medicine_name = db.Column(db.String(100))
+    frequency = db.Column(db.String(255))
+    amount = db.Column(db.String(255))
+    
+    def __init__(self, prescription_id, medicine_name, frequency, amount):
+        # self.patient_id = patient_id
+        self.prescription_id = prescription_id
+        self.medicine_name = medicine_name
+        self.frequency = frequency
+        self.amount = amount
+    
+    def json(self):
+        return {
+            'prescription_id': self.prescription_id,
+            'medicine_name': self.medicine_name,
+            'frequency': self.frequency,
+            'amount': self.amount
+        }
+        
+class Prescription(db.Model):
+    __tablename__ = 'prescription'
+    
+    prescription_id = db.Column(db.ForeignKey('patient_records.prescription_medicines', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    patient_id = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    appt_datetime = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    
+    def __init__(self, prescription_id, appt_datetime):
+        # self.patient_id = patient_id
+        self.prescription_id = prescription_id
+        self.appt_datetime = appt_datetime
+    
+    def json(self):
+        return {
+            'prescription_id': self.prescription_id,
+            'patient_id': self.patient_id,
+            'appt_datetime': self.appt_datetime
+        }
+        
 class DiagnosticTest(db.Model):
-    __tablename__ = 'test'
+    __tablename__ = 'diagnostic_test'
     
     test_id = db.Column(db.Integer, primary_key=True)
     test_datetime = db.Column(db.DateTime, nullable=False)
     test_type = db.Column(db.String, nullable=False)
     test_results = db.Column(db.String, nullable=False)
+     
+    # Foreign keys point to APPOINTMENT HISTORY table
+    patient_id = db.Column(db.ForeignKey('appointment_history.patient_id'), nullable=False)
+    appt_datetime = db.Column(db.ForeignKey('appointment_history.appt_datetime'), nullable=False)
     
-    def __init__(self, test_datetime, test_type, test_results):
-        # self.test_id = test_id
+    def __init__(self, test_datetime, test_type, test_results, appt_datetime):
+        # self.patient_id = patient_id
         self.test_datetime = test_datetime
         self.test_type = test_type
         self.test_results = test_results
+        self.appt_datetime = appt_datetime
+   
         
     def json(self):
-        return {"tid": self.test_id, "test_datetime": self.test_datetime, "test_type": self.test_type, "test_results": self.test_results}
-    
+        return {"test_id": self.test_id, 
+                "test_datetime": self.test_datetime, 
+                "test_type": self.test_type, 
+                "test_results": self.test_results,
+                "patient_id": self.patient_id,
+                "appt_datetime": self.appt_datetime
+                }
+
+
+
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
 @app.route('/create_diagnostic_test/xray', methods=['POST'])
@@ -76,8 +160,9 @@ def createDiagnosticTest():
     test_datetime = data['test_datetime']
     test_type = data["visit_type"]
     test_results = data['test_results']
+    appt_datetime = data['appt_datetime']
     
-    test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results)
+    test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
     print(db.session)
     # test_type=visit_type
     try:
@@ -128,7 +213,7 @@ def viewDiagnosticTest():
     ), 404
     
     
-    
+
 if __name__ == '__main__':
     app.run(port=5050, debug=True)
 
