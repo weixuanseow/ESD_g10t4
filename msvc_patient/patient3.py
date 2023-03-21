@@ -212,7 +212,43 @@ def viewDiagnosticTest():
         }
     ), 404
     
-    
+#################### PRESCRIPTION RELATED FUNCTIONS ############################################################
+@app.route('/check_prescription/<INPUT>', methods=['GET'])
+def checkPrescription(INPUT): #sry i need to define input or sth... anw this is assuming that INPUT is a list/tuple
+    this_patient_id=INPUT[0]
+    this_appt_date=INPUT[1]
+
+    prescription = Prescription.query.filter_by(patient_id=this_patient_id, appt_datetime=this_appt_date).first()
+
+    if prescription is not None:
+
+        prescription_medicine = PrescriptionMedicine.query.filter_by(prescription_id=prescription.prescription_id).first()
+        #ASSUMPTION MADE: Each appt for a patient only has one medicine prescribed (but this seems wrong...?)
+        #                 I think inventory code accounts for multiple medicines prescribed? Which wld be good i think!
+        #                 but I don't want to mess w the DB here so ill leave it as a comment first :sweats:
+
+        if prescription_medicine is not None:
+            return jsonify(
+                {
+                "code": 250, #this is a very random number that i assigned, i am Open to changing it
+                "data": prescription_medicine,
+                "message": "Prescription created for this patient today has been found."
+                }
+            )
+        else:
+            return jsonify(
+                {
+                "code": 404,
+                "message": "There was no medicine prescribed for this patient today."
+                }
+            )
+    else:
+        return jsonify(
+            {
+            "code": 404,
+            "message": "There was no prescription found for this patient today."
+            }
+        ) #do i need to have ', 404' here or sth haha
 
 if __name__ == '__main__':
     app.run(port=5050, debug=True)
