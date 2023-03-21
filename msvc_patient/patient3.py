@@ -18,9 +18,15 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
+<<<<<<< Updated upstream
     'password': '',
     'database': 'diagnostic_test',
     'port': 3306
+=======
+    'password': 'root',
+    'database': 'patient',
+    'port': 8889
+>>>>>>> Stashed changes
 }
 conn = mysql.connector.connect(**mysql_config)
 
