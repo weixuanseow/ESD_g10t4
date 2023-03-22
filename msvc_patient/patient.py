@@ -1,135 +1,174 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+
+import logging
+
+# Query available booking slot from current time 
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+app.logger.setLevel(logging.DEBUG)
 db = SQLAlchemy(app)
-# cursor = db.cursor()
+CORS(app)
 
-# Models
+import mysql.connector
+# Configure MySQL connection
+mysql_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'patient_records',
+    'port': 3306
+
+}
+conn = mysql.connector.connect(**mysql_config)
+        
+class ApptHist(db.Model):
+    __tablename__ = 'appointment_history'
+    
+    patient_id = db.Column(db.ForeignKey(
+        'patient_records.patient', ondelete='CASCADE', onupdate='CASCADE'), 
+                           nullable=False, primary_key = True)
+    appt_datetime = db.Column(db.DateTime, primary_key=True)
+    diagnosis = db.Column(db.String(255), nullable=False)
+    
+    def __init__(self, appt_datetime, diagnosis):
+        # self.patient_id = patient_id
+        self.appt_datetime = appt_datetime
+        self.diagnosis = diagnosis
+    
+    def json(self):
+        return {
+            'patient_id': self.patient_id,
+            'appt_datetime': self.appt_datetime,
+            'diagnosis': self.diagnosis
+        }
+    
 class Patient(db.Model):
     __tablename__ = 'patient'
-    patient_id = db.Column('Patient_ID', db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column('Patient_Full_Name', db.String(255), nullable=False)
-    date_of_birth = db.Column('Date_Of_Birth', db.Date, nullable=False)
-    gender = db.Column('Gender', db.Enum('male', 'female', 'other'), nullable=False)
-    phone = db.Column('Phone_Num', db.String(20), nullable=False)
-    allergies = db.Column('Allergies', db.String(255))
-
-    def __init__(self, patient_id, name, date_of_birth, gender, phone, allergies):
-        self.patient_id = patient_id
-        self.name = name
+    
+    patient_id = db.Column(db.Integer, primary_key=True)
+    patient_full_name = db.Column(db.String(64), nullable=False)
+    date_of_birth = db.Column(db.DateTime, nullable=False)
+    # gender = db.Column(db.String(3), nullable=False)
+    gender = db.Column(db.Enum('male', 'female', 'other'), nullable=False)
+    phone_num = db.Column(db.String(20), nullable=False)
+    allergies = db.Column(db.String(64))
+    
+    def __init__(self, patient_full_name, date_of_birth, gender, phone_num, allergies):
+        # self.patient_id = patient_id
+        self.patient_full_name = patient_full_name
         self.date_of_birth = date_of_birth
         self.gender = gender
-        self.phone = phone
+        self.phone_num = phone_num
         self.allergies = allergies
-
-    def json(self):
-        return {
-            "patient_id": self.patient_id,
-            "name": self.name,
-            "date_of_birth": self.date_of_birth,
-            "gender": self.gender,
-            "phone": self.phone,
-            "allergies": self.allergies
-        }
-
-class Appointment(db.Model):
-    __tablename__ = 'appointment_history'
-    appt_datetime = db.Column('Appt_DateTime', db.DateTime, primary_key=True)
-    patient_id = db.Column('Patient_ID', db.Integer, db.ForeignKey('patient.Patient_ID'), nullable=False, primary_key=True)
-    diagnosis = db.Column('Diagnosis', db.String(255))
-
-    patient = db.relationship('Patient', primaryjoin = 'Appointment.patient_id == Patient.patient_id', backref = 'appointment_history')
     
-    def __init__(self, appt_datetime, patient_id, diagnosis):
-        self.appt_datetime = appt_datetime
-        self.patient_id = patient_id
-        self.diagnosis = diagnosis
-
     def json(self):
         return {
-            "appt_datetime": self.appt_datetime,
-            "patient_id": self.patient_id,
-            "diagnosis": self.diagnosis
+            'patient_id': self.patient_id,
+            'patient_fullname': self.patient_full_name,
+            'date_of_birth': self.date_of_birth,
+            'gender': self.gender,
+            'phone_num': self.phone_num,
+            'allergies': self.allergies
         }
-
-class Prescription(db.Model):
-    __tablename__ = 'prescription'
-    appt_datetime = db.Column('Appt_DateTime', db.DateTime, db.ForeignKey('appointment_history.Appt_DateTime'), primary_key=True)
-    patient_id = db.Column('Patient_ID', db.Integer, db.ForeignKey('appointment_history.Patient_ID'), nullable=False, primary_key=True)
-    prescription_id = db.Column('Prescription_ID', db.Integer, nullable=False, primary_key=True)
-
-    appt = db.relationship('Appointment', primaryjoin = 'Prescription.appt_datetime == Appointment.appt_datetime', backref = 'prescription')
-    appt1 = db.relationship('Appointment', primaryjoin = 'Prescription.patient_id == Appointment.patient_id', backref = 'prescription')
-
-    def __init__(self, appt_datetime, patient_id, prescription_id):
-        self.appt_datetime = appt_datetime
-        self.patient_id = patient_id
-        self.prescription_id = prescription_id
         
-    def json(self):
-        return {
-            "appt_datetime": self.appt_datetime,
-            "patient_id": self.patient_id,
-            "prescription_id": self.prescription_id
-        }
-
 class PrescriptionMedicine(db.Model):
     __tablename__ = 'prescription_medicines'
-    prescription_id = db.Column('Prescription_ID', db.Integer, db.ForeignKey('prescription.Prescription_ID'), primary_key=True)
-    medicine_name = db.Column('Medicine_Name', db.String(255), nullable=False, primary_key=True)
-    frequency = db.Column('Frequency', db.String(255), nullable=False)
-    amount = db.Column('Amount', db.String(255), nullable=False)
     
-    prescription = db.relationship('Prescription', primaryjoin = 'PrescriptionMedicine.prescription_id == Prescription.prescription_id', backref = 'prescription_medicines')
-
+    prescription_id = db.Column(db.Integer, primary_key=True)
+    medicine_name = db.Column(db.String(100))
+    frequency = db.Column(db.String(255))
+    amount = db.Column(db.String(255))
+    
     def __init__(self, prescription_id, medicine_name, frequency, amount):
+        # self.patient_id = patient_id
         self.prescription_id = prescription_id
         self.medicine_name = medicine_name
         self.frequency = frequency
         self.amount = amount
-
-    def json(self):
-        return {"prescription_id": self.prescription_id, 
-                "medicine_name": self.medicine_name,
-                "frequency": self.frequency,
-                "amount": self.amount
-        }
     
+    def json(self):
+        return {
+            'prescription_id': self.prescription_id,
+            'medicine_name': self.medicine_name,
+            'frequency': self.frequency,
+            'amount': self.amount
+        }
+        
+class Prescription(db.Model):
+    __tablename__ = 'prescription'
+    
+    prescription_id = db.Column(db.ForeignKey('patient_records.prescription_medicines', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    patient_id = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    appt_datetime = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    
+    def __init__(self, prescription_id, appt_datetime):
+        # self.patient_id = patient_id
+        self.prescription_id = prescription_id
+        self.appt_datetime = appt_datetime
+    
+    def json(self):
+        return {
+            'prescription_id': self.prescription_id,
+            'patient_id': self.patient_id,
+            'appt_datetime': self.appt_datetime
+        }
+        
 class DiagnosticTest(db.Model):
     __tablename__ = 'diagnostic_test'
-    test_id = db.Column('Test_ID', db.Integer, primary_key=True, autoincrement=True)
-    test_datetime = db.Column('Test_DateTime', db.DateTime, nullable=False)
-    test_type = db.Column('Test_Type', db.String(255), nullable=False)
-    test_results = db.Column('Test_Results', db.String(255), nullable=False)
-    patient_id = db.Column('Patient_ID', db.Integer, db.ForeignKey('appointment_history.Patient_ID'), nullable=False)
-    appt_datetime = db.Column('Appt_DateTime', db.DateTime, db.ForeignKey('appointment_history.Appt_DateTime'), nullable=False)
-
-    def __init__(self, test_id, test_datetime, test_type, test_results, patient_id, appt_datetime):
-        self.test_id = test_id
+    
+    test_id = db.Column(db.Integer, primary_key=True)
+    test_datetime = db.Column(db.DateTime, nullable=False)
+    test_type = db.Column(db.String, nullable=False)
+    test_results = db.Column(db.String, nullable=False)
+     
+    # Foreign keys point to APPOINTMENT HISTORY table
+    patient_id = db.Column(db.ForeignKey('appointment_history.patient_id'), nullable=False)
+    appt_datetime = db.Column(db.ForeignKey('appointment_history.appt_datetime'), nullable=False)
+    
+    def __init__(self, test_datetime, test_type, test_results, appt_datetime):
+        # self.patient_id = patient_id
         self.test_datetime = test_datetime
         self.test_type = test_type
         self.test_results = test_results
-        self.patient_id = patient_id
         self.appt_datetime = appt_datetime
-
+   
+        
     def json(self):
-        return {"test_id": self.test_id,
-                "test_datetime": self.test_datetime,
-                "test_type": self.test_type,
+        return {"test_id": self.test_id, 
+                "test_datetime": self.test_datetime, 
+                "test_type": self.test_type, 
                 "test_results": self.test_results,
                 "patient_id": self.patient_id,
                 "appt_datetime": self.appt_datetime
-        }
-        
-    appt = db.relationship('Appointment', primaryjoin = 'DiagnosticTest.patient_id == Appointment.patient_id', backref = 'diagnostic_test')
-    appt = db.relationship('Appointment', primaryjoin = 'DiagnosticTest.appt_datetime == Appointment.appt_datetime', backref = 'diagnostic_test')
-    
+                }
 
-# Routes
+##############  PATIENT RELATED FUNCTIONS   ##############################################
+@app.route("/patient", methods=['GET'])
+def get_all():
+    patient_list = Patient.query.all()
+    if len(patient_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    # we use for book to perform an iteration and create a JSON representation of it using book.json() function.
+                    "bookings": [patient.json() for patient in patient_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no booking slot."
+        }
+    ), 404
+
 # find patient
 @app.route('/patient/<int:patient_id>', methods=['GET'])
 def find_patient(patient_id):
@@ -149,18 +188,19 @@ def find_patient(patient_id):
     ), 404
 
 # create patient
-@app.route('/patients', methods=['POST'])
+@app.route('/patients/create', methods=['POST'])
 def create_patient():
     
     data = request.get_json()
-    name = data['Patient_Full_Name']
-    date_of_birth = data['Date_Of_Birth']
-    gender = data['Gender']
-    phone_num = data['Phone_Num']
-    allergies = data['Allergies']
+    print(data)
+    patient_full_name = data['patient_full_name']
+    date_of_birth = data['date_of_birth']
+    gender = data['gender']
+    phone_num = data['phone_num']
+    allergies = data['allergies']
     
     # Check if patient already exists
-    if Patient.query.filter_by(name=name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num).first():
+    if Patient.query.filter_by(patient_full_name=patient_full_name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num).first():
         return jsonify(
             {
                 "code": 400,
@@ -169,7 +209,7 @@ def create_patient():
         ), 400
     
     # If patient doesn't exist, insert patient into database
-    new_patient = Patient(name=name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num, allergies=allergies)
+    new_patient = Patient(patient_full_name=patient_full_name, date_of_birth=date_of_birth, gender=gender, phone_num=phone_num, allergies=allergies)
     try:
         db.session.add(new_patient)
         db.session.commit()
@@ -178,7 +218,7 @@ def create_patient():
             {
                 "code": 500,
                 "data": {
-                    "name": name,
+                    "patient_full_name": patient_full_name,
                     "date_of_birth": date_of_birth,
                     "gender": gender,
                     "phone_num": phone_num,
@@ -246,8 +286,108 @@ def update_patient(patient_id):
     db.session.commit()
     return {"message": "Patient record updated successfully"}, 200
 
-# create diagnostic test for scenario 1
 
+###################################################################################################################
+#################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
+# create diagnostic test for scenario 1
+@app.route('/create_diagnostic_test', methods=['POST'])
+def createDiagnosticTest():
+    data = request.get_json()
+    print(data)
+    # pid = data['pid']
+    
+    test_datetime = data['test_datetime']
+    test_type = data["visit_type"]
+    test_results = data['test_results']
+    appt_datetime = data['appt_datetime']
+    
+    test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
+    print(db.session)
+    # test_type=visit_type
+    try:
+        db.session.add(test_instance)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "test_id": "error message in the except portion",
+                    "test_datetime": test_datetime,
+                    "test_type": test_type,
+                    "test_results": test_results,
+                },
+                "message": "An error occured creating the test instance"
+            }
+        ), 500
+    return jsonify(
+        {
+            "code": 201,
+            "data": test_instance.json(),
+            "message": "Donezo mina san"
+        }
+    ), 201
+
+# just to view diagnostic_test database, 'test' table
+@app.route('/view_diagnostic_test', methods=['GET'])
+def viewDiagnosticTest():
+    test_list = DiagnosticTest.query.all()
+    if len(test_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    # we use for book to perform an iteration and create a JSON representation of it using book.json() function.
+                    "bookings": [test.json() for test in test_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no booking slot."
+        }
+    ), 404
+    
+################################################################################################################
+#################### PRESCRIPTION RELATED FUNCTIONS ############################################################
+@app.route('/check_prescription/<INPUT>', methods=['GET'])
+def checkPrescription(INPUT): #sry i need to define input or sth... anw this is assuming that INPUT is a list/tuple
+    this_patient_id=INPUT[0]
+    this_appt_date=INPUT[1]
+
+    prescription = Prescription.query.filter_by(patient_id=this_patient_id, appt_datetime=this_appt_date).first()
+
+    if prescription is not None:
+
+        prescription_medicine = PrescriptionMedicine.query.filter_by(prescription_id=prescription.prescription_id).first()
+        #ASSUMPTION MADE: Each appt for a patient only has one medicine prescribed (but this seems wrong...?)
+        #                 I think inventory code accounts for multiple medicines prescribed? Which wld be good i think!
+        #                 but I don't want to mess w the DB here so ill leave it as a comment first :sweats:
+
+        if prescription_medicine is not None:
+            return jsonify(
+                {
+                "code": 250, #this is a very random number that i assigned, i am Open to changing it
+                "data": prescription_medicine, #eh wait i need to change this i dont think i can directly send over the exact object right
+                "message": "Prescription created for this patient today has been found."
+                }
+            )
+        else:
+            return jsonify(
+                {
+                "code": 404,
+                "message": "There was no medicine prescribed for this patient today."
+                }
+            )
+    else:
+        return jsonify(
+            {
+            "code": 404,
+            "message": "There was no prescription found for this patient today."
+            }
+        ) #do i need to have ', 404' here or sth haha
 
 if __name__ == '__main__':
-     app.run(port=5000, debug=True)
+    app.run(port=5050, debug=True)
+
