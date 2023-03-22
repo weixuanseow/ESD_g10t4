@@ -231,7 +231,7 @@ def checkPrescription(INPUT): #sry i need to define input or sth... anw this is 
             return jsonify(
                 {
                 "code": 250, #this is a very random number that i assigned, i am Open to changing it
-                "data": prescription_medicine,
+                "data": prescription_medicine, #eh wait i need to change this i dont think i can directly send over the exact object right
                 "message": "Prescription created for this patient today has been found."
                 }
             )

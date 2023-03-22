@@ -1,14 +1,20 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+#from flask_cors import CORS (? Needed?)
+
+import requests
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+#CORS(app) (? Needed?)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/inventory'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 cursor = db.cursor()
 
-dispense_restock_URL = "http://localhost:5202"
+#dispense_restock_URL = "http://localhost:5202"
+dispense_restock_url = "http://localhost:5000/update_inventory"
+##actually now i am worried if this is in the right place shd this be in the UI instead or sth
 
 # Models
 
@@ -34,50 +40,44 @@ class Inventory(db.Model):
     
 
 # Routes
-#Update stock level/s + Return updated stock level/s
-
-#receive list of [(name, amt to reduce by)] frm complex microservice
-#find drug_full_name=name, update db with current_amt-=amt to reduce by
-#update db
-#check if current_amt<=threshold_amt -- i made it <= cos i think == threshold shd be concerning enough alr
-#if yes: return (db updated success msg, [(drug_full_name, topup_amt)]
-#if no: return (db updated success msg, [])
-
-##complex microservice shd read the success msg and read the list to see if anth needs to be topped up!
-
-@app.route('/ROUTE/<INPUT>', methods=['PUT']) ### NEED TO FIX
+#Update stock level/s + Return success/failure message and associated amount/s that must be topped up
+@app.route('/update_inventory/<INPUT>', methods=['PUT']) ##MINNAL: Route and input variable could be modified to be better
 def update_inventory(INPUT):
     data = request.get_json()
     ret_list=[]
-    if data:
-        for i in data: ###can json be a list???
-            drug_name = i[0]
-            qty = i[1]
-            drug_full_name = Inventory.query.filter_by(drug_full_name=drug_name).first()
-            drug_full_name.current_amt -= qty
-            if drug_full_name.current_amt<=drug_full_name.threshold_amt:
-                ret_list.append((drug_full_name.drug_full_name, drug_full_name.topup_amt))
+    if data is not None:
+        try:
+            for drug_name, qty in data.items():
+                drug_full_name = Inventory.query.filter(Inventory.drug_full_name == drug_name).first()
+                drug_full_name.current_amt -= qty
+                if drug_full_name.current_amt <= drug_full_name.threshold_amt:
+                    ret_list.append((drug_full_name.drug_full_name, drug_full_name.topup_amt))
 
-        db.session.commit()
+            db.session.commit()
 
-        #return ['inventory has been updated successfully', ret_list]
-        if len(ret_list)>0:
-            return jsonify(
-                {
+            if len(ret_list)>0:
+                return jsonify(
+                    {
+                        "code": 200,
+                        "data": ret_list, 
+                        "message": 'Inventory has been updated successfully. Quantity of some medicines needs to be topped up.'
+                    }
+                )
+            else:
+                return jsonify(
+                    {
                     "code": 200,
-                    "data": ret_list.json(), 
-                    "message": 'Inventory has been updated successfully. Quantity of some medicines needs to be topped up.'
-                }
-            )
-        else:
+                    "message": 'Inventory has been updated successfully.'
+                    }
+                )
+        except:
             return jsonify(
                 {
-                "code": 200,
-                "message": 'Inventory has been updated successfully.'
+                "code": 500,
+                "message": 'An error occurred while updating the inventory.'
                 }
             )
     
-    #return ['error, no data was received and inventory was not updated']
     return jsonify(
         {
         "code": 404,
@@ -86,8 +86,20 @@ def update_inventory(INPUT):
     )
 
 # need to have one that sends 
-requests.post(url, data=None, json=None, **kwargs)
+#requests.post(url, data=None, json=None, **kwargs)
+requests.post(dispense_restock_url, data=None, json=None)
+##MINNAL: I think???????? My head hurts... Man im still tryna figure out how to send this line i'll update it later
 
+# payload = {'drug1': 5, 'drug2': 10}  # example JSON payload
+# headers = {'Content-Type': 'application/json'}
+# response = requests.post(dispense_restock_url, json=payload, headers=headers)
+
+# if response.ok:
+#     print('Inventory updated successfully')
+#     print(response.json())  # example response data
+# else:
+#     print('Error updating inventory')
+#     print(response.text)
 
 if __name__ == '__main__':
      app.run(port=5200, debug=True)
