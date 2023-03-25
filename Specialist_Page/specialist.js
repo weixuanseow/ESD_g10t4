@@ -5,7 +5,7 @@ const root = Vue.createApp({
     data() {
         return {
 
-            something: '',
+            something: [],
 
             // Suppose this is a very large array
             date_time: [
@@ -32,6 +32,12 @@ const root = Vue.createApp({
 
 
         }
+    },
+    mounted() {
+        let appt = "2023-02-20 13:00:00"
+        url = "http://127.0.0.1:5100/patient/000000001"
+        axios.get(url)
+        .then(response =>(this.something = response.data.phone))
     },
 
     methods: {
@@ -70,6 +76,7 @@ const root = Vue.createApp({
             str += `</table>`
             console.log(document.getElementById('appointment'))
             console.log("=== [END] create_patient_appoints_today() ===")
+            console.log(this.something)
             document.getElementById('appointment').innerHTML = str
         }
 
@@ -103,3 +110,44 @@ const root = Vue.createApp({
 
 })
 root.mount("#appointment")
+
+// function getPatient(){
+//     // Get patient phone number here and store in session
+//     // These info should be taken from periovus page
+//     // let pid = 000000001 // maybe pid now need get from session
+//     let appt = "2023-02-20 13:00:00"
+//     // sessionStorage.getItem("pid",pid)
+//     // sessionStorage.getItem('appt',appt)
+//     // 
+//     // test_type = document.getElementById('test_type').value
+//     url = "http://127.0.0.1:5100/appointment_history/" + appt
+//     axios.get(url)
+//     .then(response =>{
+//         data = response.data
+//         console.log(data)
+//         //storing pid, phone and visit_type in session
+
+//         // let phone = data.data.phone
+
+//         // these data needs to be used in next page , assume first page send to this page through session storage
+
+//         // sessionStorage.setItem('phone',phone)
+//         // sessionStorage.setItem("test_type",test_type)
+//         // console.log(test_type + "Test Type retrieved and "+ "patient details:" + pid + " and " + phone)
+//         // window.location.href="getslots.html"
+
+//     })
+//     .catch((error) => {
+//             const errorCode = error.code;
+//             const errorMessage = error.message;
+//             console.log(errorMessage)
+//         });
+
+
+// }
+
+
+
+
+
+
