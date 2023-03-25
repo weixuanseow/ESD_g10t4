@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 cursor = db.cursor()
 
 #dispense_restock_URL = "http://localhost:5202"
-dispense_restock_url = "http://localhost:5000/update_inventory"
+dispense_restock_url = "http://localhost:5200/update_inventory"
 ##actually now i am worried if this is in the right place shd this be in the UI instead or sth
 
 # Models
