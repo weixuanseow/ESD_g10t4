@@ -24,7 +24,7 @@ CREATE DATABASE IF NOT EXISTS `bookings` DEFAULT CHARACTER SET utf8 COLLATE utf8
 USE `bookings`;
 
 -- Create the bookings table
-DROP TABLE IF EXISTS `consultation`;
+DROP TABLE IF EXISTS `mri`;
 CREATE TABLE consultation (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE xray (
     pid INT
 );
 
-DROP TABLE IF EXISTS `physiotherapy`;
+DROP TABLE IF EXISTS `ctscan`;
 CREATE TABLE physiotherapy (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE physiotherapy (
     pid INT
 );
 
-DROP TABLE IF EXISTS `orthopaedics`;
+DROP TABLE IF EXISTS `bloodtest`;
 CREATE TABLE orthopaedics (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
@@ -91,10 +91,10 @@ DROP PROCEDURE IF EXISTS delete_expired_bookings;
 DELIMITER //
 CREATE PROCEDURE delete_expired_bookings()
 BEGIN
-    DELETE FROM consultation;
+    DELETE FROM mri;
     DELETE FROM xray;
-    DELETE FROM physiotherapy;
-    DELETE FROM orthopaedics;
+    DELETE FROM ctscan;
+    DELETE FROM bloodtest;
 END //
 DELIMITER ;
 
@@ -122,7 +122,7 @@ BEGIN
   SET the_start = start_time;
   SET the_end = the_start + INTERVAL 30 MINUTE;
   WHILE num_slots > 0 DO
-    INSERT INTO consultation (slot)
+    INSERT INTO mri (slot)
     VALUES (the_start);
     SET the_start = the_end;
     SET the_end = the_start + INTERVAL 30 MINUTE;
@@ -144,7 +144,7 @@ BEGIN
   SET the_start = start_time;
   SET the_end = the_start + INTERVAL 30 MINUTE;
     WHILE num_slots > 0 DO
-    INSERT INTO physiotherapy (slot)
+    INSERT INTO ctscan (slot)
     VALUES (the_start);
     SET the_start = the_end;
     SET the_end = the_start + INTERVAL 30 MINUTE;
@@ -155,7 +155,7 @@ BEGIN
   SET the_start = start_time;
   SET the_end = the_start + INTERVAL 30 MINUTE;
     WHILE num_slots > 0 DO
-    INSERT INTO orthopaedics (slot)
+    INSERT INTO bloodtest (slot)
     VALUES (the_start);
     SET the_start = the_end;
     SET the_end = the_start + INTERVAL 30 MINUTE;
