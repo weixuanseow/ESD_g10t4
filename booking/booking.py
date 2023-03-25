@@ -35,9 +35,9 @@ mysql_config = {
 conn = mysql.connector.connect(**mysql_config)
 
 # --------------------------- object classes------------------------------------------------------------------------
-class VisitType(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+# class VisitType(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(50))
 
 
 class mri(db.Model):
@@ -78,7 +78,7 @@ class xray(db.Model):
     def json(self):
         return {"bid": self.bid, "slot": self.slot, "available": self.available, 'pid':self.pid}
 
-class Ctscan(db.Model):
+class ctscan(db.Model):
     __tablename__ = 'ctscan'
 
 
@@ -97,7 +97,7 @@ class Ctscan(db.Model):
     def json(self):
         return {"bid": self.bid, "slot": self.slot, "available": self.available, 'pid':self.pid}
 
-class Bloodtest(db.Model):
+class bloodtest(db.Model):
     __tablename__ = 'bloodtest'
 
 
@@ -122,7 +122,7 @@ class Bloodtest(db.Model):
 @app.route("/mri/all", methods=['GET'])
 def get_all_mri():
 
-    booking_list = Mri.query.all()
+    booking_list = mri.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -143,7 +143,7 @@ def get_all_mri():
 @app.route("/xray/all", methods=['GET'])
 def get_all_xray():
 
-    booking_list = Xray.query.all()
+    booking_list = xray.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -164,7 +164,7 @@ def get_all_xray():
 @app.route("/bloodtest/all", methods=['GET'])
 def get_all_bloodtest():
 
-    booking_list = Bloodtest.query.all()
+    booking_list = bloodtest.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -185,7 +185,7 @@ def get_all_bloodtest():
 @app.route("/ctscan/all", methods=['GET'])
 def get_all_ctscan():
 
-    booking_list = Ctscan.query.all()
+    booking_list = ctscan.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -206,7 +206,7 @@ def get_all_ctscan():
 # Update a booking slot to unavailable 
 @app.route('/mri/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_mri(bid):
-    booking = Mri.query.get_or_404(bid)
+    booking = mri.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -216,7 +216,7 @@ def mark_slot_unavailable_mri(bid):
 
 @app.route('/xray/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_xray(bid):
-    booking = Xray.query.get_or_404(bid)
+    booking = xray.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -226,7 +226,7 @@ def mark_slot_unavailable_xray(bid):
 
 @app.route('/bloodtest/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_bloodtest(bid):
-    booking = Bloodtest.query.get_or_404(bid)
+    booking = bloodtest.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -236,7 +236,7 @@ def mark_slot_unavailable_bloodtest(bid):
 
 @app.route('/ctscan/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_ctscan(bid):
-    booking = Ctscan.query.get_or_404(bid)
+    booking = ctscan.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -247,7 +247,7 @@ def mark_slot_unavailable_ctscan(bid):
 # Update a booking slot to available
 @app.route('/mri/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_mri(bid):
-    booking = Mri.query.get(bid)
+    booking = mri.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -260,7 +260,7 @@ def mark_slot_available_mri(bid):
 
 @app.route('/xray/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_xray(bid):
-    booking = Xray.query.get(bid)
+    booking = xray.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -273,7 +273,7 @@ def mark_slot_available_xray(bid):
 
 @app.route('/bloodtest/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_bloodtest(bid):
-    booking = Bloodtest.query.get(bid)
+    booking = bloodtest.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -286,7 +286,7 @@ def mark_slot_available_bloodtest(bid):
 
 @app.route('/ctscan/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_ctscan(bid):
-    booking = Ctscan.query.get(bid)
+    booking = ctscan.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -306,8 +306,8 @@ def get_available_slots_mri():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Mri.query.filter(Mri.slot >= now,
-                                            Mri.available == True).all()
+    booking_list = mri.query.filter(mri.slot >= now,
+                                            mri.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -333,8 +333,8 @@ def get_available_slots_xray():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Xray.query.filter(Xray.slot >= now,
-                                            Xray.available == True).all()
+    booking_list = xray.query.filter(xray.slot >= now,
+                                            xray.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -360,8 +360,8 @@ def get_available_slots_bloodtest():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Bloodtest.query.filter(Bloodtest.slot >= now,
-                                            Bloodtest.available == True).all()
+    booking_list = bloodtest.query.filter(bloodtest.slot >= now,
+                                            bloodtest.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -387,8 +387,8 @@ def get_available_slots_ctscan():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Ctscan.query.filter(Ctscan.slot >= now,
-                                            Ctscan.available == True).all()
+    booking_list = ctscan.query.filter(ctscan.slot >= now,
+                                            ctscan.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -416,7 +416,7 @@ def get_unavailable_slots_mri():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Mri.query.filter(Mri.available == False).all()
+    booking_list = mri.query.filter(mri.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -442,7 +442,7 @@ def get_unavailable_slots_xray():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Xray.query.filter(Xray.available == False).all()
+    booking_list = xray.query.filter(xray.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -468,7 +468,7 @@ def get_unavailable_slots_bloodtest():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Bloodtest.query.filter(Bloodtest.available == False).all()
+    booking_list = bloodtest.query.filter(bloodtest.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -494,7 +494,7 @@ def get_unavailable_slots_ctscan():
     print(now)
 
     # query the database for available booking slots
-    booking_list = Ctscan.query.filter(Ctscan.available == False).all()
+    booking_list = ctscan.query.filter(ctscan.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
