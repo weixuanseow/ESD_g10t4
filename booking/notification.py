@@ -1,14 +1,15 @@
 #pip install twilio
 from flask import Flask, request, jsonify
 from twilio.rest import Client
-import pika
+from twilio.base.exceptions import TwilioRestException
+# import pika
 import os
 
 app = Flask(__name__)
 
 # Define the Twilio account SID and auth token
 account_sid = "AC1b140afde89af017b88424de796e6aad"
-auth_token = "7207a41f9f9e3b78b9992caa511bae20"
+auth_token = "56f2ba18e23a90afb1ea76ca71a59ad5"
 
 print("Notification.py is now running------------------")
 
@@ -19,12 +20,13 @@ client = Client(account_sid, auth_token)
 # Define the route to send a message
 @app.route('/send_message', methods=['POST'])
 def send_message():
+    print("Now calling send_message function------------------")
     try:
         # Get the recipient's phone number and message from the request
-        # to_number = request.form.get('to_number')
+        data = request.get_json()
+        to_number = data['phone']
         to_number = "+65 9339 8831"
-        message = request.form.get('message')
-        print(message)
+        message = data['message']
         # Use the client object to send a message to the given phone number
         message = client.messages.create(
             to=to_number, # patient number
@@ -42,7 +44,7 @@ def send_message():
         return jsonify(
         {
             "code": 404,
-            "message": "There are no booking slot."
+            "message": "Message failed to send ."
         }
     ), 404
 
