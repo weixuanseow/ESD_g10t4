@@ -18,12 +18,13 @@ client = Client(account_sid, auth_token)
 
 # Define the route to send a message
 @app.route('/send_message', methods=['POST'])
-def send_message():
+def send_message(to_number, message):
+    print("Now calling send_message function------------------")
     try:
         # Get the recipient's phone number and message from the request
         # to_number = request.form.get('to_number')
         to_number = "+65 9339 8831"
-        message = request.form.get('message')
+        # message = request.form.get('message')
         print(message)
         # Use the client object to send a message to the given phone number
         message = client.messages.create(
