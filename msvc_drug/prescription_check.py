@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 from collections import Counter
 import requests
-import json
+import os
+
+app = Flask(__name__)
+
 
 ############ compare drugs & allergy
 @app.route('/check-interaction', methods=['GET'])
