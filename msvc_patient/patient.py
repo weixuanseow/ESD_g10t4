@@ -8,7 +8,8 @@ import logging
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.logger.setLevel(logging.DEBUG)
@@ -17,12 +18,20 @@ CORS(app)
 
 import mysql.connector
 # Configure MySQL connection
+# mysql_config = {
+#     'host': 'localhost',
+#     'user': 'root',
+#     'password': '',
+#     'database': 'patient_records',
+#     'port': 3306
+
+# }
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    'password': 'root',
     'database': 'patient_records',
-    'port': 3306
+    'port': 8889
 
 }
 conn = mysql.connector.connect(**mysql_config)
@@ -360,8 +369,9 @@ def check_prescription(patient_id, appt_date):
             medicines = []
             for medicine in prescription_medicines:
                 medicines.append({
-                    "medicine_name": medicine.medicine_name,
-                    "amount": medicine.amount #is amt right not freq*amt
+                    medicine.medicine_name: medicine.amount,
+                    # "medicine_name": medicine.medicine_name,
+                    # "amount": medicine.amount #is amt right not freq*amt
                 })
             return jsonify({
                 "code": 250, #random number can change

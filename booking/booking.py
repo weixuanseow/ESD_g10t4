@@ -35,9 +35,6 @@ mysql_config = {
 conn = mysql.connector.connect(**mysql_config)
 
 # --------------------------- object classes------------------------------------------------------------------------
-# class VisitType(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(50))
 
 
 class mri(db.Model):

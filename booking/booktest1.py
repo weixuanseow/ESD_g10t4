@@ -4,8 +4,8 @@ from invokes import invoke_http
 from twilio.rest import Client
 
 import os, sys
-import amqp_setup
-import pika
+# import amqp_setup
+# import pika
 import json
 import requests
 
@@ -53,9 +53,10 @@ def book_test():
 def processBooking(booking):
     pid = booking['pid']
     phone = booking['phone']
-    visit_type = booking['visit_type']
+    test_type = booking['test_type']
     bid = booking['bid']
-    slot = booking['slot']
+    bslot = booking['bslot']
+    appt = booking['appt']
 
     location ={
         "consultation": "Room A",
@@ -66,7 +67,7 @@ def processBooking(booking):
 
     # Invoke the booking microservice --------------------------------------------------
     print('\n-----Invoking booking microservice-----')
-    booking_update_URL = "http://127.0.0.1:5000/" + visit_type + "/mark_unavailable/" + bid
+    booking_update_URL = "http://127.0.0.1:5000/" + test_type + "/mark_unavailable/" + bid
     booking_update_result = invoke_http(booking_update_URL, method='PUT', json=booking)
 
 
@@ -98,52 +99,54 @@ def processBooking(booking):
         #     }
         # else:
             # Invoke the notification microservice
-        message = "Hi" + pid + ", your appointment at specialist clinic for "+ visit_type+" has been booked at " + slot + " at "+ location[visit_type] + ". Please be remineded to bring along your identification documents during registration. Thank You."
-        send_amqp_notification(to_number, message)
+
+        message = "Hi" + pid + ", your appointment at specialist clinic for "+ test_type+" has been booked at " + bslot + " at "+ location[test_type] + ". Please be remineded to bring along your identification documents during registration. Thank You."
+        print(message)
+#         send_amqp_notification(to_number, message)
 
 
 
-def send_amqp_notification(to_number, message):
-            try:
-                # Connect to the RabbitMQ server
-                connection = pika.BlockingConnection(
-                    pika.ConnectionParameters(host='localhost')
-                )
-                channel = connection.channel()
-                # Declare the AMQP queue to send the message
-                channel.queue_declare(queue='notifications')
-                # Create the message body as a dictionary
-                message_body = {'to_number': to_number, 'message': message}
-                # Publish the message to the queue
-                channel.basic_publish(
-                    exchange='booking_exchange',
-                    # routing key specify which microservice to call 
-                    routing_key='notification',
-                    body=json.dumps(message_body)
-                )
-                # Close the connection to the RabbitMQ server
-                connection.close()
-                # Error handling
-            except pika.exceptions.AMQPError as e:
-                print(f'Error publishing message to AMQP: {str(e)}')
-                return jsonify(
-                    {
-                        "code": 404,
-                        "message": "Message not sent."
-                    })
-            except Exception as e:
-                print(f'Error sending notification: {str(e)}')
-                return jsonify(
-                    {
-                        "code": 404,
-                        "message": "Message not sent."
-                    })
-            else:
-                print(f'Message sent successfully to {to_number}')
-                return jsonify({
-                    'code': 200,
-                    'message': 'Message notification is sent to patient'
-                    })
+# def send_amqp_notification(to_number, message):
+#             try:
+#                 # Connect to the RabbitMQ server
+#                 connection = pika.BlockingConnection(
+#                     pika.ConnectionParameters(host='localhost')
+#                 )
+#                 channel = connection.channel()
+#                 # Declare the AMQP queue to send the message
+#                 channel.queue_declare(queue='notifications')
+#                 # Create the message body as a dictionary
+#                 message_body = {'to_number': to_number, 'message': message}
+#                 # Publish the message to the queue
+#                 channel.basic_publish(
+#                     exchange='booking_exchange',
+#                     # routing key specify which microservice to call 
+#                     routing_key='notification',
+#                     body=json.dumps(message_body)
+#                 )
+#                 # Close the connection to the RabbitMQ server
+#                 connection.close()
+#                 # Error handling
+#             except pika.exceptions.AMQPError as e:
+#                 print(f'Error publishing message to AMQP: {str(e)}')
+#                 return jsonify(
+#                     {
+#                         "code": 404,
+#                         "message": "Message not sent."
+#                     })
+#             except Exception as e:
+#                 print(f'Error sending notification: {str(e)}')
+#                 return jsonify(
+#                     {
+#                         "code": 404,
+#                         "message": "Message not sent."
+#                     })
+#             else:
+#                 print(f'Message sent successfully to {to_number}')
+#                 return jsonify({
+#                     'code': 200,
+#                     'message': 'Message notification is sent to patient'
+#                     })
 
 
     
@@ -151,4 +154,4 @@ def send_amqp_notification(to_number, message):
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " making a specialist booking...")
-    app.run(host="0.0.0.0", port=5050, debug=True)
+    app.run(host="0.0.0.0", port=5055, debug=True)
