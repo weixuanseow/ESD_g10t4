@@ -33,8 +33,12 @@ const root = Vue.createApp({
         console.log(year)
         this.datetosearch += '11 Mar 2023' // put back to: day + ' ' + month + ' ' + year
 
+
     },
     methods: {
+        prescribe(){
+            alert("it works")
+        },
         create_patient_appoints_today() {
             console.log("=== [START] create_patient_appoints_today() ===")
 
@@ -48,7 +52,7 @@ const root = Vue.createApp({
 
             console.log(this.date_time[0])
 
-            let str = `
+            let str =  `
             <table id="appointment_table" border="2px">
             <tr>
                 <th>
@@ -71,7 +75,7 @@ const root = Vue.createApp({
                 apptdate = this.date_time[i-1]
                 if(apptdate.includes(todaysdate)){
                     temp = `<tr><td>`
-                    temp += this.date_time[i-1]+ `</td><td>`+ this.patients[i-1]+ `</td><td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td></tr>`;
+                    temp += this.date_time[i-1]+ `</td><td>`+ this.patients[i-1]+ `</td><td><button class="btn btn-primary" v-on:click="prescribe">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td></tr>`;
                     str += temp
                 }
             }
@@ -80,7 +84,8 @@ const root = Vue.createApp({
             console.log("=== [END] create_patient_appoints_today() ===")
             console.log(this.something)
             document.getElementById('appointment').innerHTML = str
-        }
+        },
+
 
     },
         // computed: {
