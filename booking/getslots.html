@@ -80,13 +80,14 @@
         <table class="table my-4">
             <thead>
               <tr>
+                <tr><th rowspan = "3" id =""></th></tr>
                 <th scope="col">Booking ID</th>
                 <th scope="col">Available Slots</th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody id="slotsTable"> 
-              <tr><th rowspan = "3" id =""></th></tr>
+              <!-- <tr><th rowspan = "3" id =""></th></tr> -->
               <!-- <tr>
                 <th scope="row">1</th>
                 <td>2023-03-12 09:00:00</td>
@@ -116,13 +117,13 @@
                 .append("<label>"+message+"</label>");
         }
     
-        let visit_type = sessionStorage.getItem("test_type")
-        console.log(visit_type)
+        let test_type = sessionStorage.getItem("test_type")
+        console.log(test_type)
         // anonymous async function 
         // - using await requires the function that calls it to be async
         $(async() => {           
             // Change serviceURL to your own
-            let visit_type = sessionStorage.getItem("test_type")
+            let test_type = sessionStorage.getItem("test_type")
             console.log(test_type)
             var URL = "http://127.0.0.1:5000/"+ test_type + "/available_slots";
     
