@@ -7,6 +7,7 @@ import amqp_setup
 import pika
 import json
 import requests
+import pickle
 
 app = Flask(__name__)
 CORS(app)
@@ -75,15 +76,29 @@ def get_medicines():
         print("=====================================dispense_restock.py - approve order function=====================")
 
         amqp_setup.check_setup()
-        print ('setup')
-        # for drug in inventory_results:
-        #     for drug_name, topup_amt in drug.items():
-        #         print("drug name---",drug_name)
-        #         print("top up amount",topup_amt)
 
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
 
-        amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= inventory_results, properties=pika.BasicProperties(delivery_mode=2))
-        print('channel')
+        channel.basic_publish(exchange='drug_to_restock',
+                            routing_key='',
+                            body= inventory_results,
+                            properties=pika.BasicProperties(
+                                delivery_mode = 2, # make message persistent
+                            ))
+
+        connection.close()
+
+        # print ('setup')
+        # # for drug in inventory_results:
+        # #     for drug_name, topup_amt in drug.items():
+        # #         print("drug name---",drug_name)
+        # #         print("top up amount",topup_amt)
+
+        # data = {"name": "John", "age": 30}
+        # bytes_data = pickle.dumps(data)  # serialize dictionary to bytes
+        # amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= inventory_results, properties=pika.BasicProperties(delivery_mode=2))
+        # print('channel')
     
     return prescription_results # will be displayed on UI
 

@@ -55,6 +55,13 @@ INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID) VALUES
 ('2023-02-20 13:00:00', '000000001', '800000003');
 COMMIT;
 
+INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID) VALUES
+('2022-12-29 10:20:00', '000000003', '800000004')
+COMMIT;
+INSERT INTO prescription_medicines (Prescription_ID, Medicine_Name, Frequency, Amount) VALUES
+('800000004', 'Drug A', 'whenever ur heart desires', 200),
+('800000004', 'Drug B', 'whenever ur heart desires', 150)
+COMMIT;
 
 CREATE TABLE IF NOT EXISTS prescription_medicines (
   Prescription_ID int(9) UNSIGNED ZEROFILL,
