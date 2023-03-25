@@ -91,8 +91,8 @@ def get_medicines():
 #     print("=====================================dispense_restock.py - approve order function=====================")
 
 #     amqp_setup.check_setup()
-#     drug_name = request.json.get(data, None)
-#     topup_amt = request.json.get('customer_email', None)
+#     drug_name = request.json.get('drug_name', None)
+#     topup_amt = request.json.get('qty', None)
     
 #     print("drug name---",drug_name)
 #     print("top up amount",topup_amt)
@@ -101,15 +101,15 @@ def get_medicines():
 #     msg_content = json.dumps({
 #         "topup_details":
 #             {
-#             "drug_name": customer_name, 
-#             "payment_link": payment_link
+#             "drug_name": drug_name, 
+#             "topup_amount": topup_amt
 #             }
 #     })
 
 #     amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= msg_content, properties=pika.BasicProperties(delivery_mode=2))
 #     return jsonify({
 #         "code": 201,
-#         "message": "Payment Email Sent Successfully"
+#         "message": "Approval Message Sent Successfully"
 #         }
 #     ), 201
 
