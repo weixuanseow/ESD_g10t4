@@ -103,7 +103,11 @@
 
     <script>
         // display patient details
-        $('#headertext').append("<h1>Book a "+ sessionStorage.getItem('test_type')+ " test</h1>")
+            
+        let test_type = sessionStorage.getItem("test_type")
+        console.log(test_type)
+
+        $('#headertext').append("<h1>Book a "+ test_type+ " test</h1>")
         $('#phone').append("<p>Phone: "+ sessionStorage.getItem('phone')+ "</p>")
         $('#pid').append("<p>Patient ID: "+ sessionStorage.getItem('pid')+ "</p>")
         // Helper function to display error message
@@ -117,9 +121,7 @@
             $('#main-container')
                 .append("<label>"+message+"</label>");
         }
-    
-        let test_type = sessionStorage.getItem("test_type")
-        console.log(test_type)
+
         // anonymous async function 
         // - using await requires the function that calls it to be async
         $(async() => {           
@@ -203,10 +205,10 @@
         // }
             
         function make_booking(event){
-          let visit_type = sessionStorage.getItem("visit_type")
+          let test_type = sessionStorage.getItem("test_type")
           let pid = sessionStorage.getItem("pid")
           let phone = sessionStorage.getItem("phone")
-          let visit_location = location[visit_type]
+          let test_location = location[test_type]
           booking_details = event.target.value
           booking_list = booking_details.split(',')
           let bid = booking_list[0]
@@ -215,7 +217,7 @@
             'pid': pid,
             'phone': phone,
             'bid': bid,
-            'visit_type': visit_type,
+            'test_type': test_type,
             'slot': slot
           }
           console.log('Function make_booking is invoked and data')
