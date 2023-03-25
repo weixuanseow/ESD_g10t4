@@ -1,19 +1,19 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-#from flask_cors import CORS (? Needed?)
+from flask_cors import CORS 
 
 import requests
 
 app = Flask(__name__)
-#CORS(app) (? Needed?)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/inventory'
+CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/inventory'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-cursor = db.cursor()
+# cursor = db.cursor()
 
 #dispense_restock_URL = "http://localhost:5202"
-dispense_restock_url = "http://localhost:5200/update_inventory"
+# dispense_restock_url = "http://localhost:5200/update_inventory"
 ##actually now i am worried if this is in the right place shd this be in the UI instead or sth
 
 # Models
@@ -41,65 +41,95 @@ class Inventory(db.Model):
 
 # Routes
 #Update stock level/s + Return success/failure message and associated amount/s that must be topped up
-@app.route('/update_inventory/', methods=['PUT']) ##MINNAL: Route and input variable could be modified to be better
+# @app.route('/update_inventory', methods=['PUT']) ##MINNAL: Route and input variable could be modified to be better
+# def update_inventory():
+#     data = request.get_json()
+#     print (data)
+#     ret_list=[]
+#     if data is not None:
+#         try:
+#             for drug_name, qty in data.items():
+#                 drug_full_name = Inventory.query.filter(Inventory.drug_full_name == drug_name).first()
+#                 print(drug_name)
+#                 print(qty)
+#                 drug_full_name.current_amt -= qty
+#                 db.session.commit()
+
+#                 if drug_full_name.current_amt <= drug_full_name.threshold_amt:
+#                     ret_list.append((drug_full_name.drug_full_name, drug_full_name.topup_amt))
+
+#             if len(ret_list)>0:
+#                 return jsonify(
+#                     {
+#                         "code": 200,
+#                         "data": ret_list, 
+#                         "message": 'Inventory has been updated successfully. Quantity of some medicines needs to be topped up.'
+#                     }
+#                 )
+#             else:
+#                 return jsonify(
+#                     {
+#                     "code": 210,
+#                     "message": 'Inventory has been updated successfully.'
+#                     }
+#                 )
+#         except:
+#             return jsonify(
+#                 {
+#                 "code": 500,
+#                 "message": 'An error occurred while updating the inventory.'
+#                 }
+#             )
+    
+#     return jsonify(
+#         {
+#         "code": 404,
+#         "message": 'No data was received. Inventory was not updated.'
+#         }
+#     )
+
+
+@app.route('/update_inventory', methods=['PUT'])
 def update_inventory():
     data = request.get_json()
-    ret_list=[]
-    if data is not None:
-        try:
-            for drug_name, qty in data.items():
-                drug_full_name = Inventory.query.filter(Inventory.drug_full_name == drug_name).first()
-                drug_full_name.current_amt -= qty
-                if drug_full_name.current_amt <= drug_full_name.threshold_amt:
-                    ret_list.append((drug_full_name.drug_full_name, drug_full_name.topup_amt))
-
+    
+    updated = False  # flag to indicate whether any updates were made
+    
+    try:
+        ret_list={}
+        for drug_name, qty in data.items():
+            drug_full_name = Inventory.query.filter(Inventory.drug_full_name == drug_name).first()
+            drug_full_name.current_amt -= qty
+            if drug_full_name.current_amt<=drug_full_name.threshold_amt:
+                ret_list[drug_full_name.drug_full_name]=drug_full_name.topup_amt
+            updated = True  # set the flag to True if an update was made
             db.session.commit()
-
-            if len(ret_list)>0:
-                return jsonify(
-                    {
-                        "code": 200,
-                        "data": ret_list, 
-                        "message": 'Inventory has been updated successfully. Quantity of some medicines needs to be topped up.'
-                    }
-                )
-            else:
-                return jsonify(
-                    {
-                    "code": 200,
-                    "message": 'Inventory has been updated successfully.'
-                    }
-                )
-        except:
+        
+        if updated:
             return jsonify(
                 {
-                "code": 500,
-                "message": 'An error occurred while updating the inventory.'
+                    "code": 200,
+                    "data": ret_list,  # return all updated drugs
+                    "message": 'Updates were made and topups are required.'
                 }
-            )
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "code": 210,
+                    "message": "No updates were made"
+                }
+            ), 210
     
-    return jsonify(
-        {
-        "code": 404,
-        "message": 'No data was received. Inventory was not updated.'
-        }
-    )
+    #Return any errors faced 
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "message": "An error occurred while updating the inventory. " + str(e)
+            }
+        ), 500
 
-# need to have one that sends 
-#requests.post(url, data=None, json=None, **kwargs)
-requests.post(dispense_restock_url, data=None, json=None)
-##MINNAL: I think???????? My head hurts... Man im still tryna figure out how to send this line i'll update it later
-
-# payload = {'drug1': 5, 'drug2': 10}  # example JSON payload
-# headers = {'Content-Type': 'application/json'}
-# response = requests.post(dispense_restock_url, json=payload, headers=headers)
-
-# if response.ok:
-#     print('Inventory updated successfully')
-#     print(response.json())  # example response data
-# else:
-#     print('Error updating inventory')
-#     print(response.text)
 
 if __name__ == '__main__':
      app.run(port=5200, debug=True)
