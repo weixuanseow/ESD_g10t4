@@ -36,4 +36,8 @@ function prescribeMedicine(patientId, prescriptionDetails, allergies) {
       console.log("Error saving prescription:", xhr.responseText);
     });
   }
-  
+
+var pid = sessionStorage.getItem('id')
+var pdate = sessionStorage.getItem('date')
+document.getElementById('patient-id').setAttribute('value',pid)
+document.getElementById('patient-id').setAttribute('value',pid)

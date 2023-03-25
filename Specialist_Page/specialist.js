@@ -40,7 +40,7 @@ const root = Vue.createApp({
             // alert(`it works! this is the id: ${date} this is the id: ${id}`)
             sessionStorage.setItem('date',date)
             sessionStorage.setItem('id',id)
-            window.location.href = "#"
+            window.location.href = "../complex_prescribe_med/prescribe.html"
         },
         create_patient_appoints_today() {
             console.log("=== [START] create_patient_appoints_today() ===")

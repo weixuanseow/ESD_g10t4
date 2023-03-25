@@ -4,16 +4,81 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- local css -->
+    <link rel="stylesheet" href="../css/specialistpage.css">
+    <link rel="stylesheet" href="../css/general.css">
+
+    <!-- bootstrap css -->
+    <link href="/css/main.min.css" rel="stylesheet">
+
+    <!-- external js file
+    <script type="module" src="#"></script> -->
+
+    <!-- vue script -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- Axios -->
+    <script src='https://unpkg.com/axios/dist/axios.js'></script>
     <title>Prescribe med</title>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+  <nav id="navbarspecialist" class="navbar sticky-top navbar-light">
+
+    <!-- Website Name -->
+    <a class="navbar-brand ">
+        <div class="row" style="margin:0;">
+            <div class="col">
+                <iframe src="https://embed.lottiefiles.com/animation/107925"></iframe>
+            </div>
+            <div class="col my-auto">
+                <form method="GET" >
+                    <h4>
+                        PRESCRIBE MEDICINE
+                    </h4>
+                </form>
+            </div>
+
+        </div>
+    </a>
+
+    <!-- Menu Icon -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- NavBar Items -->
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav" id="navbar">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../bookimg/booking.html">Book a Test</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Prescribe Medicine</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Dispense and Restock</a>
+            </li>
+        </ul>
+    </div>
+</nav>
     <h1>Prescription Form</h1>
     <form id="prescription">
         <label for="patient-id">Patient ID:</label>
-        <input type="text" id="patient-id" name="patient-id"><br>
+        <input type="text" id="patient-id" name="patient-id" ><br>
       
         <div id="medicine-fields">
           <div class="medicine-field">
@@ -32,6 +97,7 @@
         <input type="button" value="Submit" onclick="submitPrescription()">
       </form>
 
+      <div id="error-messages"></div>
 
 
       <script>
