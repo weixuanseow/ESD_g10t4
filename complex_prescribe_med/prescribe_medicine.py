@@ -1,5 +1,7 @@
+import requests
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
@@ -77,3 +79,67 @@ class PrescriptionMedicine(db.Model):
         }
     
 # Route
+PATIENT_MICROSERVICE_URL = "http://127.0.0.1:5050"
+
+@app.route('/prescribe_medicine', methods=["POST"])
+def prescribe_medicine():
+    data = request.get_json()
+    patient_id = data['patient_id']
+    prescription_details = data['prescription_details']
+    allergies = data['allergies']
+    
+    # medicine_names = []
+    # for med in prescription_details:
+    #     medicine_names.append(med['med_name'])
+        
+    medicine_names = [med['medicine'] for med in prescription_details]
+
+    drug_service_url = "http://127.0.0.1:5200/check-interaction"
+    drug_service_payload = {
+        'patient_id': patient_id,
+        'medicine_names': medicine_names,
+        'allergies': allergies
+    }
+    response = requests.post(drug_service_url, json=drug_service_payload)
+    
+    # response from drug service
+    drug_service_result = response.json()
+    
+    if response.status_code == 404:
+        # patient is allergic to a medicine or there are harmful interactions
+        # send message to UI to prompt the doctor to re-enter medicine details
+        error_message = drug_service_result['error']
+        return jsonify(
+            {
+                'code': 404,
+                'error': error_message
+            }
+        )
+    else:
+        # no harmful interactions, update prescription history in patient microservice
+        prescription_payload = {
+            'patient_id': patient_id,
+            # appt_datetime from homepage, hardcoded for now
+            'appt_datetime': '2023-03-11 16:30:00',
+        }
+        response = requests.put(f"{PATIENT_MICROSERVICE_URL}/update-prescription-history", json=prescription_payload)
+        prescription_id = response.json()['prescription_id']
+        
+        # update prescription_medicines table in patient microservice
+        prescription_medicines_payload = {
+            'prescription_id': prescription_id,
+            'medicine_details': prescription_details
+        }
+        response = requests.put(f"{PATIENT_MICROSERVICE_URL}/update-prescription-medicines", json=prescription_medicines_payload)
+        
+        return jsonify(
+            {
+                'code': 200,
+                'message': 'Prescription successfully added to patient history'
+            }
+        )
+    
+
+if __name__ == "__main__":
+    print("This is flask " + os.path.basename(__file__) + " for prescribing medicine...")
+    app.run(host="0.0.0.0", port=5101, debug=True)

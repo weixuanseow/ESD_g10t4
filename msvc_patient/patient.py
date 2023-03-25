@@ -295,6 +295,21 @@ def create_patient():
 #     db.session.commit()
 #     return {"message": "Patient record updated successfully"}, 200
 
+    
+@app.route('/patient/<int:patient_id>/allergies', methods=["GET"])
+def get_patient_allergies(patient_id):
+    patient = Patient.query.filter_by(patient_id=patient_id).first()
+    if patient:
+        allergies = patient.allergies or ''
+        return jsonify(allergies.split(','))
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Patient not found."
+        }
+    ), 404
+
+
 
 ###################################################################################################################
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
@@ -442,6 +457,40 @@ def check_prescription(patient_id, appt_date):
         }
     ), 404
 
+@app.route('/update-prescription-history', methods=['PUT'])
+def update_prescription_history():
+    data = request.get_json()
+    # appt_datetime need to retrieve from homepage, hardcode first
+    appt_datetime = data['appt_datetime']
+    patient_id = data['patient_id']
+    
+    prescription = Prescription(Appt_DateTime=appt_datetime, Patient_ID=patient_id)
+    db.session.add(prescription)
+    db.session.commit()
+    
+    # get prescription ID
+    prescription_id = prescription.Prescription_ID
+    return jsonify({'prescription_id': prescription_id})
+
+
+@app.route('/update-prescription-medicines', methods=['PUT'])
+def update_prescription_medicines():
+    data = request.get_json()
+    prescription_id = data['prescription_id']
+    medicines = data['medicines_details']
+    prescription_medicines = [PrescriptionMedicine(
+                                Prescription_ID=prescription_id, 
+                                medicine_name=med['medicine_name'], 
+                                frequency=med['frequency'], 
+                                amount=med['amount']) 
+                                    for med in medicines]
+    
+    db.session.add_all(prescription_medicines)
+    db.session.commit()
+    
+    return jsonify({'message': 'Prescription medicines updated successfully'})
+    
+    
 if __name__ == '__main__':
     app.run(port=5050, debug=True)
 

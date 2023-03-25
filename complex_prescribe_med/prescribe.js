@@ -25,15 +25,20 @@ function submitPrescription() {
 }
     
 // send prescription details and patient allergies to the complex microservice
-function prescribeMedicine(patientId, prescriptionDetails, allergies) {
+  function prescribeMedicine(patientId, prescriptionDetails, allergies) {
     $.post("http://127.0.0.1:5101/prescribe_medicine", {
-      patient_id: patientId,
-      prescription_details: prescriptionDetails,
-      allergies: allergies
+        patient_id: patientId,
+        prescription_details: prescriptionDetails,
+        allergies: allergies
     }).done(function(data) {
-      console.log("Prescription saved:", data);
+        console.log("Prescription saved:", data);
+        if (data.code === 404) {
+            // Display error message
+            var errorMessage = data.error;
+            $("#error-messages").html(errorMessage);
+        }
     }).fail(function(xhr, status, error) {
-      console.log("Error saving prescription:", xhr.responseText);
+        console.log("Error saving prescription:", xhr.responseText);
     });
   }
 
