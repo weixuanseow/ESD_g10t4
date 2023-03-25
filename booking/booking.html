@@ -230,7 +230,12 @@
         searchbtn.addEventListener("click",getPatient);
         function getPatient(){
             // Get patient phone number here and store in session
+            // These info should be taken from periovus page
             let pid = 000000001 // maybe pid now need get from session
+            let appt = "2023-02-20 13:00:00"
+            sessionStorage.getItem("pid",pid)
+            sessionStorage.getItem('appt',appt)
+            // 
             test_type = document.getElementById('test_type').value
             url = "http://127.0.0.1:5100/patient/" + pid
             axios.get(url)
@@ -241,9 +246,7 @@
                 let phone = data.data.phone
                 // these data needs to be used in next page , assume first page send to this page through session storage
                 sessionStorage.setItem('phone',phone)
-                sessionStorage.getItem("pid",pid)
                 sessionStorage.setItem("test_type",test_type)
-                sessionStorage.getItem('appt',appt)
                 console.log(test_type + "Test Type retrieved and "+ "patient details:" + pid + " and " + phone)
                 window.location.href="getslots.html"
 
