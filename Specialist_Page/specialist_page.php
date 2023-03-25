@@ -84,7 +84,26 @@
         <h1>Your Appointments</h1>
         <div id="appointment">
             <!--Doctors Appointments-->
-                {{create_patient_appoints_today()}}
+            <table id="appointment_table" border="2px">
+            <tr>
+                <th>
+                    <h2>Date&Time</h2>
+                </th>
+
+                <th>
+                    <h2>Patient</h2>
+                </th>
+
+                <th>
+                    <h2>Select</h2>
+                </th>
+
+            </tr>
+            <tr v-for="obj of this.something">
+                <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.appt_datetime}}</td>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.patient_id}}</td>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch)"><button class="btn btn-primary" @click="prescribe(obj.appt_datetime, obj.patient_id)">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>
+            </tr>
         </div>
     </div>
     
