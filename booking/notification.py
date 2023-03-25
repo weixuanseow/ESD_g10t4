@@ -21,9 +21,10 @@ client = Client(account_sid, auth_token)
 def send_message():
     try:
         # Get the recipient's phone number and message from the request
-        to_number = request.form.get('to_number')
+        # to_number = request.form.get('to_number')
+        to_number = "+65 9339 8831"
         message = request.form.get('message')
-
+        print(message)
         # Use the client object to send a message to the given phone number
         message = client.messages.create(
             to=to_number, # patient number
