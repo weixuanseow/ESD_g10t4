@@ -36,7 +36,7 @@ const root = Vue.createApp({
 
     },
     methods: {
-        prescribe(){
+        prescribe: () =>{
             alert("it works")
         },
         create_patient_appoints_today() {
@@ -75,7 +75,7 @@ const root = Vue.createApp({
                 apptdate = this.date_time[i-1]
                 if(apptdate.includes(todaysdate)){
                     temp = `<tr><td>`
-                    temp += this.date_time[i-1]+ `</td><td>`+ this.patients[i-1]+ `</td><td><button class="btn btn-primary" v-on:click="prescribe">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td></tr>`;
+                    temp += this.date_time[i-1]+ `</td><td>`+ this.patients[i-1]+ `</td><td><button class="btn btn-primary" @click="prescribe">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td></tr>`;
                     str += temp
                 }
             }
