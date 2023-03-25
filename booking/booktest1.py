@@ -105,9 +105,11 @@ def processBooking(booking):
                 "message": "Internal server error."
             }
         else:
-            message = "Please be reminded of your booked test at " + location + " at " + bslot
-            # Invoke the notification microservice
             print('\n\n-----Invoking notification microservice-----')
+            message = "Please be reminded of your booked test at " + location[test_type] + " at " + bslot
+            booking['message'] = message
+            print(booking)
+            # Invoke the notification microservice
             # import json
             # import pika
             # from notification import send_message
@@ -153,12 +155,18 @@ def processBooking(booking):
             #         print(f'Error receiving message: {str(e)}')
             # receive_message()
             notification_URL = "http://127.0.0.1:5008/send_message" 
-            notification_result = invoke_http(diagnostic_test_URL, method="POST", json=booking)
-            code = diagnostic_test_result["code"]
+            notification_result = invoke_http(notification_URL, method="POST", json=booking)
+            code = notification_result["code"]
             if code not in range(200, 300):
-                return  "Internal service error - Notification."
+                return jsonify({
+                        'code': 500,
+                        'message': 'Internal error - notifcation '
+                    })
             else:
-                return  "Complex microservice done."
+                return jsonify({
+                        'code': 200,
+                        'message': 'Complex microservice done'
+                    })
 
 
 
