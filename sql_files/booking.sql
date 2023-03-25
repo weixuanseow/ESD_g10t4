@@ -25,7 +25,7 @@ USE `bookings`;
 
 -- Create the bookings table
 DROP TABLE IF EXISTS `mri`;
-CREATE TABLE consultation (
+CREATE TABLE mri (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
     available BOOLEAN DEFAULT TRUE,
@@ -41,7 +41,7 @@ CREATE TABLE xray (
 );
 
 DROP TABLE IF EXISTS `ctscan`;
-CREATE TABLE physiotherapy (
+CREATE TABLE ctscan (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
     available BOOLEAN DEFAULT TRUE,
@@ -49,7 +49,7 @@ CREATE TABLE physiotherapy (
 );
 
 DROP TABLE IF EXISTS `bloodtest`;
-CREATE TABLE orthopaedics (
+CREATE TABLE bloodtest (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
     available BOOLEAN DEFAULT TRUE,
