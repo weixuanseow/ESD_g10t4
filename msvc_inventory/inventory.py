@@ -41,8 +41,8 @@ class Inventory(db.Model):
 
 # Routes
 #Update stock level/s + Return success/failure message and associated amount/s that must be topped up
-@app.route('/update_inventory/<INPUT>', methods=['PUT']) ##MINNAL: Route and input variable could be modified to be better
-def update_inventory(INPUT):
+@app.route('/update_inventory/', methods=['PUT']) ##MINNAL: Route and input variable could be modified to be better
+def update_inventory():
     data = request.get_json()
     ret_list=[]
     if data is not None:

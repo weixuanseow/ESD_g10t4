@@ -30,10 +30,17 @@ def get_medicines(patient_id,appt_date):
 #Invoke Pharmacy: Send patient prescription data, notify to dispense drug
 @app.route("/invoke_pharmacy/<patient_id>/<results>", methods=['PUT']) #WHAT shd the input be here omg... patient_id & results? but can results be a list?
 def invoke_pharmacy():
-
+    # idk what pharmacy does
     return
 
 #Invoke Inventory: Send prescription data to update inventory, receive required restocks if needed
+@app.route("/inventory/")
+def update_inventory():
+    url = f"http://127.0.0.1:5000/update_inventory/" 
+    results = invoke_http(url, method='GET')
+    print(results)
+    return results
+
 #Use AMQP: Take in required restocks, send purchase invoice to UI, get approval from UI
 
 # dispense medicine
