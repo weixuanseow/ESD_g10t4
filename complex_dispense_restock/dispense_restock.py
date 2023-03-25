@@ -28,10 +28,16 @@ def get_medicines(patient_id,appt_date):
 #but aft this i am truly lost i need to see the UI cos idk what im doing alr...
 
 #Invoke Pharmacy: Send patient prescription data, notify to dispense drug
-@app.route("/invoke_pharmacy/<patient_id>/<results>", methods=['PUT']) #WHAT shd the input be here omg... patient_id & results? but can results be a list?
-def invoke_pharmacy():
-    # idk what pharmacy does
-    return
+@app.route("/invoke_pharmacy/<patient_id>/<appt_date>", methods=['PUT'])
+def invoke_pharmacy(patient_id, appt_date):
+    pres_results = get_medicines(patient_id, appt_date)
+    url = f'http://localhost:5201/{appt_date}'
+    response = requests.post(url, json=pres_results)
+    if response.status_code == 200:
+        print('Prescription sent successfully')
+    else:
+        print('Failed to send prescription')
+
 
 #Invoke Inventory: Send prescription data to update inventory, receive required restocks if needed
 @app.route("/inventory/")
