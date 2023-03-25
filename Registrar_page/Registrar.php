@@ -19,12 +19,15 @@
     <!-- bootstrap css -->
     <link href="/css/main.min.css" rel="stylesheet">
 
-    <!-- external js file -->
-    <script type="module" src="#"></script>
+    <!-- external js file
+    <script type="module" src="#"></script> -->
 
     <!-- vue script -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     
+    <!-- Axios -->
+    <script src='https://unpkg.com/axios/dist/axios.js'></script>
+
 
     <title>Login Page</title>
     
@@ -75,73 +78,21 @@
     </nav>
 
     <!--
-        Appointments
+        To Dispense
     -->
-    <h1>Your Appointments</h1>
-    <div id="appointment">
-        <!--Doctors Appointments-->
-        <!-- <table id="appointment_table" border="2px">
-            <tr>
-                <th>
-                    <h2>Date</h2>
-                </th>
-
-                <th>
-                    <h2>Time</h2>
-                </th>
-
-                <th>
-                    <h2>Patient</h2>
-                </th>
-
-                <th>
-                    <h2>Select</h2>
-                </th>
-
-            </tr> -->
-            {{create_patient_appoints_today()}}
-            <!-- <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 0900Hrs</td>
-                <td>Bryan Low Chee Theng</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1000Hrs</td>
-                <td>Tan Shan Mei</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1100Hrs</td>
-                <td>Jayme Lek Jie Min</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1200Hrs</td>
-                <td>Seow Wei Xuan</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1300Hrs</td>
-                <td>Minnal K Dhayalan</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1400Hrs</td>
-                <td>Joel Oh Kai Shun Hiroyuki</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr> -->
+    <h1 style="margin: 20px">To be Dispensed</h1>
+    <div id="dispense">
+        {{ }}
     </div>
+    
     <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
         <!-- Font Awesome JS -->
         <script src="https://kit.fontawesome.com/c7ddd7a650.js" crossorigin="anonymous"></script>
         <script src="specialist.js"></script>
         <!-- bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+
+
+
     </body>
 </html>
