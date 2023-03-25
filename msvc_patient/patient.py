@@ -369,8 +369,9 @@ def check_prescription(patient_id, appt_date):
             medicines = []
             for medicine in prescription_medicines:
                 medicines.append({
-                    "medicine_name": medicine.medicine_name,
-                    "amount": medicine.amount #is amt right not freq*amt
+                    medicine.medicine_name: medicine.amount,
+                    # "medicine_name": medicine.medicine_name,
+                    # "amount": medicine.amount #is amt right not freq*amt
                 })
             return jsonify({
                 "code": 250, #random number can change

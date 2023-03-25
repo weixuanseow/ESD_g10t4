@@ -28,6 +28,26 @@ def get_medicines(patient_id,appt_date):
         inventory_url = f"http://127.0.0.1:5000/update_inventory/"
         inventory_results = invoke_http(inventory_url, method='PUT', json=medicines_data)
         print(inventory_results)
+
+        # Call the /update_inventory endpoint in inventory.py and pass the medicine data as input
+        inventory_url = f"http://127.0.0.1:5000/update_inventory/"
+        inventory_results = invoke_http(inventory_url, method='PUT', json=medicines_data)
+        print(inventory_results)
+
+        # Send the inventory_results to a queue
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        channel = connection.channel()
+
+        channel.queue_declare(queue='inventory_results')
+
+        channel.basic_publish(exchange='',
+                            routing_key='inventory_results',
+                            body=str(inventory_results))
+
+        print("Sent inventory_results to queue")
+
+        connection.close()
+
         return inventory_results
     
     return prescription_results
