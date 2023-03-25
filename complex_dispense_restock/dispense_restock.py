@@ -4,14 +4,37 @@ from invokes import invoke_http #Used for the invocation of other microservices
 
 import os, sys
 import amqp_setup
-import pika
+import pika ##MINNAL: Why is this underlined omg...
 import json
+import requests ##MINNAL: If needed ya.. i j put first...
 
 app = Flask(__name__)
 CORS(app)
 
-pharmacy_URL = "http://localhost:5201/pharmacy/<string:appt_datetime>"
-inventory_URL = "http://localhost:5200/inventory/create_order" #is it i get my data from inventory through routing 
+#maybe the URLs can be defined inside the function like whats in the Invoke Patient route? then the variables easier? idk...
+pharmacy_URL = "http://localhost:5201/pharmacy/<string:appt_datetime>" 
+inventory_URL = "http://localhost:5200/inventory/create_order" #Jayme: is it i get my data from inventory through routing 
+order_URL = "http://localhost:5000/inventory" # (????????) 
+
+#Routes
+
+#Invoke Patient: Obtain patient prescription data
+@app.route("/get_medicines/<patient_id>/<appt_date>", methods=['GET'])
+def get_medicines(patient_id,appt_date):
+    url = f"http://127.0.0.1:5000/check_prescription/{patient_id}/{appt_date}"
+    results = invoke_http(url, method='GET')
+    print(results)  # Print the results variable
+    return results
+#but aft this i am truly lost i need to see the UI cos idk what im doing alr...
+
+#Invoke Pharmacy: Send patient prescription data, notify to dispense drug
+@app.route("/invoke_pharmacy/<patient_id>/<results>", methods=['PUT']) #WHAT shd the input be here omg... patient_id & results? but can results be a list?
+def invoke_pharmacy():
+
+    return
+
+#Invoke Inventory: Send prescription data to update inventory, receive required restocks if needed
+#Use AMQP: Take in required restocks, send purchase invoice to UI, get approval from UI
 
 # dispense medicine
 
@@ -29,7 +52,10 @@ def create_order():
             result = processPlaceOrder(order)
             print('\n------------------------')
             print('\nresult: ', result)
-            return jsonify(result), result["code"]
+            return jsonify({
+                "code": result["code"],
+                "data": result
+                })
 
         except Exception as e:
             # Unexpected error in code
@@ -109,7 +135,7 @@ def processPlaceOrder(order):
     
     order_result = invoke_http(
         inventory_URL, method="POST", json=order_result['data'])
-    print("shipping_result:", shipping_result, '\n')
+    print("shipping_result:", shipping_result, '\n') ##MINNAL: Define shipping_result?
 
     # Check the shipping result;
     # if a failure, send it to the error microservice.
