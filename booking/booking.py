@@ -32,7 +32,7 @@ class VisitType(db.Model):
     name = db.Column(db.String(50))
 
 
-class Mri(db.Model):
+class mri(db.Model):
     __tablename__ = 'mri'
 
 
@@ -51,7 +51,7 @@ class Mri(db.Model):
     def json(self):
         return {"bid": self.bid, "slot": self.slot, "available": self.available, 'pid':self.pid}
 
-class Xray(db.Model):
+class xray(db.Model):
     __tablename__ = 'xray'
 
 
