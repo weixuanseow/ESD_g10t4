@@ -5,51 +5,49 @@ const root = Vue.createApp({
     data() {
         return {
 
-            something: [],
+            something: {},
 
             // Suppose this is a very large array
-            date_time: [
-                '23/03/23 0900HRS',
-                '23/03/23 1000HRS',
-                '23/03/23 1100HRS',
-                '23/03/23 1200HRS',
-                '23/03/23 1300HRS'
-            ],
-            patients: [
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-            ],
-            rows: [
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-            ],
+            date_time: [],
 
+            patients: [],
 
+            rows: [],
+
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+
+            datetosearch: '',
         }
     },
     mounted() {
         let appt = "2023-02-20 13:00:00"
-        url = "http://127.0.0.1:5100/patient/000000001"
+        url = "http://127.0.0.1:5010/find_by_date/1"
         axios.get(url)
-        .then(response =>(this.something = response.data.phone))
+        .then(response =>(this.something = response.data.data.bookings))
+        date = new Date()
+        day = date.getDate()
+        month = this.months[date.getMonth()]
+        year = date.getFullYear()
+        console.log(month)
+        console.log(day)
+        console.log(year)
+        this.datetosearch += '11 Mar 2023' // put back to: day + ' ' + month + ' ' + year
+
     },
-
     methods: {
-
-        // say_hello() {
-        //     console.log("=== [START] say_hello() ===")
-        //     console.log("=== [END] say_hello() ===")
-        //     return Date.now()
-        // },
-
         create_patient_appoints_today() {
             console.log("=== [START] create_patient_appoints_today() ===")
+
+            for(obj in this.something){
+                console.log(this.something[obj])
+                this.date_time.push(this.something[obj].appt_datetime)
+                this.patients.push(this.something[obj].patient_id)
+            }
+
+
+
+            console.log(this.date_time[0])
+
             let str = `
             <table id="appointment_table" border="2px">
             <tr>
@@ -68,10 +66,14 @@ const root = Vue.createApp({
             </tr>
             `
 
-            for(let i = 1; i <= this.rows.length; i++) {
-                temp = `<tr><td>`
-                temp += this.date_time[i-1]+ `</td><td>`+ this.patients[i-1]+ `</td><td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td></tr>`;
-                str += temp
+            for(let i = 1; i <= this.something.length; i++) {
+                todaysdate = this.datetosearch
+                apptdate = this.date_time[i-1]
+                if(apptdate.includes(todaysdate)){
+                    temp = `<tr><td>`
+                    temp += this.date_time[i-1]+ `</td><td>`+ this.patients[i-1]+ `</td><td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td></tr>`;
+                    str += temp
+                }
             }
             str += `</table>`
             console.log(document.getElementById('appointment'))
