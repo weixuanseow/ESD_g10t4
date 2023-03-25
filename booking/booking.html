@@ -22,7 +22,7 @@
     <!-- local css -->
     <!-- <link rel="stylesheet" href="../css/specialistpage.css"> -->
     <link rel="stylesheet" href="../css/general.css">
-    <link rel="stylesheet" href="../bookimg/booking.css">
+    <link rel="stylesheet" href="../booking/booking.css">
 
   </head>
 <body class="u-body u-xl-mode d-flex flex-column min-vh-100">
@@ -231,19 +231,21 @@
         function getPatient(){
             // Get patient phone number here and store in session
             // These info should be taken from periovus page
-            let pid = 000000001 // maybe pid now need get from session
+            let pid = 1// maybe pid now need get from session
             let appt = "2023-02-20 13:00:00"
             sessionStorage.setItem("pid",pid)
             sessionStorage.setItem('appt',appt)
             // 
             test_type = document.getElementById('test_type').value
-            url = "http://127.0.0.1:5100/patient/" + pid
+            url = "http://127.0.0.1:5050/patient/" + pid
+            console.log(url)
             axios.get(url)
             .then(response =>{
                 data = response.data
                 console.log(data)
                 //storing pid, phone and visit_type in session
-                let phone = data.data.phone
+                let phone = data.data.phone_num
+                console.log(phone)
                 // these data needs to be used in next page , assume first page send to this page through session storage
                 sessionStorage.setItem('phone',phone)
                 sessionStorage.setItem("test_type",test_type)

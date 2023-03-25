@@ -70,17 +70,17 @@
           </div>
       </nav>
     
-    <h1 class="my-5 mx-3">Book a Test Appointment</h1>
+    <div class="my-5 mx-3" id="headertext"></div>
     <div class = "container px-5 mx-auto" id="main-container">
     <div class = "row border rounded text-center pt-2"> 
         <div class = "col" id="pid"></div>
         <div class = "col" id="phone"></div>
+        <hr>
     </div>
 
         <table class="table my-4">
             <thead>
               <tr>
-                <tr><th rowspan = "3" id =""></th></tr>
                 <th scope="col">Booking ID</th>
                 <th scope="col">Available Slots</th>
                 <th scope="col"></th>
@@ -103,8 +103,9 @@
 
     <script>
         // display patient details
-        $('#phone').append("<p>Phone: "+ sessionStorage.getItem('phone')+ "<p>")
-        $('#pid').append("<p>Patient ID: "+ sessionStorage.getItem('pid')+ "<p>")
+        $('#headertext').append("<h1>Book a "+ sessionStorage.getItem('test_type')+ " test</h1>")
+        $('#phone').append("<p>Phone: "+ sessionStorage.getItem('phone')+ "</p>")
+        $('#pid').append("<p>Patient ID: "+ sessionStorage.getItem('pid')+ "</p>")
         // Helper function to display error message
         function showError(message) {
             // Hide the table and button in the event of error
