@@ -57,10 +57,10 @@ CREATE TABLE orthopaedics (
 );
 
 -- Create an index on the slot column for faster querying
-CREATE INDEX slot_index ON consultation (slot);
+CREATE INDEX slot_index ON mri (slot);
 CREATE INDEX slot_index ON xray (slot);
-CREATE INDEX slot_index ON physiotherapy (slot);
-CREATE INDEX slot_index ON orthopaedics (slot);
+CREATE INDEX slot_index ON ctscan (slot);
+CREATE INDEX slot_index ON bloodtest (slot);
 
 -- Create a stored procedure to check for available slots
 DROP PROCEDURE IF EXISTS get_available_slots;
