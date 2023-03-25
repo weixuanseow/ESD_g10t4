@@ -14,7 +14,7 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 
 # Find Drug to be restocked (From DispenseAndRestock MS -> Inventory MS)
-exchangename="find_drug"
+exchangename="drug_to_restock"
 exchangetype="direct"
 channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, durable=True)
 
@@ -22,7 +22,7 @@ channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, dura
 #declare Approve Order queue
 queue_name = 'approve_order'
 channel.queue_declare(queue=queue_name, durable=True) 
-channel.queue_bind(exchange="find_drug", queue="approve_order", routing_key='order.exchange') 
+channel.queue_bind(exchange="drug_to_restock", queue="approve_order", routing_key='') 
 
 
 def check_setup():

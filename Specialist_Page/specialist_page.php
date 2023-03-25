@@ -80,17 +80,14 @@
     <!--
         Appointments
     -->
-    <h1>Your Appointments</h1>
-    <div id="appointment">
-        <!--Doctors Appointments-->
-        <!-- <table id="appointment_table" border="2px">
+    <div>
+        <h1>Your Appointments</h1>
+        <div id="appointment">
+            <!--Doctors Appointments-->
+            <table id="appointment_table" border="2px">
             <tr>
                 <th>
-                    <h2>Date</h2>
-                </th>
-
-                <th>
-                    <h2>Time</h2>
+                    <h2>Date&Time</h2>
                 </th>
 
                 <th>
@@ -101,45 +98,15 @@
                     <h2>Select</h2>
                 </th>
 
-            </tr> -->
-            {{create_patient_appoints_today()}}
-            <!-- <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 0900Hrs</td>
-                <td>Bryan Low Chee Theng</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>
             </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1000Hrs</td>
-                <td>Tan Shan Mei</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
+            <tr v-for="obj of this.something">
+                <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.appt_datetime}}</td>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.patient_id}}</td>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch)"><button class="btn btn-primary" @click="prescribe(obj.appt_datetime, obj.patient_id)">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>
             </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1100Hrs</td>
-                <td>Jayme Lek Jie Min</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1200Hrs</td>
-                <td>Seow Wei Xuan</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1300Hrs</td>
-                <td>Minnal K Dhayalan</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr>
-            <tr>
-                <td>Wednesday,15 March 2023</td>
-                <td> 1400Hrs</td>
-                <td>Joel Oh Kai Shun Hiroyuki</td>
-                <td><button class="btn btn-primary">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>                
-            </tr> -->
+        </div>
     </div>
+    
     <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
         <!-- Font Awesome JS -->
         <script src="https://kit.fontawesome.com/c7ddd7a650.js" crossorigin="anonymous"></script>

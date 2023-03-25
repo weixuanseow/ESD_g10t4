@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescribe med</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Prescription Form</h1>
+    <form id="prescription">
+        <label for="patient-id">Patient ID:</label>
+        <input type="text" id="patient-id" name="patient-id"><br>
+      
+        <div id="medicine-fields">
+          <div class="medicine-field">
+            <label for="medicine-1">Medicine:</label>
+            <input type="text" id="medicine-1" name="medicine[]"><br>
+      
+            <label for="frequency-1">Frequency:</label>
+            <input type="text" id="frequency-1" name="frequency[]"><br>
+      
+            <label for="amount-1">Amount:</label>
+            <input type="text" id="amount-1" name="amount[]"><br>
+          </div>
+        </div>
+      
+        <input type="button" value="Add Medicine" onclick="addMedicineFields()">
+        <input type="button" value="Submit" onclick="submitPrescription()">
+      </form>
+
+
+
+      <script>
+        var medicineCount = 1;
+
+        function addMedicineFields() {
+          medicineCount++;
+      
+          var medicineFields = document.getElementById("medicine-fields");
+      
+          var medicineField = document.createElement("div");
+          medicineField.className = "medicine-field";
+      
+          var medicineLabel = document.createElement("label");
+          medicineLabel.htmlFor = "medicine-" + medicineCount;
+          medicineLabel.innerHTML = "Medicine " + medicineCount + ":";
+      
+          var medicineInput = document.createElement("input");
+          medicineInput.type = "text";
+          medicineInput.id = "medicine-" + medicineCount;
+          medicineInput.name = "medicine[]";
+      
+          var frequencyLabel = document.createElement("label");
+          frequencyLabel.htmlFor = "frequency-" + medicineCount;
+          frequencyLabel.innerHTML = "Frequency " + medicineCount + ":";
+      
+          var frequencyInput = document.createElement("input");
+          frequencyInput.type = "text";
+          frequencyInput.id = "frequency-" + medicineCount;
+          frequencyInput.name = "frequency[]";
+      
+          var amountLabel = document.createElement("label");
+          amountLabel.htmlFor = "amount-" + medicineCount;
+          amountLabel.innerHTML = "Amount " + medicineCount + ":";
+      
+          var amountInput = document.createElement("input");
+          amountInput.type = "text";
+          amountInput.id = "amount-" + medicineCount;
+          amountInput.name = "amount[]";
+      
+          medicineField.appendChild(medicineLabel);
+          medicineField.appendChild(medicineInput);
+          medicineField.appendChild(document.createElement("br"));
+          medicineField.appendChild(frequencyLabel);
+          medicineField.appendChild(frequencyInput);
+          medicineField.appendChild(document.createElement("br"));
+          medicineField.appendChild(amountLabel);
+          medicineField.appendChild(amountInput);
+      
+          medicineFields.appendChild(medicineField);
+        }
+      </script>
+  <script src="./prescribe.js"></script>
+</body>
+</html>
