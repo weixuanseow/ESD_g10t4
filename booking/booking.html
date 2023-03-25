@@ -38,7 +38,7 @@
                 <div class="col my-auto">
                     <form method="GET" >
                         <h4>
-                            BOOK A TEST
+                            BOOK A TEST (Select Test Type)
                         </h4>
                     </form>
                 </div>
@@ -76,23 +76,18 @@
 
     <form>
         <h3 class="my-3">Select Test:</h3>
-        <input type="radio" id="X-ray" name="selected_test" value="HTML" style="margin: 1%">
-        <label for="X-ray" style="margin: 1%">X-ray</label>
-
-        <input type="radio" id="MRI" name="selected_test" value="CSS" style="margin: 1%">
-        <label for="MRI" style="margin: 1%">MRI</label>
-
-        <input type="radio" id="ctscan" name="selected_test" value="ctscan" style="margin: 1%">
-        <label for="ctscan" style="margin: 1%">CT-scan</label>
-
-        <input type="radio" id="bloodtest" name="selected_test" value="bloodtest" style="margin: 1%">
-        <label for="bloodtest" style="margin: 1%">Blood Test</label>
+        <select class="form-control my-3" id="test_type">
+            <option selected value="xray">X-ray</option>
+            <option value="mri">MRI</option>
+            <option value="ctscan">CT-Scan</option>
+            <option value ="bloodtest">Blood Test</option>
+        </select>
     </form>
 
     <!--Input Patient ID-->
 
-    <h3 class="my-4">Enter patient ID:</h3>
-    <input id="pid" class="form-control form-control-lg my-3" type="text" placeholder="Patient ID">
+    <!-- <h3 class="my-4">Enter patient ID:</h3>
+    <input id="pid" class="form-control form-control-lg my-3" type="text" placeholder="Patient ID"> -->
 
 
         <!-- <select class="form-control my-3" id="visit_type">
@@ -102,7 +97,7 @@
             <option value ="orthopaedics">Orthopaedics</option>
         </select> -->
 
-    <!--Select Time Slot-->
+    <!-- Select Time Slot
     <h3 class="my-3">Select Timeslot:</h3>
     <div class="my-3">
         <select id="timeslot" class="my-3">
@@ -122,11 +117,11 @@
     
     <div class="my-3">
         <input name="setTodaysDate" type="date">
-    </div>
+    </div> -->
 
     <button id="search" class="btn btn-outline-primary px-5 my-3" >Search</button>
     
-
+<!-- 
 
 
     <table class="table-bordered my-3" id="avail">
@@ -224,19 +219,24 @@
             <td></td>
 
         </tr>
-    </table>
+    </table> -->
         
 
     <script>
-        var today = new Date().toISOString().split('T')[0];
-        document.getElementsByName("setTodaysDate")[0].setAttribute('min', today);
+        // var today = new Date().toISOString().split('T')[0];
+        // document.getElementsByName("setTodaysDate")[0].setAttribute('min', today);
 
         let searchbtn = document.getElementById("search")
         searchbtn.addEventListener("click",getPatient);
         function getPatient(){
             // Get patient phone number here and store in session
-            pid = document.getElementById('pid').value
-            visit_type = document.getElementById('visit_type').value
+            // These info should be taken from periovus page
+            let pid = 000000001 // maybe pid now need get from session
+            let appt = "2023-02-20 13:00:00"
+            sessionStorage.getItem("pid",pid)
+            sessionStorage.getItem('appt',appt)
+            // 
+            test_type = document.getElementById('test_type').value
             url = "http://127.0.0.1:5100/patient/" + pid
             axios.get(url)
             .then(response =>{
@@ -244,10 +244,10 @@
                 console.log(data)
                 //storing pid, phone and visit_type in session
                 let phone = data.data.phone
+                // these data needs to be used in next page , assume first page send to this page through session storage
                 sessionStorage.setItem('phone',phone)
-                sessionStorage.setItem("pid",pid)
-                sessionStorage.setItem("visit_type",visit_type)
-                console.log(visit_type + "Visit Type retrieved and "+ "patient details:" + pid + " and " + phone)
+                sessionStorage.setItem("test_type",test_type)
+                console.log(test_type + "Test Type retrieved and "+ "patient details:" + pid + " and " + phone)
                 window.location.href="getslots.html"
 
             })

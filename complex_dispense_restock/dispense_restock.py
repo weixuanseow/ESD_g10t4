@@ -11,11 +11,6 @@ import requests ##MINNAL: If needed ya.. i j put first...
 app = Flask(__name__)
 CORS(app)
 
-#maybe the URLs can be defined inside the function like whats in the Invoke Patient route? then the variables easier? idk...
-pharmacy_URL = "http://localhost:5201/pharmacy/<string:appt_datetime>" 
-inventory_URL = "http://localhost:5200/inventory/create_order" #Jayme: is it i get my data from inventory through routing 
-order_URL = "http://localhost:5000/inventory" # (????????) 
-
 #Routes
 
 #Invoke Patient: Obtain patient prescription data
@@ -28,13 +23,52 @@ def get_medicines(patient_id,appt_date):
 #but aft this i am truly lost i need to see the UI cos idk what im doing alr...
 
 #Invoke Pharmacy: Send patient prescription data, notify to dispense drug
-@app.route("/invoke_pharmacy/<patient_id>/<results>", methods=['PUT']) #WHAT shd the input be here omg... patient_id & results? but can results be a list?
-def invoke_pharmacy():
+@app.route("/invoke_pharmacy/<patient_id>/<appt_date>", methods=['PUT'])
+def invoke_pharmacy(patient_id, appt_date):
+    pres_results = get_medicines(patient_id, appt_date)
+    url = f'http://localhost:5201/{appt_date}'
+    response = requests.post(url, json=pres_results)
+    if response.status_code == 200:
+        print('Prescription sent successfully')
+    else:
+        print('Failed to send prescription')
 
-    return
 
 #Invoke Inventory: Send prescription data to update inventory, receive required restocks if needed
+@app.route("/inventory/")
+def update_inventory():
+    url = f"http://127.0.0.1:5000/update_inventory/" 
+    results = invoke_http(url, method='GET')
+    print(results)
+    return results
+
 #Use AMQP: Take in required restocks, send purchase invoice to UI, get approval from UI
+
+def approve_order():
+    print("=====================================dispense_restock.py - approve order function=====================")
+
+    amqp_setup.check_setup()
+    drug_name = request.json.get(data, None)
+    topup_amt = request.json.get('customer_email', None)
+    
+    print("drug name---",drug_name)
+    print("top up amount",topup_amt)
+
+    #Invoke inventory MS to retrieve drug topup details
+    msg_content = json.dumps({
+        "topup_details":
+            {
+            "drug_name": customer_name, 
+            "payment_link": payment_link
+            }
+    })
+
+    amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= msg_content, properties=pika.BasicProperties(delivery_mode=2))
+    return jsonify({
+        "code": 201,
+        "message": "Payment Email Sent Successfully"
+        }
+    ), 201
 
 # dispense medicine
 
@@ -74,41 +108,41 @@ def create_order():
     # if drug_full_name.current_amt<=drug_full_name.threshold_amt:
     #     order.append((drug_full_name, drug_full_name.topup_amt))
         
-def processPlaceOrder(order):
-    # 2. Send the order info {cart items}
-    # Invoke the order microservice
-    print('\n-----Invoking order microservice-----')
-    order_result = invoke_http(order_URL, method='POST', json=order)
-    print('order_result:', order_result)
+# def processPlaceOrder(order):
+#     # 2. Send the order info {cart items}
+#     # Invoke the order microservice
+#     print('\n-----Invoking order microservice-----')
+#     order_result = invoke_http(order_URL, method='POST', json=order)
+#     print('order_result:', order_result)
   
-    # Check the order result; if a failure, send it to the error microservice.
-    code = order_result["code"]
-    message = json.dumps(order_result)
+#     # Check the order result; if a failure, send it to the error microservice.
+#     code = order_result["code"]
+#     message = json.dumps(order_result)
 
-    amqp_setup.check_setup()
+#     amqp_setup.check_setup()
 
-    if code not in range(200, 300):
-        # Inform the error microservice
-        #print('\n\n-----Invoking error microservice as order fails-----')
-        print('\n\n-----Publishing the (order error) message with routing_key=order.error-----')
+#     if code not in range(200, 300):
+#         # Inform the error microservice
+#         #print('\n\n-----Invoking error microservice as order fails-----')
+#         print('\n\n-----Publishing the (order error) message with routing_key=order.error-----')
 
-        # invoke_http(error_URL, method="POST", json=order_result)
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.error", 
-            body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
-        # make message persistent within the matching queues until it is received by some receiver 
-        # (the matching queues have to exist and be durable and bound to the exchange)
+#         # invoke_http(error_URL, method="POST", json=order_result)
+#         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.error", 
+#             body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
+#         # make message persistent within the matching queues until it is received by some receiver 
+#         # (the matching queues have to exist and be durable and bound to the exchange)
 
-        # - reply from the invocation is not used;
-        # continue even if this invocation fails        
-        print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(
-            code), order_result)
+#         # - reply from the invocation is not used;
+#         # continue even if this invocation fails        
+#         print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(
+#             code), order_result)
 
-        # 7. Return error
-        return {
-            "code": 500,
-            "data": {"order_result": order_result},
-            "message": "Order creation failure sent for error handling."
-        }
+#         # 7. Return error
+#         return {
+#             "code": 500,
+#             "data": {"order_result": order_result},
+#             "message": "Order creation failure sent for error handling."
+#         }
 
     # Notice that we are publishing to "Activity Log" only when there is no error in order creation.
     # In http version, we first invoked "Activity Log" and then checked for error.
@@ -174,33 +208,7 @@ def processPlaceOrder(order):
 
 # notify registrar to approve draft order
 # part with fire and forget, uses the same data from create order
-@app.route("/approve_order",methods=['GET'])
-def approve_order():
-    print("======================================prepare_order.py - approve order function=====================")
 
-    amqp_setup.check_setup()
-    drug_name = request.json.get('payment_url', None)
-    topup_amt = request.json.get('customer_email', None)
-    
-    print("drug name---",drug_name)
-    print("top up amount",topup_amt)
-
-    #Invoke inventory MS to retrieve drug topup details
-    msg_content = json.dumps({
-        "customer_details":
-            {
-            "customer_name": customer_name, 
-            "customer_email": customer_email,
-            "payment_link": payment_link
-            }
-    })
-
-    amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= msg_content, properties=pika.BasicProperties(delivery_mode=2))
-    return jsonify({
-        "code": 201,
-        "message": "Payment Email Sent Successfully"
-        }
-    ), 201
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " for placing an order...")

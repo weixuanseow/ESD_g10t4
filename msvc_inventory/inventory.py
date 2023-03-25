@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 cursor = db.cursor()
 
 #dispense_restock_URL = "http://localhost:5202"
-dispense_restock_url = "http://localhost:5000/update_inventory"
+dispense_restock_url = "http://localhost:5200/update_inventory"
 ##actually now i am worried if this is in the right place shd this be in the UI instead or sth
 
 # Models
@@ -41,8 +41,8 @@ class Inventory(db.Model):
 
 # Routes
 #Update stock level/s + Return success/failure message and associated amount/s that must be topped up
-@app.route('/update_inventory/<INPUT>', methods=['PUT']) ##MINNAL: Route and input variable could be modified to be better
-def update_inventory(INPUT):
+@app.route('/update_inventory/', methods=['PUT']) ##MINNAL: Route and input variable could be modified to be better
+def update_inventory():
     data = request.get_json()
     ret_list=[]
     if data is not None:

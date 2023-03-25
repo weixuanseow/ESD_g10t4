@@ -24,8 +24,8 @@ CREATE DATABASE IF NOT EXISTS `bookings` DEFAULT CHARACTER SET utf8 COLLATE utf8
 USE `bookings`;
 
 -- Create the bookings table
-DROP TABLE IF EXISTS `consultation`;
-CREATE TABLE consultation (
+DROP TABLE IF EXISTS `mri`;
+CREATE TABLE mri (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
     available BOOLEAN DEFAULT TRUE,
@@ -40,16 +40,16 @@ CREATE TABLE xray (
     pid INT
 );
 
-DROP TABLE IF EXISTS `physiotherapy`;
-CREATE TABLE physiotherapy (
+DROP TABLE IF EXISTS `ctscan`;
+CREATE TABLE ctscan (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
     available BOOLEAN DEFAULT TRUE,
     pid INT
 );
 
-DROP TABLE IF EXISTS `orthopaedics`;
-CREATE TABLE orthopaedics (
+DROP TABLE IF EXISTS `bloodtest`;
+CREATE TABLE bloodtest (
     bid INT AUTO_INCREMENT PRIMARY KEY,
     slot DATETIME NOT NULL,
     available BOOLEAN DEFAULT TRUE,
@@ -57,10 +57,10 @@ CREATE TABLE orthopaedics (
 );
 
 -- Create an index on the slot column for faster querying
-CREATE INDEX slot_index ON consultation (slot);
+CREATE INDEX slot_index ON mri (slot);
 CREATE INDEX slot_index ON xray (slot);
-CREATE INDEX slot_index ON physiotherapy (slot);
-CREATE INDEX slot_index ON orthopaedics (slot);
+CREATE INDEX slot_index ON ctscan (slot);
+CREATE INDEX slot_index ON bloodtest (slot);
 
 -- Create a stored procedure to check for available slots
 DROP PROCEDURE IF EXISTS get_available_slots;
@@ -91,10 +91,10 @@ DROP PROCEDURE IF EXISTS delete_expired_bookings;
 DELIMITER //
 CREATE PROCEDURE delete_expired_bookings()
 BEGIN
-    DELETE FROM consultation;
+    DELETE FROM mri;
     DELETE FROM xray;
-    DELETE FROM physiotherapy;
-    DELETE FROM orthopaedics;
+    DELETE FROM ctscan;
+    DELETE FROM bloodtest;
 END //
 DELIMITER ;
 
@@ -122,7 +122,7 @@ BEGIN
   SET the_start = start_time;
   SET the_end = the_start + INTERVAL 30 MINUTE;
   WHILE num_slots > 0 DO
-    INSERT INTO consultation (slot)
+    INSERT INTO mri (slot)
     VALUES (the_start);
     SET the_start = the_end;
     SET the_end = the_start + INTERVAL 30 MINUTE;
@@ -144,7 +144,7 @@ BEGIN
   SET the_start = start_time;
   SET the_end = the_start + INTERVAL 30 MINUTE;
     WHILE num_slots > 0 DO
-    INSERT INTO physiotherapy (slot)
+    INSERT INTO ctscan (slot)
     VALUES (the_start);
     SET the_start = the_end;
     SET the_end = the_start + INTERVAL 30 MINUTE;
@@ -155,7 +155,7 @@ BEGIN
   SET the_start = start_time;
   SET the_end = the_start + INTERVAL 30 MINUTE;
     WHILE num_slots > 0 DO
-    INSERT INTO orthopaedics (slot)
+    INSERT INTO bloodtest (slot)
     VALUES (the_start);
     SET the_start = the_end;
     SET the_end = the_start + INTERVAL 30 MINUTE;
