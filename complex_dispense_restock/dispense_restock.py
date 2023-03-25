@@ -14,6 +14,43 @@ CORS(app)
 #Routes
 
 #Get Prescriptions
+# @app.route("/get_medicines/", methods=['GET'])
+# def get_medicines():
+#     data = request.get_json()
+#     for key,value in data.items():
+#         patient_id=key
+#         appt_date=value
+
+#     url = f"http://127.0.0.1:5050/check_prescription/{patient_id}/{appt_date}"
+#     prescription_results = invoke_http(url, method='GET')
+#     ###print (prescription_results)
+    
+#     if prescription_results['code'] == 250:
+#         # Extract the medicine data from the prescription results
+#         medicines_data = prescription_results['data']
+        
+#         # Call the /update_inventory endpoint in inventory.py and pass the medicine data as input
+#         inventory_url = f"http://127.0.0.1:5000/update_inventory/"
+#         inventory_results = invoke_http(inventory_url, method='PUT', json=medicines_data)
+#         ###print(inventory_results)
+
+#         # Send the inventory_results to a queue
+#         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+#         channel = connection.channel()
+
+#         channel.queue_declare(queue='inventory_results')
+
+#         channel.basic_publish(exchange='',
+#                             routing_key='inventory_results',
+#                             body=str(inventory_results))
+
+#         print("Sent inventory_results to queue")
+
+#         connection.close()
+#         ###print('i am printing inventory')
+    
+#     return prescription_results # will be displayed on UI
+
 @app.route("/get_medicines/", methods=['GET'])
 def get_medicines():
     data = request.get_json()
@@ -21,9 +58,9 @@ def get_medicines():
         patient_id=key
         appt_date=value
 
-    url = f"http://127.0.0.1:5000/check_prescription/{patient_id}/{appt_date}"
+    url = f"http://127.0.0.1:5050/check_prescription/{patient_id}/{appt_date}"
     prescription_results = invoke_http(url, method='GET')
-    print(prescription_results)
+    ###print (prescription_results)
     
     if prescription_results['code'] == 250:
         # Extract the medicine data from the prescription results
@@ -32,26 +69,23 @@ def get_medicines():
         # Call the /update_inventory endpoint in inventory.py and pass the medicine data as input
         inventory_url = f"http://127.0.0.1:5000/update_inventory/"
         inventory_results = invoke_http(inventory_url, method='PUT', json=medicines_data)
-        print(inventory_results)
+        ###print(inventory_results)
 
         # Send the inventory_results to a queue
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-        channel = connection.channel()
+        print("=====================================dispense_restock.py - approve order function=====================")
 
-        channel.queue_declare(queue='inventory_results')
+        amqp_setup.check_setup()
+        print ('setup')
+        # for drug in inventory_results:
+        #     for drug_name, topup_amt in drug.items():
+        #         print("drug name---",drug_name)
+        #         print("top up amount",topup_amt)
 
-        channel.basic_publish(exchange='',
-                            routing_key='inventory_results',
-                            body=str(inventory_results))
 
-        print("Sent inventory_results to queue")
-
-        connection.close()
-
-        return inventory_results
+        amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= inventory_results, properties=pika.BasicProperties(delivery_mode=2))
+        print('channel')
     
     return prescription_results # will be displayed on UI
-
 
 #Send AMQP to UI # invoice only
 
@@ -87,32 +121,6 @@ def get_medicines():
 #     return results
 
 
-# def approve_order():
-#     print("=====================================dispense_restock.py - approve order function=====================")
-
-#     amqp_setup.check_setup()
-#     drug_name = request.json.get('drug_name', None)
-#     topup_amt = request.json.get('qty', None)
-    
-#     print("drug name---",drug_name)
-#     print("top up amount",topup_amt)
-
-#     #Invoke inventory MS to retrieve drug topup details
-#     msg_content = json.dumps({
-#         "topup_details":
-#             {
-#             "drug_name": drug_name, 
-#             "topup_amount": topup_amt
-#             }
-#     })
-
-#     amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= msg_content, properties=pika.BasicProperties(delivery_mode=2))
-#     return jsonify({
-#         "code": 201,
-#         "message": "Approval Message Sent Successfully"
-#         }
-#     ), 201
-
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) + " for placing an order...")
-    app.run(host="0.0.0.0", port=5202, debug=True)
+    print("This is flask " + os.path.basename(__file__) + " for dispensing medicine...")
+    app.run(host="0.0.0.0", port=5203, debug=True)

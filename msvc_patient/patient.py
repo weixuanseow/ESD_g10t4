@@ -420,22 +420,27 @@ def check_prescription(patient_id, appt_date):
     if prescription:
         prescription_medicines = PrescriptionMedicine.query.filter_by(prescription_id=prescription.prescription_id).all()
         if prescription_medicines:
-            medicines = []
+            medicines = {}
             for medicine in prescription_medicines:
-                medicines.append({
-                    medicine.medicine_name: medicine.amount,
+                medicines[medicine.medicine_name]= medicine.amount,
                     # "medicine_name": medicine.medicine_name,
                     # "amount": medicine.amount #is amt right not freq*amt
-                })
-            return jsonify({
-                "code": 250, #random number can change
-                "data": medicines,
-                "message": "Prescription created for this patient on this appointment date has been found."
-            })
-    return jsonify({
-        "code": 404,
-        "message": "There was no prescription found for this patient on this appointment date."
-    }), 404
+                
+            print('code 250')
+            return jsonify(
+                {
+                    "code": 250, #random number can change
+                    "data": medicines,
+                    "message": "Prescription created for this patient on this appointment date has been found."
+                }
+            ), 250
+    print('code 404')
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There was no prescription found for this patient on this appointment date."
+        }
+    ), 404
 
 if __name__ == '__main__':
     app.run(port=5050, debug=True)
