@@ -45,10 +45,10 @@ def get_medicines(patient_id,appt_date):
 
         return inventory_results
     
-    return prescription_results
+    return prescription_results # will be displayed on UI
 
 
-#Send AMQP to UI
+#Send AMQP to UI # invoice only
 
 
 
