@@ -1,11 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from invokes import invoke_http
-
+from twilio.rest import Client
 
 import os, sys
-# import amqp_setup
-# import pika
+import amqp_setup
+import pika
 import json
 import requests
 
@@ -55,6 +55,14 @@ def processBooking(booking):
     phone = booking['phone']
     visit_type = booking['visit_type']
     bid = booking['bid']
+    slot = booking['slot']
+
+    location ={
+        "consultation": "Room A",
+        "xray": "Room B",
+        "physiotherapy": "Room C",
+        "orthopaedics": "Room D"
+    }
 
     # Invoke the booking microservice --------------------------------------------------
     print('\n-----Invoking booking microservice-----')
@@ -73,41 +81,70 @@ def processBooking(booking):
     else:
         print("Update booking Status Successful ", booking_update_result)
         print('\n-----Invoking patient microservice-----')
-        print('\n----Update patient appointment time-----')
+        # print('\n----Update patient appointment time-----')
 
         # Record in diagnostic test ----------------------------------------------------
-        print('\n\n-----Invoking patient microservice-----')
-        diagnostic_test_URL = "http://127.0.0.1:5050/create_diagnostic_test" 
-        diagnostic_test_result = invoke_http(diagnostic_test_URL, method="POST", json=booking)
+        # print('\n\n-----Invoking patient microservice-----')
+        # diagnostic_test_URL = "http://127.0.0.1:5050/create_diagnostic_test" 
+        # diagnostic_test_result = invoke_http(diagnostic_test_URL, method="POST", json=booking)
 
-        # Check the order result; if a failure, send it to the error microservice.
-        code = diagnostic_test_result["code"]
-        if code not in range(200, 300):
-            return {
-                "code": 500,
-                "data": {"diagnostic_test_result": diagnostic_test_result},
-                "message": "Internal server error."
-            }
+        # # Check the order result; if a failure, send it to the error microservice.
+        # code = diagnostic_test_result["code"]
+        # if code not in range(200, 300):
+        #     return {
+        #         "code": 500,
+        #         "data": {"diagnostic_test_result": diagnostic_test_result},
+        #         "message": "Internal server error."
+        #     }
         # else:
             # Invoke the notification microservice
-            # send_confirmation(phone,booking)
-            # def send_confirmation(phone_number, booking_details):
-            #     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-            #     channel = connection.channel()
-            #     channel.queue_declare(queue='booking_confirmation')
-
-            #     message = {'phone_number': phone_number, 'booking_details': booking_details}
-            #     channel.basic_publish(exchange='', routing_key='booking_confirmation', body=json.dumps(message))
+        message = "Hi" + pid + ", your appointment at specialist clinic for "+ visit_type+" has been booked at " + slot + " at "+ location[visit_type] + ". Please be remineded to bring along your identification documents during registration. Thank You."
+        send_amqp_notification(to_number, message)
 
 
-            #     # invoke notification through AMQP ----------------------------------------------------
-            #     # message = json.dumps(booking)
-            #     # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.error", 
-            #     # body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
 
+def send_amqp_notification(to_number, message):
+            try:
+                # Connect to the RabbitMQ server
+                connection = pika.BlockingConnection(
+                    pika.ConnectionParameters(host='localhost')
+                )
+                channel = connection.channel()
+                # Declare the AMQP queue to send the message
+                channel.queue_declare(queue='notifications')
+                # Create the message body as a dictionary
+                message_body = {'to_number': to_number, 'message': message}
+                # Publish the message to the queue
+                channel.basic_publish(
+                    exchange='booking_exchange',
+                    # routing key specify which microservice to call 
+                    routing_key='notification',
+                    body=json.dumps(message_body)
+                )
+                # Close the connection to the RabbitMQ server
+                connection.close()
+                # Error handling
+            except pika.exceptions.AMQPError as e:
+                print(f'Error publishing message to AMQP: {str(e)}')
+                return jsonify(
+                    {
+                        "code": 404,
+                        "message": "Message not sent."
+                    })
+            except Exception as e:
+                print(f'Error sending notification: {str(e)}')
+                return jsonify(
+                    {
+                        "code": 404,
+                        "message": "Message not sent."
+                    })
+            else:
+                print(f'Message sent successfully to {to_number}')
+                return jsonify({
+                    'code': 200,
+                    'message': 'Message notification is sent to patient'
+                    })
 
-            # connection.close()
-            
 
     
 #------------------------------------------------------------------------------
