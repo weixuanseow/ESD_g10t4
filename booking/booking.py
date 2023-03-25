@@ -32,8 +32,8 @@ class VisitType(db.Model):
     name = db.Column(db.String(50))
 
 
-class consultation(db.Model):
-    __tablename__ = 'consultation'
+class Mri(db.Model):
+    __tablename__ = 'mri'
 
 
     bid = db.Column(db.Integer, primary_key=True)
@@ -51,7 +51,7 @@ class consultation(db.Model):
     def json(self):
         return {"bid": self.bid, "slot": self.slot, "available": self.available, 'pid':self.pid}
 
-class xray(db.Model):
+class Xray(db.Model):
     __tablename__ = 'xray'
 
 
@@ -70,8 +70,8 @@ class xray(db.Model):
     def json(self):
         return {"bid": self.bid, "slot": self.slot, "available": self.available, 'pid':self.pid}
 
-class orthopaedics(db.Model):
-    __tablename__ = 'orthopaedics'
+class Ctscan(db.Model):
+    __tablename__ = 'ctscan'
 
 
     bid = db.Column(db.Integer, primary_key=True)
@@ -89,8 +89,8 @@ class orthopaedics(db.Model):
     def json(self):
         return {"bid": self.bid, "slot": self.slot, "available": self.available, 'pid':self.pid}
 
-class physiotherapy(db.Model):
-    __tablename__ = 'physiotherapy'
+class Bloodtest(db.Model):
+    __tablename__ = 'bloodtest'
 
 
     bid = db.Column(db.Integer, primary_key=True)
@@ -111,10 +111,10 @@ class physiotherapy(db.Model):
 # ----------------------------Functions ----------------------------------------------------------------------------
 
 # Get all booking slots------------------------------------------------------------
-@app.route("/consultation/all", methods=['GET'])
-def get_all_consultation():
+@app.route("/mri/all", methods=['GET'])
+def get_all_mri():
 
-    booking_list = consultation.query.all()
+    booking_list = Mri.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -135,7 +135,7 @@ def get_all_consultation():
 @app.route("/xray/all", methods=['GET'])
 def get_all_xray():
 
-    booking_list = xray.query.all()
+    booking_list = Xray.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -153,10 +153,10 @@ def get_all_xray():
         }
     ), 404
 
-@app.route("/all/physiotherapy", methods=['GET'])
-def get_all_physiotherapy():
+@app.route("/bloodtest/all", methods=['GET'])
+def get_all_bloodtest():
 
-    booking_list = xray.query.all()
+    booking_list = Bloodtest.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -174,10 +174,10 @@ def get_all_physiotherapy():
         }
     ), 404
 
-@app.route("/all/orthpaedics", methods=['GET'])
-def get_all_orthopaedics():
+@app.route("/ctscan/all", methods=['GET'])
+def get_all_ctscan():
 
-    booking_list = xray.query.all()
+    booking_list = Ctscan.query.all()
     if len(booking_list):
         return jsonify(
             {
@@ -196,9 +196,9 @@ def get_all_orthopaedics():
     ), 404
 #------------------------------------------------------------------------------------------------------------------------
 # Update a booking slot to unavailable 
-@app.route('/consultation/mark_unavailable/<int:bid>', methods=['PUT'])
-def mark_slot_unavailable_consultation(bid):
-    booking = consultation.query.get_or_404(bid)
+@app.route('/mri/mark_unavailable/<int:bid>', methods=['PUT'])
+def mark_slot_unavailable_mri(bid):
+    booking = Mri.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -208,7 +208,7 @@ def mark_slot_unavailable_consultation(bid):
 
 @app.route('/xray/mark_unavailable/<int:bid>', methods=['PUT'])
 def mark_slot_unavailable_xray(bid):
-    booking = xray.query.get_or_404(bid)
+    booking = Xray.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -216,9 +216,9 @@ def mark_slot_unavailable_xray(bid):
     'message': 'Booking slot updated to unavailable'
     })
 
-@app.route('/physiotherapy/mark_unavailable/<int:bid>', methods=['PUT'])
-def mark_slot_unavailable_physiotherapy(bid):
-    booking = physiotherapy.query.get_or_404(bid)
+@app.route('/bloodtest/mark_unavailable/<int:bid>', methods=['PUT'])
+def mark_slot_unavailable_bloodtest(bid):
+    booking = Bloodtest.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -226,9 +226,9 @@ def mark_slot_unavailable_physiotherapy(bid):
     'message': 'Booking slot updated to unavailable'
     })
 
-@app.route('/orthopaedics/mark_unavailable/<int:bid>', methods=['PUT'])
-def mark_slot_unavailable_orthopaedics(bid):
-    booking = orthopaedics.query.get_or_404(bid)
+@app.route('/ctscan/mark_unavailable/<int:bid>', methods=['PUT'])
+def mark_slot_unavailable_ctscan(bid):
+    booking = Ctscan.query.get_or_404(bid)
     booking.available = False
     db.session.commit()
     return jsonify({
@@ -237,9 +237,9 @@ def mark_slot_unavailable_orthopaedics(bid):
     })
 #------------------------------------------------------------------------------------------------------------------------
 # Update a booking slot to available
-@app.route('/consultation/mark_available/<int:bid>', methods=['PUT'])
-def mark_slot_available_consultation(bid):
-    booking = consultation.query.get(bid)
+@app.route('/mri/mark_available/<int:bid>', methods=['PUT'])
+def mark_slot_available_mri(bid):
+    booking = Mri.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -252,7 +252,7 @@ def mark_slot_available_consultation(bid):
 
 @app.route('/xray/mark_available/<int:bid>', methods=['PUT'])
 def mark_slot_available_xray(bid):
-    booking = xray.query.get(bid)
+    booking = Xray.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -263,9 +263,9 @@ def mark_slot_available_xray(bid):
     'message': 'Booking slot updated to unavailable'
     })
 
-@app.route('/physiotherapy/mark_available/<int:bid>', methods=['PUT'])
-def mark_slot_available_physiotherapy(bid):
-    booking = physiotherapy.query.get(bid)
+@app.route('/bloodtest/mark_available/<int:bid>', methods=['PUT'])
+def mark_slot_available_bloodtest(bid):
+    booking = Bloodtest.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -276,9 +276,9 @@ def mark_slot_available_physiotherapy(bid):
     'message': 'Booking slot updated to unavailable'
     })
 
-@app.route('/orthopaedics/mark_available/<int:bid>', methods=['PUT'])
-def mark_slot_available_orthopaedics(bid):
-    booking = orthopaedics.query.get(bid)
+@app.route('/ctscan/mark_available/<int:bid>', methods=['PUT'])
+def mark_slot_available_ctscan(bid):
+    booking = Ctscan.query.get(bid)
     if not booking:
         return jsonify({'error': 'Booking not found'}), 404
     booking.available = True
@@ -291,15 +291,15 @@ def mark_slot_available_orthopaedics(bid):
 #------------------------------------------------------------------------------------------------------------------------
 # Query available booking slot from current time 
 from datetime import datetime, timedelta
-@app.route('/consultation/available_slots', methods=['GET'])
-def get_available_slots_consultation():
+@app.route('/mri/available_slots', methods=['GET'])
+def get_available_slots_mri():
     # get current time 
     now = datetime.utcnow()
     print(now)
 
     # query the database for available booking slots
-    booking_list = consultation.query.filter(consultation.slot >= now,
-                                            consultation.available == True).all()
+    booking_list = Mri.query.filter(Mri.slot >= now,
+                                            Mri.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -325,8 +325,8 @@ def get_available_slots_xray():
     print(now)
 
     # query the database for available booking slots
-    booking_list = xray.query.filter(xray.slot >= now,
-                                            xray.available == True).all()
+    booking_list = Xray.query.filter(Xray.slot >= now,
+                                            Xray.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -345,15 +345,15 @@ def get_available_slots_xray():
             }
         ), 404
 
-@app.route('/physiotherapy/available_slots', methods=['GET'])
-def get_available_slots_physiotherapy():
+@app.route('/bloodtest/available_slots', methods=['GET'])
+def get_available_slots_bloodtest():
     # get current time 
     now = datetime.utcnow()
     print(now)
 
     # query the database for available booking slots
-    booking_list = physiotherapy.query.filter(physiotherapy.slot >= now,
-                                            physiotherapy.available == True).all()
+    booking_list = Bloodtest.query.filter(Bloodtest.slot >= now,
+                                            Bloodtest.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -372,15 +372,15 @@ def get_available_slots_physiotherapy():
             }
         ), 404
 
-@app.route('/orthopaedics/available_slots', methods=['GET'])
-def get_available_slots_orthopaedics():
+@app.route('/ctscan/available_slots', methods=['GET'])
+def get_available_slots_ctscan():
     # get current time 
     now = datetime.utcnow()
     print(now)
 
     # query the database for available booking slots
-    booking_list = orthopaedics.query.filter(orthopaedics.slot >= now,
-                                            orthopaedics.available == True).all()
+    booking_list = Ctscan.query.filter(Ctscan.slot >= now,
+                                            Ctscan.available == True).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -401,14 +401,14 @@ def get_available_slots_orthopaedics():
 #------------------------------------------------------------------------------------------------------------------------
 # Query unavailable booking slot - booked 
 from datetime import datetime, timedelta
-@app.route('/consultation/unavailable_slots', methods=['GET'])
-def get_unavailable_slots_consultation():
+@app.route('/mri/unavailable_slots', methods=['GET'])
+def get_unavailable_slots_mri():
     # get current time 
     now = datetime.utcnow()
     print(now)
 
     # query the database for available booking slots
-    booking_list = consultation.query.filter(consultation.available == False).all()
+    booking_list = Mri.query.filter(Mri.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -434,7 +434,7 @@ def get_unavailable_slots_xray():
     print(now)
 
     # query the database for available booking slots
-    booking_list = xray.query.filter(xray.available == False).all()
+    booking_list = Xray.query.filter(Xray.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -453,14 +453,14 @@ def get_unavailable_slots_xray():
             }
         ), 404
 
-@app.route('/physiotherapy/unavailable_slots', methods=['GET'])
-def get_unavailable_slots_physiotherapy():
+@app.route('/bloodtest/unavailable_slots', methods=['GET'])
+def get_unavailable_slots_bloodtest():
     # get current time 
     now = datetime.utcnow()
     print(now)
 
     # query the database for available booking slots
-    booking_list = physiotherapy.query.filter(physiotherapy.available == False).all()
+    booking_list = Bloodtest.query.filter(Bloodtest.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
@@ -479,14 +479,14 @@ def get_unavailable_slots_physiotherapy():
             }
         ), 404
 
-@app.route('/orthopaedics/unavailable_slots', methods=['GET'])
-def get_unavailable_slots_orthopaedics():
+@app.route('/ctscan/unavailable_slots', methods=['GET'])
+def get_unavailable_slots_ctscan():
     # get current time 
     now = datetime.utcnow()
     print(now)
 
     # query the database for available booking slots
-    booking_list = orthopaedics.query.filter(orthopaedics.available == False).all()
+    booking_list = Ctscan.query.filter(Ctscan.available == False).all()
     print(booking_list)
     if len(booking_list):
         return jsonify(
