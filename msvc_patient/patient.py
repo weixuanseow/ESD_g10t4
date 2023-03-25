@@ -355,7 +355,10 @@ def createDiagnosticTest():
         cursor.execute(sql, val)
             
         conn.commit()
-        return jsonify({'message': 'Diagnostic test created successfully.'}), 201
+        return jsonify({
+            'code': 201,
+            'message': 'Diagnostic test created successfully.'
+            })
     except Exception as e:
         print(str(e))
         conn.rollback()

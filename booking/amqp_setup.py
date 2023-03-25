@@ -1,3 +1,6 @@
+#http://localhost:15672
+#docker run -d --hostname esd-rabbit --name rabbitmq-mgmt -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
 import pika
 
 # These module-level variables are initialized whenever a new instance of python interpreter imports the module;
@@ -30,7 +33,7 @@ channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, dura
 
 ############   Activity_Log queue    #############
 # declare Notification queue
-queue_name = 'notification'
+queue_name = 'notifications'
 channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
 
