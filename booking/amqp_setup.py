@@ -1,3 +1,6 @@
+#http://localhost:15672
+#docker run -d --hostname esd-rabbit --name rabbitmq-mgmt -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
 import pika
 
 # These module-level variables are initialized whenever a new instance of python interpreter imports the module;
@@ -20,28 +23,17 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 # Set up the exchange if the exchange doesn't exist
 # - use a 'topic' exchange to enable interaction
-exchangename="order_topic"
-exchangetype="topic"
+exchangename="booking_exchange"
+exchangetype="direct"
 channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, durable=True)
     # 'durable' makes the exchange survive broker restarts
 
 # Here can be a place to set up all queues needed by the microservices,
 # - instead of setting up the queues using RabbitMQ UI.
 
-############   Error queue   #############
-#delcare Error queue
-queue_name = 'Error'
-channel.queue_declare(queue=queue_name, durable=True) 
-    # 'durable' makes the queue survive broker restarts
-
-#bind Error queue
-channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.error') 
-    # bind the queue to the exchange via the key
-    # any routing_key with two words and ending with '.error' will be matched
-
 ############   Activity_Log queue    #############
-#delcare Activity_Log queue
-queue_name = 'Activity_Log'
+# declare Notification queue
+queue_name = 'notifications'
 channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
 

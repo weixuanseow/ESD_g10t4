@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.logger.setLevel(logging.DEBUG)
@@ -31,7 +31,7 @@ mysql_config = {
     'user': 'root',
     'password': 'root',
     'database': 'patient_records',
-    'port': 8889
+    'port': 3306
 
 }
 conn = mysql.connector.connect(**mysql_config)
@@ -246,96 +246,150 @@ def create_patient():
     ), 201    
         
 # update patient
-@app.route('/patients/<int:patient_id>', methods=['PUT'])
-def update_patient(patient_id):
-    patient = Patient.query.filter_by(patient_ID=patient_id).first()
-    if patient:
-        data = request.get_json()
-        if data['Patient_Full_Name']:
-            patient.Patient_Full_Name = data['Patient_Full_Name']
-        if data['Date_Of_Birth']:
-            patient.Date_Of_Birth = data['Date_Of_Birth']
-        if data['Gender']:
-            patient.Gender = data['Gender']
-        if data['Phone_Num']:
-            patient.Phone_Num = data['Phone_Num'] 
-        if data['Allergies']:
-            patient.Allergies = data['Allergies'] 
-        db.session.commit()
+# @app.route('/patients/<int:patient_id>', methods=['PUT'])
+# def update_patient(patient_id):
+#     patient = Patient.query.filter_by(patient_ID=patient_id).first()
+#     if patient:
+#         data = request.get_json()
+#         if data['Patient_Full_Name']:
+#             patient.Patient_Full_Name = data['Patient_Full_Name']
+#         if data['Date_Of_Birth']:
+#             patient.Date_Of_Birth = data['Date_Of_Birth']
+#         if data['Gender']:
+#             patient.Gender = data['Gender']
+#         if data['Phone_Num']:
+#             patient.Phone_Num = data['Phone_Num'] 
+#         if data['Allergies']:
+#             patient.Allergies = data['Allergies'] 
+#         db.session.commit()
         
-        return jsonify(
-            {
-                "code": 200,
-                "data": patient.json()
-            }
-        )
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": patient.json()
+#             }
+#         )
         
-    return jsonify(
-        {
-            "code": 404,
-            "data": {
-                "patient_id": patient_id
-            },
-            "message": "Patient not found."
-        }
-    ), 404
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "data": {
+#                 "patient_id": patient_id
+#             },
+#             "message": "Patient not found."
+#         }
+#     ), 404
     
     
     
-    if not patient:
-        return {"error": "Patient not found"}, 404
+#     if not patient:
+#         return {"error": "Patient not found"}, 404
 
-    data = request.get_json()
-    patient.Patient_Full_Name = data.get('Patient_Full_Name', patient.Patient_Full_Name)
-    patient.Date_Of_Birth = data.get('Date_Of_Birth', patient.Date_Of_Birth)
-    patient.Gender = data.get('Gender', patient.Gender)
-    patient.Phone_Num = data.get('Phone_Num', patient.Phone_Num)
-    patient.Allergies = data.get('Allergies', patient.Allergies)
+#     data = request.get_json()
+#     patient.Patient_Full_Name = data.get('Patient_Full_Name', patient.Patient_Full_Name)
+#     patient.Date_Of_Birth = data.get('Date_Of_Birth', patient.Date_Of_Birth)
+#     patient.Gender = data.get('Gender', patient.Gender)
+#     patient.Phone_Num = data.get('Phone_Num', patient.Phone_Num)
+#     patient.Allergies = data.get('Allergies', patient.Allergies)
 
-    db.session.commit()
-    return {"message": "Patient record updated successfully"}, 200
+#     db.session.commit()
+#     return {"message": "Patient record updated successfully"}, 200
 
 
 ###################################################################################################################
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
+# @app.route('/create_diagnostic_test', methods=['POST'])
+# def createDiagnosticTest():
+#     data = request.get_json()
+#     print(data)
+#     # pid = data['pid']
+#     pid = data['pid']
+#     test_datetime = data['bslot']
+#     test_type = data["test_type"]
+#     test_results = ""
+#     appt_datetime = data['appt']
+    
+#     test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
+#     print(db.session)
+#     # test_type=visit_type
+#     try:
+#         db.session.add(test_instance)
+#         db.session.commit()
+#     except:
+#         return jsonify(
+#             {
+#                 "code": 500,
+#                 "data": {
+#                     "test_id": "error message in the except portion",
+#                     "test_datetime": test_datetime,
+#                     "test_type": test_type,
+#                     "test_results": test_results,
+#                 },
+#                 "message": "An error occured creating the test instance"
+#             }
+#         ), 500
+#     return jsonify(
+#         {
+#             "code": 201,
+#             "data": test_instance.json(),
+#             "message": "Donezo mina san"
+#         }
+#     ), 201
 @app.route('/create_diagnostic_test', methods=['POST'])
 def createDiagnosticTest():
-    data = request.get_json()
-    print(data)
-    # pid = data['pid']
-    
-    test_datetime = data['test_datetime']
-    test_type = data["visit_type"]
-    test_results = data['test_results']
-    appt_datetime = data['appt_datetime']
-    
-    test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
-    print(db.session)
-    # test_type=visit_type
     try:
-        db.session.add(test_instance)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "test_id": "error message in the except portion",
-                    "test_datetime": test_datetime,
-                    "test_type": test_type,
-                    "test_results": test_results,
-                },
-                "message": "An error occured creating the test instance"
-            }
-        ), 500
-    return jsonify(
-        {
-            "code": 201,
-            "data": test_instance.json(),
-            "message": "Donezo mina san"
-        }
-    ), 201
+        data = request.get_json()
+        print(data)
+        # pid = data['pid']
+        pid = data['pid']
+        from datetime import datetime
+        test_datetime = datetime.strptime(data['bslot'], ' %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d %H:%M:%S')
+        test_type = data["test_type"]
+        test_results = "Broken brain cells"
+        appt_datetime = data['appt']
+        
+        cursor = conn.cursor()
+        sql = "INSERT INTO diagnostic_test (Test_DateTime, Test_Type, Test_Results, Patient_ID, Appt_DateTime) VALUES (%s, %s, %s, %s, %s)"
+        val = (test_datetime, test_type, test_results, pid, appt_datetime)
+        cursor.execute(sql, val)
+            
+        conn.commit()
+        return jsonify({
+            'code': 201,
+            'message': 'Diagnostic test created successfully.'
+            })
+    except Exception as e:
+        print(str(e))
+        conn.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    # test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
+    # print(db.session)
+    # # test_type=visit_type
+    # try:
+    #     db.session.add(test_instance)
+    #     db.session.commit()
+    # except:
+    #     return jsonify(
+    #         {
+    #             "code": 500,
+    #             "data": {
+    #                 "test_id": "error message in the except portion",
+    #                 "test_datetime": test_datetime,
+    #                 "test_type": test_type,
+    #                 "test_results": test_results,
+    #             },
+    #             "message": "An error occured creating the test instance"
+    #         }
+    #     ), 500
+    # return jsonify(
+    #     {
+    #         "code": 201,
+    #         "data": test_instance.json(),
+    #         "message": "Donezo mina san"
+    #     }
+    # ), 201
 
 # just to view diagnostic_test database, 'test' table
 @app.route('/view_diagnostic_test', methods=['GET'])

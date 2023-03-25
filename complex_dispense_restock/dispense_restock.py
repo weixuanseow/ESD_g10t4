@@ -14,8 +14,13 @@ CORS(app)
 #Routes
 
 #Get Prescriptions
-@app.route("/get_medicines/<patient_id>/<appt_date>", methods=['GET'])
-def get_medicines(patient_id,appt_date):
+@app.route("/get_medicines/", methods=['GET'])
+def get_medicines():
+    data = request.get_json()
+    for key,value in data.items():
+        patient_id=key
+        appt_date=value
+
     url = f"http://127.0.0.1:5000/check_prescription/{patient_id}/{appt_date}"
     prescription_results = invoke_http(url, method='GET')
     print(prescription_results)
@@ -45,10 +50,10 @@ def get_medicines(patient_id,appt_date):
 
         return inventory_results
     
-    return prescription_results
+    return prescription_results # will be displayed on UI
 
 
-#Send AMQP to UI
+#Send AMQP to UI # invoice only
 
 
 
@@ -86,8 +91,8 @@ def get_medicines(patient_id,appt_date):
 #     print("=====================================dispense_restock.py - approve order function=====================")
 
 #     amqp_setup.check_setup()
-#     drug_name = request.json.get(data, None)
-#     topup_amt = request.json.get('customer_email', None)
+#     drug_name = request.json.get('drug_name', None)
+#     topup_amt = request.json.get('qty', None)
     
 #     print("drug name---",drug_name)
 #     print("top up amount",topup_amt)
@@ -96,15 +101,15 @@ def get_medicines(patient_id,appt_date):
 #     msg_content = json.dumps({
 #         "topup_details":
 #             {
-#             "drug_name": customer_name, 
-#             "payment_link": payment_link
+#             "drug_name": drug_name, 
+#             "topup_amount": topup_amt
 #             }
 #     })
 
 #     amqp_setup.channel.basic_publish(exchange="approve_order", routing_key="order.exchange", body= msg_content, properties=pika.BasicProperties(delivery_mode=2))
 #     return jsonify({
 #         "code": 201,
-#         "message": "Payment Email Sent Successfully"
+#         "message": "Approval Message Sent Successfully"
 #         }
 #     ), 201
 
