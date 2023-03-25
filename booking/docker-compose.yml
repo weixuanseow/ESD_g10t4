@@ -1,0 +1,66 @@
+version: "3.8"
+
+volumes:
+  rabbitmq_data:
+
+####################################
+# RabbitMQ: Message broker 
+####################################
+rabbitmq:
+  image: rabbitmq:3-management
+  hostname: esd-rabbit
+  restart: always
+  ports:
+    - "5672:5672"
+    - "15672:15672"
+  volumes: 
+    - rabbitmq_data:/var/lib/rabbitmq
+
+  #################################
+  # booking - Simple microservice
+  #################################
+booking:
+    build: 
+      context: ./
+      dockerfile: booking.dockerfile
+    image: dockerid/booking
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ESD_T1
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5000:5000"
+
+  #################################
+  # notification - Simple microservice
+  #################################
+notification:
+    build: 
+      context: ./
+      dockerfile: notification.dockerfile
+    image: dockerid/notification
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ESD_T1
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5008:5008"
+
+###############################################
+# booktest - Complex Microservice
+###############################################
+booktest:
+  build: 
+    context: ./
+    dockerfile: booktest.dockerfile 
+  image: dockerid/booktest
+  restart: always
+  depends_on:
+    - booking
+    - patient
+    - notification
+  environment:
+    # do i have to list out the links ?
+    PYTHONUNBUFFERED: 1
+  ports:
+    - "5055:5055"
