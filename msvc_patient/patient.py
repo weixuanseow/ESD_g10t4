@@ -109,17 +109,35 @@ class PrescriptionMedicine(db.Model):
             'amount': self.amount
         }
         
+# class Prescription(db.Model):
+#     __tablename__ = 'prescription'
+    
+#     appt_datetime = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+#     patient_id = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+#     prescription_id = db.Column(db.ForeignKey('patient_records.prescription_medicines', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    
+#     def __init__(self, appt_datetime, patient_id):
+#         self.appt_datetime = appt_datetime
+#         self.patient_id = patient_id
+#         # self.prescription_id = prescription_id
+    
+#     def json(self):
+#         return {
+#             'prescription_id': self.prescription_id,
+#             'patient_id': self.patient_id,
+#             'appt_datetime': self.appt_datetime
+#         }
+        
 class Prescription(db.Model):
     __tablename__ = 'prescription'
     
-    prescription_id = db.Column(db.ForeignKey('patient_records.prescription_medicines', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
-    patient_id = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
-    appt_datetime = db.Column(db.ForeignKey('patient_records.appointment_history', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    appt_datetime = db.Column(db.ForeignKey('appointment_history.appt_datetime', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    patient_id = db.Column(db.ForeignKey('appointment_history.patient_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    prescription_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
-    def __init__(self, prescription_id, appt_datetime):
-        # self.patient_id = patient_id
-        self.prescription_id = prescription_id
+    def __init__(self, appt_datetime, patient_id):
         self.appt_datetime = appt_datetime
+        self.patient_id = patient_id
     
     def json(self):
         return {
@@ -127,7 +145,7 @@ class Prescription(db.Model):
             'patient_id': self.patient_id,
             'appt_datetime': self.appt_datetime
         }
-        
+
 class DiagnosticTest(db.Model):
     __tablename__ = 'diagnostic_test'
     
@@ -461,15 +479,15 @@ def check_prescription(patient_id, appt_date):
 def update_prescription_history():
     data = request.get_json()
     # appt_datetime need to retrieve from homepage, hardcode first
-    appt_datetime = data['appt_datetime']
+    appt_datetime = '2022-12-28 10:20:00'
     patient_id = data['patient_id']
     
-    prescription = Prescription(Appt_DateTime=appt_datetime, Patient_ID=patient_id)
+    prescription = Prescription(appt_datetime=appt_datetime, patient_id=patient_id)
     db.session.add(prescription)
     db.session.commit()
     
     # get prescription ID
-    prescription_id = prescription.Prescription_ID
+    prescription_id = prescription.prescription_id
     return jsonify({'prescription_id': prescription_id})
 
 
@@ -477,17 +495,20 @@ def update_prescription_history():
 def update_prescription_medicines():
     data = request.get_json()
     prescription_id = data['prescription_id']
-    medicines = data['medicines_details']
-    prescription_medicines = [PrescriptionMedicine(
-                                Prescription_ID=prescription_id, 
-                                medicine_name=med['medicine_name'], 
-                                frequency=med['frequency'], 
-                                amount=med['amount']) 
-                                    for med in medicines]
-    
+    medicines = data['medicine_details']
+    print(medicines)
+    prescription_medicines = []
+
+    for med in medicines:
+        medicine_name = med['med_name']
+        frequency = med['frequency']
+        amount = med['amount']
+        prescription_medicine = PrescriptionMedicine(prescription_id=prescription_id, medicine_name=medicine_name, frequency=frequency, amount=amount)
+        prescription_medicines.append(prescription_medicine)
+
     db.session.add_all(prescription_medicines)
     db.session.commit()
-    
+
     return jsonify({'message': 'Prescription medicines updated successfully'})
     
     

@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from collections import Counter
 import requests
 import os
 

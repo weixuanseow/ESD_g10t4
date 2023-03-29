@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  #################################
+  # Patient: The Patient microservice
+  #################################
+  patient:
+    build: ../msvc_patient/Dockerfile
+    container_name: patient
+    restart: always
+    ports:
+      - "5050:5050"
+
+  #################################
+  # Drug: The Drug microservice
+  #################################
+  drug:
+    build: ../msvc_drug/Dockerfile
+    container_name: drug
+    restart: always
+    ports:
+      - "5002:5002"
+
+  ###############################################
+  # prescribe_med: The prescribe_medicine.py program
+  ###############################################
+  prescribe:  
+    build: ./Dockerfile
+    container_name: prescribe
+    restart: always
+    ports:
+      - "5101:5101"
+    depends_on:
+      - patient
+      - drug
