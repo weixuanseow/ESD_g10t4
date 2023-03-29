@@ -1,6 +1,7 @@
-function submitPrescription() {
+// send prescription details and patient allergies to the complex microservice
+function prescribeMedicine() {
     var patientId = document.getElementById("patient-id").value;
-    var medicines = [];
+    var prescriptionDetails = [];
     var medicineFields = document.getElementsByClassName("medicine-field");
     for (var i = 0; i < medicineFields.length; i++) {
         var medicine = {
@@ -8,39 +9,34 @@ function submitPrescription() {
             frequency: medicineFields[i].querySelector('input[name="frequency[]"]').value,
             amount: medicineFields[i].querySelector('input[name="amount[]"]').value
         };
-        medicines.push(medicine);
+        prescriptionDetails.push(medicine);
     }
     $.ajax({
-        url: "http://127.0.0.1:5050/patient/" + patientId + "/allergies",
-        type: "GET",
+        url: "http://127.0.0.1:5101/prescribe_medicine",
+        type: "POST",
+        data: JSON.stringify({
+            patient_id: patientId,
+            prescription_details: prescriptionDetails,
+        }),
+        contentType: "application/json",
         dataType: "json",
-        success: function(response) {
-            var allergies = response.join(',');
-            prescribeMedicine(patientId, medicines, allergies);
+        success: function(data) {
+            console.log("Flask responding", data);
+            if (data.code === 400 || data.code === 422) {
+                // Display error message
+                var errorMessage = data.message;
+                $("#error-messages").html(errorMessage);
+            }
+            else if (data.code === 200){
+                var showMessage = data.message;
+                $("#error-messages").html(showMessage);
+            }
         },
         error: function(xhr, status, error) {
-            console.log(xhr.responseText);
+            console.log("Error saving prescription:", xhr.responseText);
         }
-    });
+    })
 }
-    
-// send prescription details and patient allergies to the complex microservice
-  function prescribeMedicine(patientId, prescriptionDetails, allergies) {
-    $.post("http://127.0.0.1:5101/prescribe_medicine", {
-        patient_id: patientId,
-        prescription_details: prescriptionDetails,
-        allergies: allergies
-    }).done(function(data) {
-        console.log("Prescription saved:", data);
-        if (data.code === 404) {
-            // Display error message
-            var errorMessage = data.error;
-            $("#error-messages").html(errorMessage);
-        }
-    }).fail(function(xhr, status, error) {
-        console.log("Error saving prescription:", xhr.responseText);
-    });
-  }
 
 var pid = sessionStorage.getItem('id')
 var pdate = sessionStorage.getItem('date')

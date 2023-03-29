@@ -2,7 +2,8 @@ import requests
 import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_cors import CORS
+from invokes import invoke_http
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
@@ -10,6 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+CORS(app)
 # Models
 class Appointment(db.Model):
     __tablename__ = 'appointment_history'
@@ -81,41 +83,48 @@ class PrescriptionMedicine(db.Model):
     
 # Route
 PATIENT_MICROSERVICE_URL = "http://127.0.0.1:5050"
+DRUG_MICROSERVICE_URL = "http://127.0.0.1:5002"
 
 @app.route('/prescribe_medicine', methods=["POST"])
-def prescribe_medicine():
+def prescribe_medicine(): 
     data = request.get_json()
     patient_id = data['patient_id']
     prescription_details = data['prescription_details']
-    allergies = data['allergies']
+    print(prescription_details)
     
-    # medicine_names = []
-    # for med in prescription_details:
-    #     medicine_names.append(med['med_name'])
+    # invoke patient microservice
+    print('\n-----Invoking patient microservice-----')
+    allergies = invoke_http(PATIENT_MICROSERVICE_URL + '/patient/' + patient_id + '/allergies', method='GET')
+    print('allergies:', allergies)
         
-    medicine_names = [med['medicine'] for med in prescription_details]
-
-    drug_service_url = "http://127.0.0.1:5200/check-interaction"
+    medicine_names = [med['med_name'] for med in prescription_details]
     drug_service_payload = {
         'patient_id': patient_id,
         'medicine_names': medicine_names,
         'allergies': allergies
     }
-    response = requests.post(drug_service_url, json=drug_service_payload)
-    
+    # invoke drug microservice
+    response = invoke_http(DRUG_MICROSERVICE_URL + '/check-interaction', method='GET', json=drug_service_payload)
+    error_code = response['code']
     # response from drug service
-    drug_service_result = response.json()
+    # drug_service_result = response.json()
     
-    if response.status_code == 404:
+    if error_code == 400:
         # patient is allergic to a medicine or there are harmful interactions
         # send message to UI to prompt the doctor to re-enter medicine details
-        error_message = drug_service_result['error']
+        error_message = response['message']
         return jsonify(
             {
-                'code': 404,
-                'error': error_message
+                'code': error_code,
+                'message': error_message
             }
         )
+    elif error_code == 422:
+        error_message = response['message']
+        return jsonify({
+            'code': error_code,
+            'message': error_message
+        })
     else:
         # no harmful interactions, update prescription history in patient microservice
         prescription_payload = {

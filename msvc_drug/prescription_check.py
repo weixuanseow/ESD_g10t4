@@ -16,42 +16,45 @@ def check_interaction():
 
     # check if prescription exists in allergies
     allergic_to = set(medicine_names).intersection(set(allergies))
+    print(allergic_to)
     if allergic_to:
         return jsonify(
             {
-                'code': 404,
-                'error': f'Patient is allergic to {", ".join(allergic_to)}'
+                'code': 400,
+                'message': f'Patient is allergic to {", ".join(allergic_to)}. Please re-enter medicine!'
             }
-        )
+        ),400
     else:
-        interactions = set()
+        interactions = []
         for i, drug1 in enumerate(medicine_names):
             for drug2 in medicine_names[i+1:]:
                 # Set the OpenFDA API endpoint and search parameters
-                url = f'https://api.fda.gov/drug/event.json?search=patient.drug.openfda.generic_name:"{drug1}"+AND+patient.drug.openfda.generic_name:"{drug2}"&limit=10'
+                url = f'https://api.fda.gov/drug/event.json?search=patient.drug.openfda.generic_name:{drug1}+AND+patient.drug.openfda.generic_name:{drug2}&limit=10'
 
-            # Send a request to the OpenFDA API and check for errors
+            # Send request to the OpenFDA API
                 response = requests.get(url)
-                response.raise_for_status()
-
-                # Extract the reaction terms from the API response
                 data = response.json()
-                reactions = {item['term'] for item in data['results']}
+                # print(data)
 
-                # Add the drug pair tuple with reaction
-                if reactions:
-                    interactions.add((drug1, drug2, ', '.join(reactions)))
+                # Add the drug pair tuple
+                if 'error' in data:
+                    print("No interactions found")
+                else:
+                    interactions.append((drug1, drug2))
 
-        # If interactions were found, return the drug pairs and their reactions
+
+        # If interactions were found, return the drug pairs
         if interactions:
-            # sort according to length of interaction so that pair of drugs with most reactions appear first
-            sorted_interactions = sorted(interactions, key=lambda x: len(x[2]), reverse=True)
+             # convert list to string
+            interaction_str = ', '.join([f'{drug1} and {drug2}' for drug1, drug2 in interactions])
+            print(interaction_str)
+
             return jsonify(
                 {
-                    'code': 404,
-                    'interactions': [{'drugs': f'{pair[0]}, {pair[1]}', 'reactions': pair[2]} for pair in sorted_interactions]
+                    'code': 422,
+                    'message': f'The following drugs have interactions: {interaction_str}. Please re-enter medicine!'
                 }
-            )
+            ),422
         
         # If no interactions were found, return an error message
         else:
@@ -60,7 +63,7 @@ def check_interaction():
                     'code': 200,
                     'message': 'Patient is not allergic to the prescribed medication and there are no adverse interactions indicated from OpenFDA API'
                 }
-            )
+            ),200
 
 if __name__ == '__main__':
     print("This is flask for " + os.path.basename(__file__) + ": manage prescriptions ...")
