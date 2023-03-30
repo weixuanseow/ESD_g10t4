@@ -58,10 +58,7 @@ COMMIT;
 INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID) VALUES
 ('2022-12-29 10:20:00', '000000003', '800000004')
 COMMIT;
-INSERT INTO prescription_medicines (Prescription_ID, Medicine_Name, Frequency, Amount) VALUES
-('800000004', 'Drug A', 'whenever ur heart desires', 200),
-('800000004', 'Drug B', 'whenever ur heart desires', 150)
-COMMIT;
+
 
 CREATE TABLE IF NOT EXISTS prescription_medicines (
   Prescription_ID int(9) UNSIGNED ZEROFILL,
@@ -71,6 +68,11 @@ CREATE TABLE IF NOT EXISTS prescription_medicines (
   PRIMARY KEY (Prescription_ID, Medicine_Name),
   FOREIGN KEY (Prescription_ID) REFERENCES prescription(Prescription_ID)
 );
+
+INSERT INTO prescription_medicines (Prescription_ID, Medicine_Name, Frequency, Amount) VALUES
+('800000004', 'Drug A', 'whenever ur heart desires', 200),
+('800000004', 'Drug B', 'whenever ur heart desires', 150)
+COMMIT;
 
 INSERT INTO prescription_medicines (Prescription_ID, Medicine_Name, Frequency, Amount) VALUES
 ('800000001', 'Aspirin', 'Every 4-6 hours as needed', '2 tablets'),

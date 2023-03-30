@@ -106,7 +106,7 @@ def processBooking(booking):
             }
         else:
             print('\n\n-----Invoking notification microservice-----')
-            message = "Please be reminded of your booked test at " + location[test_type] + " at " + bslot
+            message = "Please be reminded of your " + test_type  + " test at " + location[test_type] + " at " + bslot + ". Please bring the required documents during your visit. Thank you."
             booking['message'] = message
             print(booking)
             # Invoke the notification microservice

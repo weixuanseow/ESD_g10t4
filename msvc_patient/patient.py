@@ -8,8 +8,8 @@ import logging
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.logger.setLevel(logging.DEBUG)
@@ -21,9 +21,9 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    'password': 'root',
     'database': 'patient_records',
-    'port': 3306
+    'port': 8889
 }
 
 # mysql_config = {
@@ -377,7 +377,8 @@ def createDiagnosticTest():
         # pid = data['pid']
         pid = data['pid']
         from datetime import datetime
-        test_datetime = datetime.strptime(data['bslot'], ' %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d %H:%M:%S')
+        now = datetime.now()
+        test_datetime = now.strptime(data['bslot'], ' %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d %H:%M:%S')
         test_type = data["test_type"]
         test_results = "Broken brain cells"
         appt_datetime = data['appt']
