@@ -17,15 +17,15 @@ CORS(app)
 
 @app.route("/get_medicines/", methods=['GET'])
 def get_medicines():
-    # data = request.get_json()
-    # for key,value in data.items():
-    #     patient_id=key
-    #     appt_date=value
-    patient_id_str = request.args.get('patient_id')
-    patient_id_int = int(patient_id_str, 10)
-    patient_id = '{:08d}'.format(patient_id_int)
+    data = request.get_json()
+    for key,value in data.items():
+        patient_id=key
+        appt_date=value
+    # patient_id_str = request.args.get('patient_id')
+    # patient_id_int = int(patient_id_str, 10)
+    # patient_id = '{:08d}'.format(patient_id_int)
 
-    appt_date = datetime.today().strftime("%Y-%m-%d")
+    # appt_date = datetime.today().strftime("%Y-%m-%d")
 
     url = f"http://127.0.0.1:5050/check_prescription/{patient_id}/{appt_date}"
     prescription_results = invoke_http(url, method='GET')
