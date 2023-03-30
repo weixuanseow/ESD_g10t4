@@ -39,7 +39,7 @@ def get_medicines(patient_id, appt_date):
         # Call the /update_inventory endpoint in inventory.py and pass the medicine data as input
         inventory_url = f"http://127.0.0.1:5000/update_inventory/"
         inventory_results = invoke_http(inventory_url, method='PUT', json=medicines_data)
-        ###print(inventory_results)
+        print(inventory_results)
 
         # Send the inventory_results to a queue
         print("=====================================dispense_restock.py - approve order function=====================")
@@ -50,7 +50,7 @@ def get_medicines(patient_id, appt_date):
         channel = connection.channel()
 
         channel.basic_publish(exchange='drug_to_restock',
-                            routing_key='',
+                            routing_key='#',
                             body= inventory_results,
                             properties=pika.BasicProperties(
                                 delivery_mode = 2, # make message persistent
