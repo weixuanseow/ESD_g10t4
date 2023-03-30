@@ -102,7 +102,7 @@
             <tr v-for="obj of this.something">
                 <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.appt_datetime}}</td>
                 <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.patient_id}}</td>
-                <td v-if="obj.appt_datetime.includes(this.datetosearch)"><button class="btn btn-primary" @click="prescribe(obj.appt_datetime, obj.patient_id)">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch)"><button class="btn btn-primary" @click="prescribe(obj.appt_datetime, obj.patient_id)">Prescribe Medicine</button> <button class="btn btn-warning"  @click="prescribe(obj.appt_datetime, obj.patient_id)">Book a Test</button></td>
             </tr>
         </div>
     </div>

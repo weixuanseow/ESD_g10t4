@@ -233,8 +233,8 @@
             // These info should be taken from periovus page
             let pid = 1// maybe pid now need get from session
             let appt = "2023-02-20 13:00:00"
-            sessionStorage.setItem("pid",pid)
-            sessionStorage.setItem('appt',appt)
+            sessionStorage.getItem("pid",pid)
+            sessionStorage.getItem('appt',appt)
             // 
             test_type = document.getElementById('test_type').value
             url = "http://127.0.0.1:5050/patient/" + pid
