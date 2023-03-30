@@ -5,11 +5,10 @@ const root = Vue.createApp({
     data() {
         return {
             patient_id: '',
-            
         }
     },
     mounted() {
-
+        
     },
     methods: {
         get_medicines(patient_id) {
