@@ -38,6 +38,7 @@ class Inventory(db.Model):
 @app.route('/update_inventory', methods=['PUT'])
 def update_inventory():
     data = request.get_json()
+    print(data)
     
     updated = False  # flag to indicate whether any updates were made
     
@@ -78,4 +79,4 @@ def update_inventory():
 
 
 if __name__ == '__main__':
-     app.run(port=5200, debug=True)
+     app.run(port=5210, debug=True)

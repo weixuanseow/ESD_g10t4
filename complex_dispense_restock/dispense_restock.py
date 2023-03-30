@@ -34,12 +34,15 @@ def get_medicines():
     if prescription_results['code'] == 250:
         # Extract the medicine data from the prescription results
         medicines_data = prescription_results['data']
-        
-        
+        new_data = {}
+        for key, value in medicines_data.items():
+            new_data[key] = int(value[0][0])
+
         # Call the /update_inventory endpoint in inventory.py and pass the medicine data as input
-        inventory_url = f"http://127.0.0.1:5000/update_inventory/"
-        inventory_results = invoke_http(inventory_url, method='PUT', json=medicines_data)
+        inventory_url = f"http://127.0.0.1:5210/update_inventory"
+        inventory_results = invoke_http(inventory_url, method='PUT', json=new_data)
         print(inventory_results)
+        print (type(inventory_results))
 
         # Send the inventory_results to a queue
         print("=====================================dispense_restock.py - approve order function=====================")
@@ -51,10 +54,17 @@ def get_medicines():
 
         channel.basic_publish(exchange='drug_to_restock',
                             routing_key='#',
-                            body= inventory_results,
+                            body= str(inventory_results['data']),
                             properties=pika.BasicProperties(
-                                delivery_mode = 2, # make message persistent
+                                delivery_mode = 2 # make message persistent
                             ))
+        # def callback(ch, method, properties, body):
+        #     # process the message
+        #     print("Received message:", str(inventory_results['data']))
+
+        
+        # amqp_setup.channel.basic_consume(queue='approve_order', on_message_callback=callback, auto_ack=True)
+        # amqp_setup.channel.start_consuming()
 
         connection.close()
 
@@ -71,6 +81,12 @@ def get_medicines():
     
     return prescription_results # will be displayed on UI
 
+# def callback(ch, method, properties, body):
+#     # process the message
+#     print("Received message:", body)
+
+#     # acknowledge the message
+#     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 #Get Prescriptions
 # @app.route("/get_medicines/", methods=['GET'])
