@@ -35,6 +35,7 @@ def get_medicines():
         # Extract the medicine data from the prescription results
         medicines_data = prescription_results['data']
         
+        
         # Call the /update_inventory endpoint in inventory.py and pass the medicine data as input
         inventory_url = f"http://127.0.0.1:5000/update_inventory/"
         inventory_results = invoke_http(inventory_url, method='PUT', json=medicines_data)
