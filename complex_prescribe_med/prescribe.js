@@ -57,8 +57,7 @@ function addMedicineFields() {
     medicineLabel.htmlFor = "medicine-" + medicineCount;
     medicineLabel.innerHTML = "Medicine " + medicineCount + ":";
 
-    var medicineInput = document.createElement("input");
-    medicineInput.type = "text";
+    var medicineInput = document.createElement("select");
     medicineInput.id = "medicine-" + medicineCount;
     medicineInput.name = "medicine[]";
 
@@ -186,19 +185,11 @@ const root = Vue.createApp({
         },
         addMedicineFields() {
             this.medicinecount += 1
-
-            var medicinefields = document.getElementById("medicine-fields")
-            medicinefields.innerHTML += `
-                <label for="medicine-${this.medicinecount}">Medicine:</label>
-                <select id="medicine-${this.medicinecount}" v-model="selected_drug">
-                    <option value="'" disabled selected>Choose Drug</option>
-                    <option v-for="drug in this.drugs" v-bind:value="drug" >{{ drug }}</option>
-                </select><br>
-                <label for="frequency-${this.medicinecount}">Frequency:</label>
-                <input type="text" id="frequency-${this.medicinecount}" name="frequency[]"><br>
-                <label for="amount-${this.medicinecount}">Amount:</label>
-                <input type="text" id="amount-1" name="amount[]"><br>
+            str = `
+            <p>lorem</p>
             `
+            medicinefields = document.getElementById("medicine-fields").innerHTML
+            medicinefields += str
 
         }
 
