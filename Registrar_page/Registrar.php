@@ -65,7 +65,7 @@
                     <a class="nav-link" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../bookimg/booking.html">Book a Test</a>
+                    <a class="nav-link" href="../booking/booking.html">Book a Test</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Prescribe Medicine</a>
@@ -85,16 +85,15 @@
         <form method="GET" action="/get_medicines/">
         Please enter incoming patient ID: <input type="text" id="patient_id">
         </form>
-        <button class="btn btn-primary" type="submit">Get Prescription Details</button>
+        <button class="btn btn-primary" id="prescription" @click="get_prescription()" type="submit">Get Prescription Details</button>
     </div>
     
     <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
         <!-- Font Awesome JS -->
         <script src="https://kit.fontawesome.com/c7ddd7a650.js" crossorigin="anonymous"></script>
-        <!-- <script src="specialist.js"></script> -->
+        <script src="registrar.js"></script>
         <!-- bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
-
 
 
     </body>

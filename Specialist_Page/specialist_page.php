@@ -65,7 +65,7 @@
                     <a class="nav-link" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../bookimg/booking.html">Book a Test</a>
+                    <a class="nav-link" href="../booking/booking.html">Book a Test</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Prescribe Medicine</a>

@@ -16,7 +16,7 @@ CORS(app)
 #Routes
 
 @app.route("/get_medicines/", methods=['GET'])
-def get_medicines(patient_id, appt_date):
+def get_medicines(patient_id):
     # data = request.get_json()
     # for key,value in data.items():
     #     patient_id=key
