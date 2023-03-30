@@ -83,8 +83,10 @@
         <div id="medicine-fields">
           <div class="medicine-field">
             <label for="medicine-1">Medicine:</label>
-            <input type="text" id="medicine-1" name="medicine[]"><br>
-      
+            <select id="medicine-1" v-model="selected_drug">
+                <option value="'" disabled selected>Choose Drug</option>
+                <option v-for="drug in this.drugs" v-bind:value="drug" >{{ drug }}</option>
+             </select><br>
             <label for="frequency-1">Frequency:</label>
             <input type="text" id="frequency-1" name="frequency[]"><br>
       
@@ -93,63 +95,12 @@
           </div>
         </div>
       
-        <input type="button" value="Add Medicine" onclick="addMedicineFields()">
-        <input type="button" value="Submit" onclick="prescribeMedicine()">
+        <button class="btn btn-primary m-3" value="Add Medicine" v-on:click="addMedicineFields()">Add Medicine</button>
+        <button class="btn btn-primary m-3" value="Submit" onclick="prescribeMedicine()">Submit</button>
       </form>
 
       <div id="error-messages"></div>
 
-
-      <script>
-        var medicineCount = 1;
-
-        function addMedicineFields() {
-          medicineCount++;
-      
-          var medicineFields = document.getElementById("medicine-fields");
-      
-          var medicineField = document.createElement("div");
-          medicineField.className = "medicine-field";
-      
-          var medicineLabel = document.createElement("label");
-          medicineLabel.htmlFor = "medicine-" + medicineCount;
-          medicineLabel.innerHTML = "Medicine " + medicineCount + ":";
-      
-          var medicineInput = document.createElement("input");
-          medicineInput.type = "text";
-          medicineInput.id = "medicine-" + medicineCount;
-          medicineInput.name = "medicine[]";
-      
-          var frequencyLabel = document.createElement("label");
-          frequencyLabel.htmlFor = "frequency-" + medicineCount;
-          frequencyLabel.innerHTML = "Frequency " + medicineCount + ":";
-      
-          var frequencyInput = document.createElement("input");
-          frequencyInput.type = "text";
-          frequencyInput.id = "frequency-" + medicineCount;
-          frequencyInput.name = "frequency[]";
-      
-          var amountLabel = document.createElement("label");
-          amountLabel.htmlFor = "amount-" + medicineCount;
-          amountLabel.innerHTML = "Amount " + medicineCount + ":";
-      
-          var amountInput = document.createElement("input");
-          amountInput.type = "text";
-          amountInput.id = "amount-" + medicineCount;
-          amountInput.name = "amount[]";
-      
-          medicineField.appendChild(medicineLabel);
-          medicineField.appendChild(medicineInput);
-          medicineField.appendChild(document.createElement("br"));
-          medicineField.appendChild(frequencyLabel);
-          medicineField.appendChild(frequencyInput);
-          medicineField.appendChild(document.createElement("br"));
-          medicineField.appendChild(amountLabel);
-          medicineField.appendChild(amountInput);
-      
-          medicineFields.appendChild(medicineField);
-        }
-      </script>
   <script src="./prescribe.js"></script>
 </body>
 </html>
