@@ -82,10 +82,10 @@
     -->
     <h1 style="margin: 20px">To be Dispensed</h1>
     <div id="dispense" style="padding:0px 20px">
-        <form method="GET" action="/get_medicines/">
-        Please enter incoming patient ID: <input type="text" id="patient_id">
-        </form>
-        <button class="btn btn-primary" id="prescription" @click="get_prescription()" type="submit">Get Prescription Details</button>
+        <!-- <form method="GET" action="/get_medicines/"> -->
+        Please enter incoming patient ID: <input type="text" id="patient_id"><br>
+        <button class="btn btn-primary" id="prescription" @click="get_medicines(this.patient_id)" type="submit">Get Prescription Details</button>
+        <!-- </form> -->
     </div>
     
     <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
