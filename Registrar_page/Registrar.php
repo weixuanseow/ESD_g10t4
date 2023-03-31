@@ -87,6 +87,9 @@
         <button class="btn btn-primary" id="prescription" @click="get_medicines(this.patient_id)" type="submit">Get Prescription Details</button>
         <!-- </form> -->
     </div>
+    <div id="medicines">
+        
+    </div>
     
     <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
         <!-- Font Awesome JS -->

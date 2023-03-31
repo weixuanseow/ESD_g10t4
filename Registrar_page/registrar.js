@@ -25,9 +25,18 @@ const root = Vue.createApp({
             axios.get(url)
             .then(response => {
             this.message = response.data;
-            console.log(response) // comment out ltr
-            console.log(this.message) // comment out ltr
+            console.log(this.message) //can comment out later
             console.log('done');
+            //set innerHTML for prescriptions based on code & data
+            prescriptions=response.data.data
+            FISH='<table><tr><th>Medicine</th><th>Amount</th></tr>'
+            for (prescription in prescriptions) {
+                console.log(prescription)
+                console.log(prescriptions[prescription])
+                FISH+='<tr><td>' + prescription + '</td><td>' + prescriptions[prescription] + '</td></tr>'
+            }
+            FISH+='</table>'
+            document.getElementById("medicines").innerHTML=FISH
             })
             .catch(error => {
             console.log('error');

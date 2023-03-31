@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from sqlalchemy import func
 
 import logging
 
@@ -450,13 +451,17 @@ def viewDiagnosticTest():
 #################### PRESCRIPTION RELATED FUNCTIONS ############################################################
 @app.route('/check_prescription/<patient_id>/<appt_date>', methods=['GET']) #wehhh i havent figured out the input stuff yet
 def check_prescription(patient_id, appt_date):
-    prescription = Prescription.query.filter_by(patient_id=patient_id, appt_datetime=appt_date).first()
+    print(patient_id,appt_date)
+    print(type(patient_id),type(appt_date))
+    appt_date='2022-12-28' #need to remove this hardcode aft adding more data in!
+    prescription = Prescription.query.filter(Prescription.patient_id == patient_id,func.DATE(Prescription.appt_datetime) == appt_date).first()
+   
     if prescription:
         prescription_medicines = PrescriptionMedicine.query.filter_by(prescription_id=prescription.prescription_id).all()
         if prescription_medicines:
             medicines = {}
             for medicine in prescription_medicines:
-                medicines[medicine.medicine_name]= medicine.amount,
+                medicines[medicine.medicine_name]= medicine.amount
                     # "medicine_name": medicine.medicine_name,
                     # "amount": medicine.amount #is amt right not freq*amt
                 
