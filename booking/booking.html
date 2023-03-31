@@ -233,8 +233,10 @@
             // These info should be taken from periovus page
             let pid = 1// maybe pid now need get from session
             let appt = "2023-02-20 13:00:00"
-            sessionStorage.getItem("pid",pid)
-            sessionStorage.getItem('appt',appt)
+            console.log(pid)
+            console.log(appt)
+            //sessionStorage.getItem("pid",pid)
+            //sessionStorage.getItem('appt',appt)
             // 
             test_type = document.getElementById('test_type').value
             url = "http://127.0.0.1:5050/patient/" + pid
@@ -245,8 +247,9 @@
                 console.log(data)
                 //storing pid, phone and visit_type in session
                 let phone = data.data.phone_num
-                console.log(phone)
+                // console.log(phone)
                 // these data needs to be used in next page , assume first page send to this page through session storage
+                sessionStorage.setItem('pid', pid)
                 sessionStorage.setItem('phone',phone)
                 sessionStorage.setItem("test_type",test_type)
                 console.log(test_type + "Test Type retrieved and "+ "patient details:" + pid + " and " + phone)
