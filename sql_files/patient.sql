@@ -36,6 +36,7 @@ INSERT INTO appointment_history (Appt_DateTime, Patient_ID, Diagnosis) VALUES
 ('2022-12-28 10:20:00', '000000003', 'Left Distal Radius Fracture'),
 ('2023-01-28 15:40:00', '000000002', 'Scoliosis'),
 ('2023-02-20 13:00:00', '000000001', 'Osteoarthritis'),
+('2022-12-29 10:20:00', '000000003', 'Minnal inserted a disease for me'),
 ('2023-03-11 16:30:00', '000000003', 'Fracture Union, No further treatment required');
 COMMIT;
 
@@ -50,13 +51,13 @@ CREATE TABLE IF NOT EXISTS prescription (
 );
 
 INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID) VALUES
-('2022-12-28 10:20:00', '000000003', '800000001'),
-('2023-01-28 15:40:00', '000000002', '800000002'),
-('2023-02-20 13:00:00', '000000001', '800000003');
+('2022-12-28 10:20:00', '000000003', '800000001'), /* ok */
+('2023-01-28 15:40:00', '000000002', '800000002'), /* ok */
+('2023-02-20 13:00:00', '000000001', '800000003'); /* ok */
 COMMIT;
 
 INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID) VALUES
-('2022-12-29 10:20:00', '000000003', '800000004')
+('2022-12-29 10:20:00', '000000003', '800000004');
 COMMIT;
 
 
@@ -70,19 +71,14 @@ CREATE TABLE IF NOT EXISTS prescription_medicines (
 );
 
 INSERT INTO prescription_medicines (Prescription_ID, Medicine_Name, Frequency, Amount) VALUES
-('800000004', 'Drug A', 'whenever ur heart desires', 200),
-('800000004', 'Drug B', 'whenever ur heart desires', 150)
+('800000001', 'Aspirin', 'Every 4-6 hours as needed', '60'),
+('800000001', 'Fluoxetine', 'Once a day', '31'),
+('800000001', 'Tramadol', 'Once a day', '60'),
+('800000002', 'Paracetamol', 'Every 4-6 hours as needed, no longer than 2 days', '50'),
+('800000003', 'Naproxen', 'Twice a day', '28'),
+('800000003', 'Warfarin', '3-4 times a day', '120');
 COMMIT;
-
-INSERT INTO prescription_medicines (Prescription_ID, Medicine_Name, Frequency, Amount) VALUES
-('800000001', 'Aspirin', 'Every 4-6 hours as needed', '2 tablets'),
-('800000001', 'Flexeril', 'Once a day', '1 tablet'),
-('800000001', 'Teriparatide', 'Once a day', '1 tablet'),
-('800000002', ' Paracetamol', 'Every 4-6 hours as needed, no longer than 2 days', '1 tablet'),
-('800000003', 'Naproxen Sodium', 'Twice a day', '2 tablets'),
-('800000003', 'Capsaicin Topical Cream', '3-4 times a day', 'As needed');
-COMMIT;
-
+/* Changed "Amount" to numbers so it can be interpreted by inventory.py */
 
 DROP TABLE IF EXISTS diagnostic_test;
 CREATE TABLE IF NOT EXISTS diagnostic_test (

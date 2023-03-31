@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from invokes import invoke_http #Used for the invocation of other microservices
-from datetime import datetime
 
 import os, sys
 import amqp_setup
@@ -15,17 +14,12 @@ CORS(app)
 
 #Routes
 
-@app.route("/get_medicines/", methods=['GET'])
-def get_medicines():
-    data = request.get_json()
-    for key,value in data.items():
-        patient_id=key
-        appt_date=value
-    # patient_id_str = request.args.get('patient_id')
-    # patient_id_int = int(patient_id_str, 10)
-    # patient_id = '{:08d}'.format(patient_id_int)
-
-    # appt_date = datetime.today().strftime("%Y-%m-%d")
+@app.route("/get_medicines/<patient_id>/<appt_date>", methods=['GET'])
+def get_medicines(patient_id, appt_date):
+    # data = request.get_json()
+    # for key,value in data.items():
+    #     patient_id=key
+    #     appt_date=value
 
     url = f"http://127.0.0.1:5050/check_prescription/{patient_id}/{appt_date}"
     prescription_results = invoke_http(url, method='GET')
