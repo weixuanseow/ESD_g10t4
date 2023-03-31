@@ -106,6 +106,9 @@
             
         let test_type = sessionStorage.getItem("test_type")
         console.log(test_type)
+        let pid = sessionStorage.getItem("pid")
+        console.log(pid)
+        
 
         $('#headertext').append("<h1>Book a "+ test_type+ " test</h1>")
         $('#phone').append("<p>Phone: "+ sessionStorage.getItem('phone')+ "</p>")
