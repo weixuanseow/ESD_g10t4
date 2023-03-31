@@ -11,6 +11,7 @@ const root = Vue.createApp({
     mounted() {
         date = new Date();
         date = date.toISOString().substring(0,10);
+        date = "2023-02-20" //comment this out later!
         console.log(date, 'mounted')
         patient_id=document.getElementById("patient_id").value
         console.log(patient_id, 'mounted')
@@ -24,7 +25,8 @@ const root = Vue.createApp({
             axios.get(url)
             .then(response => {
             this.message = response.data;
-            console.log(this.message)
+            console.log(response) // comment out ltr
+            console.log(this.message) // comment out ltr
             console.log('done');
             })
             .catch(error => {
