@@ -102,3 +102,84 @@ INSERT INTO diagnostic_test (Test_DateTime, Test_Type, Test_Results, Patient_ID,
 ('2023-02-20 13:18:00', 'MRI', 'Monoarticular Osteoarthritis at the knee', '000000001', '2023-02-20 13:00:00'),
 ('2023-03-11 16:35:00', 'X-ray', 'No signs of abnormality', '000000003', '2023-03-11 16:30:00');
 COMMIT;
+
+INSERT INTO appointment_history (Patient_ID, Appt_DateTime, Diagnosis)
+VALUES
+  ('000000001', '2023-04-01 09:00:00', 'Fever'),
+  ('000000001', '2023-04-02 10:30:00', 'Common cold'),
+  ('000000001', '2023-04-03 14:15:00', 'Migraine'),
+  ('000000001', '2023-04-04 11:00:00', 'Sinusitis'),
+  ('000000001', '2023-04-05 15:30:00', 'Allergies'),
+  ('000000002', '2023-04-01 08:45:00', 'High blood pressure'),
+  ('000000002', '2023-04-02 13:00:00', 'Diabetes'),
+  ('000000002', '2023-04-03 16:45:00', 'Depression'),
+  ('000000002', '2023-04-04 09:30:00', 'Arthritis'),
+  ('000000002', '2023-04-05 11:30:00', 'Asthma'),
+  ('000000003', '2023-04-01 12:30:00', 'Pneumonia'),
+  ('000000003', '2023-04-02 16:00:00', 'Anxiety'),
+  ('000000003', '2023-04-03 13:15:00', 'Back pain'),
+  ('000000003', '2023-04-04 14:30:00', 'Gastroenteritis'),
+  ('000000003', '2023-04-05 10:45:00', 'Urinary tract infection');
+  COMMIT;
+
+INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID)
+VALUES
+('2023-04-01 09:00:00', '000000001', 800000004),
+('2023-04-02 10:30:00', '000000001', 800000005),
+('2023-04-03 14:15:00', '000000001', 800000006),
+('2023-04-04 11:00:00', '000000001', 800000007),
+('2023-04-05 15:30:00', '000000001', 800000008),
+('2023-04-01 08:45:00', '000000002', 800000009),
+('2023-04-02 13:00:00', '000000002', 800000010),
+('2023-04-03 16:45:00', '000000002', 800000011),
+('2023-04-04 09:30:00', '000000002', 800000012),
+('2023-04-05 11:30:00', '000000002', 800000013),
+('2023-04-01 12:30:00', '000000003', 800000014),
+('2023-04-02 16:00:00', '000000003', 800000015),
+('2023-04-03 13:15:00', '000000003', 800000016),
+('2023-04-04 14:30:00', '000000003', 800000017),
+('2023-04-05 10:45:00', '000000003', 800000018);
+COMMIT;
+
+INSERT INTO prescription_medicines (Prescription_ID, Medicine_Name, Frequency, Amount) VALUES
+  -- Prescription 800000004
+  (800000004, 'Ibuprofen', 'Once a day', 30),
+  (800000004, 'Acetaminophen', 'Twice a day', 60),
+  -- Prescription 800000005
+  (800000005, 'Acetaminophen', 'Once a day', 30),
+  (800000005, 'Ibuprofen', 'Once a day', 30),
+  -- Prescription 800000006
+  (800000006, 'Aspirin', 'Once a day', 30),
+  -- Prescription 800000007
+  (800000007, 'Lisinopril', 'Once a day', 30),
+  -- Prescription 800000008
+  (800000008, 'Amoxicillin', 'Twice a day', 20),
+  -- Prescription 800000009
+  (800000009, 'Ibuprofen', 'Once a day', 30),
+  (800000009, 'Paracetamol', 'Once a day', 30),
+  -- Prescription 800000010
+  (800000010, 'Paracetamol', 'Once a day', 60),
+  -- Prescription 800000011
+  (800000011, 'Doxycycline', 'Once a day', 14),
+  (800000011, 'Ibuprofen', 'Once a day', 30),
+  -- Prescription 800000012
+  (800000012, 'Metformin', 'Twice a day', 60),
+  -- Prescription 800000013
+  (800000013, 'Atorvastatin', 'Once a day', 30),
+  -- Prescription 800000014
+  (800000014, 'Ibuprofen', 'Once a day', 30),
+  (800000014, 'Lorazepam', 'Once a day', 30),
+  -- Prescription 800000015
+  (800000015, 'Metoprolol', 'Once a day', 30),
+  -- Prescription 800000016
+  (800000016, 'Doxycycline', 'Once a day', 14),
+  (800000016, 'Ibuprofen', 'Once a day', 30),
+  -- Prescription 800000017
+  (800000017, 'Simvastatin', 'Once a day', 30),
+  -- Prescription 800000018
+  (800000018, 'Ibuprofen', 'Once a day', 30),
+  (800000018, 'Lorazepam', 'Once a day', 30);
+COMMIT;
+
+/* ok i generated everything except diagnostic test cos i dont rly know the details for it
+pls add if wanted/needed thanks */
