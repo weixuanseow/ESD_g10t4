@@ -1,6 +1,28 @@
 <?php
     session_start();
     $username = $_SESSION["username"]
+
+    // $connection = new AMQPConnection(array(
+    //     'host' => 'localhost',
+    //     'port' => 5672,
+    //     'login' => 'guest',
+    //     'password' => 'guest'
+    // ));
+    
+    // $connection->connect();
+    
+    // $channel = new AMQPChannel($connection);
+    
+    // $queue = new AMQPQueue($channel);
+    // $queue->setName('approve_order');
+    
+    // while (true) {
+    //     $queue->consume(function($message) {
+    //         echo $message->getBody();
+    //     }, AMQP_AUTOACK);
+    // }
+    
+    // $connection->disconnect();
 ?>
 <!DOCTYPE html>
 <html lang="en">
