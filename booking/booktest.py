@@ -92,7 +92,7 @@ def processBooking(booking):
 
         # Record in diagnostic test ----------------------------------------------------
         print('\n\n-----Invoking patient microservice-----')
-        diagnostic_test_URL = "http://127.0.0.1:5050/create_diagnostic_test" 
+        diagnostic_test_URL = "http://127.0.0.1:5051/create_diagnostic_test" 
         diagnostic_test_result = invoke_http(diagnostic_test_URL, method="POST", json=booking)
 
 
