@@ -60,6 +60,7 @@ const root = Vue.createApp({
             window.location.href = "../booking/booking.html"
         },
         prescribe(date,id) {
+<<<<<<< Updated upstream
             // alert(`it works! this is the id: ${date} this is the id: ${id}`)
                         // console.log(date)
             // console.log(date)
@@ -69,6 +70,21 @@ const root = Vue.createApp({
             monthnumber = this.month_to_number[tempstorage[1]]
             yearnumber = tempstorage[2]
             newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
+=======
+            alert(`it works! this is the id: ${date} this is the id: ${id}`)
+                        console.log(date)
+            console.log(date)
+            const newdate = this.formatDate(date);
+            // console.log(this.something)
+            // tempdate = date.slice(6, date.length - 4)
+            // console.log(tempdate)
+            // tempstorage = tempdate.split(' ')
+            // daynumber = tempstorage[0]
+            // monthnumber = this.month_to_number[tempstorage[1]]
+            // yearnumber = tempstorage[2]
+            // const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
+            console.log(newdate)
+>>>>>>> Stashed changes
 
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('id',id)

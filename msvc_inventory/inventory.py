@@ -51,7 +51,7 @@ def update_inventory():
                 ret_list[drug_full_name.drug_full_name]=drug_full_name.topup_amt
             updated = True  # set the flag to True if an update was made
             db.session.commit()
-        
+
         if updated:
             return jsonify(
                 {
@@ -60,6 +60,7 @@ def update_inventory():
                     "message": 'Updates were made and topups are required.'
                 }
             ), 200
+
         else:
             return jsonify(
                 {

@@ -10,7 +10,7 @@ import json
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/patient_records'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -31,7 +31,7 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    'password': 'root',
     'database': 'patient_records',
     'port': 3306
 }
@@ -481,5 +481,5 @@ def update_prescription_medicines():
     
     
 if __name__ == '__main__':
-    app.run(port=5050, debug=True)
+    app.run(port=5051, debug=True)
 
