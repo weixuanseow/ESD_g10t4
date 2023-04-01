@@ -99,13 +99,14 @@
                 </th>
 
             </tr>
-            <tr v-for="obj of this.something">
-                <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.appt_datetime}}</td>
-                <td v-if="obj.appt_datetime.includes(this.datetosearch)">{{obj.patient_id}}</td>
-                <td v-if="obj.appt_datetime.includes(this.datetosearch)">
-                    <button class="btn btn-primary" @click="prescribe(obj.appt_datetime, obj.patient_id)">Prescribe Medicine</button>
-                     <button class="btn btn-warning"  @click="booking(obj.appt_datetime, obj.patient_id)">Book a Test</button>
-                    </td>
+            <tr v-for="obj of this.something" id='obj.appt_datetime'>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch) && obj.diagnosis == 'tbd' ">{{obj.appt_datetime}}</td>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch) && obj.diagnosis == 'tbd' ">{{obj.patient_id}}</td>
+                <td v-if="obj.appt_datetime.includes(this.datetosearch) && obj.diagnosis == 'tbd' ">
+                    <button class="btn btn-primary m-2" @click="prescribe(obj.appt_datetime, obj.patient_id)">Prescribe Medicine</button>
+                    <button class="btn btn-warning m-2"  @click="booking(obj.appt_datetime, obj.patient_id)">Book a Test</button>
+                    <button class="btn btn-success m-2"  @click="remove(obj.appt_datetime, obj.patient_id)">Complete Consult</button>
+                </td>
             </tr>
         </div>
     </div>

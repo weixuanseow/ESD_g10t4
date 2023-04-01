@@ -18,12 +18,14 @@ const root = Vue.createApp({
 
             datetosearch: '',
 
-            month_to_number: {'Jan': 1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+            month_to_number: {'Jan': '01','Feb':'02','Mar':'03','Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'},
+
+            msg:'',
         }
     },
     mounted() {
         let appt = "2023-02-20 13:00:00"
-        url = "http://127.0.0.1:5010/find_by_date/1"
+        url = "http://127.0.0.1:5010/find_by_date2/1"
         axios.get(url)
         .then(response =>(this.something = response.data.data.bookings))
         date = new Date()
@@ -33,12 +35,13 @@ const root = Vue.createApp({
         console.log(month)
         console.log(day)
         console.log(year)
-        this.datetosearch += '11 Mar 2023' // put back to: day + ' ' + month + ' ' + year
+        this.datetosearch += day + ' ' + month + ' ' + year
 
 
     },
     methods: {
         booking(date,id){
+<<<<<<< Updated upstream
             console.log(date)
             // console.log(this.something)
             // tempdate = date.slice(6, date.length - 4)
@@ -52,14 +55,42 @@ const root = Vue.createApp({
             //newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
             const newdate = this.formatDate(date);
             console.log(newdate)
+=======
+            // console.log(date)
+            sessionStorage.clear()
+            console.log(this.something)
+            tempdate = date.slice(6, date.length - 4)
+            console.log(tempdate)
+            tempstorage = tempdate.split(' ')
+
+            if(tempstorage[0].length == 2) {
+                daynumber = tempstorage[0]
+            }
+            else {
+            daynumber = '0' + tempstorage[0]
+            }
+            monthnumber = this.month_to_number[tempstorage[1]]
+            yearnumber = tempstorage[2]
+
+            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
+            // console.log(newdate)
+
+>>>>>>> Stashed changes
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('pid',id)
-            window.location.href = "../booking/booking.html"
+            // window.location.href = "../booking/booking.html"
         },
         prescribe(date,id) {
+<<<<<<< Updated upstream
             alert(`it works! this is the id: ${date} this is the id: ${id}`)
                         console.log(date)
             console.log(date)
+=======
+            // alert(`it works! this is the id: ${date} this is the id: ${id}`)
+                        // console.log(date)
+            // console.log(date)
+            sessionStorage.clear()
+>>>>>>> Stashed changes
             console.log(this.something)
             tempdate = date.slice(6, date.length - 4)
             console.log(tempdate)
@@ -67,8 +98,14 @@ const root = Vue.createApp({
             daynumber = tempstorage[0]
             monthnumber = this.month_to_number[tempstorage[1]]
             yearnumber = tempstorage[2]
+<<<<<<< Updated upstream
             const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
             console.log(newdate)
+=======
+   
+            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
+            // console.log(newdate)
+>>>>>>> Stashed changes
 
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('id',id)
@@ -85,46 +122,9 @@ const root = Vue.createApp({
             
 
             console.log(this.date_time[0])
-
-            // let str =  `
-            // <table id="appointment_table" border="2px">
-            // <tr>
-            //     <th>
-            //         <h2>Date&Time</h2>
-            //     </th>
-
-            //     <th>
-            //         <h2>Patient</h2>
-            //     </th>
-
-            //     <th>
-            //         <h2>Select</h2>
-            //     </th>
-
-            // </tr>
-            // `
-
-            // for(let i = 1; i <= this.something.length; i++) {
-            //     todaysdate = this.datetosearch
-            //     apptdate = this.date_time[i-1]  
-            //     if(apptdate.includes(todaysdate)){
-            //         temp = `<tr><td>`
-            //         button = document.createElement('button')
-            //         button.setAttribute('class','btn btn-primary')
-            //         button.setAttribute('v-on:click','prescribe')
-            //         button.innerText = 'Prescribe Medicine'
-            //         temp += this.date_time[i-1]+ `</td><td>`+ this.patients[i-1]+ `</td><td><button class="btn btn-primary" @click="prescribe">Prescribe Medicine</button> <button class="btn btn-warning">Book a Test</button></td></tr>`;
-            //         str += temp
-            //     }
-            // }
-            // str += `</table>`
-            // console.log(document.getElementById('appointment'))
-            // console.log("=== [END] create_patient_appoints_today() ===")
-            // console.log(this.something)
-            // document.getElementById('appointment').innerHTML = str
-
             
         },
+<<<<<<< Updated upstream
         formatDate(dateString) {
             const date = new Date(dateString);
             const year = date.getUTCFullYear();
@@ -137,6 +137,26 @@ const root = Vue.createApp({
             const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             return formattedDate;
           }
+=======
+        remove(id,pid) {
+            prompted = prompt('Enter The Diagnosis')
+            // diagnosis = {"diagnosis":prompted}
+            // console.log(diagnosis)
+            let appt = "2023-04-01T16:30:00"
+            url = "http://127.0.0.1:5010/find_by_date/" + pid + '/' + appt + '/' + prompted
+            // axios({
+            //     method: 'get',
+            //     url: "http://127.0.0.1:5010/find_by_date/" + pid + '/' + appt,
+            //     data: {
+            //         "diagnosis":prompted
+            //     }
+            //   });
+            axios.get(url)
+            .then(response =>(this.msg = response))
+            alert('Success!')
+            location.reload(true)
+        }
+>>>>>>> Stashed changes
 
 
     },

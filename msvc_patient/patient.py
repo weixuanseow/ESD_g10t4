@@ -4,6 +4,7 @@ from flask_cors import CORS
 from sqlalchemy import func
 
 import logging
+import json
 
 # Query available booking slot from current time 
 from datetime import datetime, timedelta
@@ -158,8 +159,8 @@ class DiagnosticTest(db.Model):
     patient_id = db.Column(db.ForeignKey('appointment_history.patient_id'), nullable=False)
     appt_datetime = db.Column(db.ForeignKey('appointment_history.appt_datetime'), nullable=False)
     
-    def __init__(self, test_datetime, test_type, test_results, appt_datetime):
-        # self.patient_id = patient_id
+    def __init__(self, patient_id, test_datetime, test_type, test_results, appt_datetime):
+        self.patient_id = patient_id
         self.test_datetime = test_datetime
         self.test_type = test_type
         self.test_results = test_results
@@ -219,7 +220,7 @@ def find_patient(patient_id):
 def create_patient():
     
     data = request.get_json()
-    print(data)
+    
     patient_full_name = data['patient_full_name']
     date_of_birth = data['date_of_birth']
     gender = data['gender']
@@ -264,54 +265,54 @@ def create_patient():
     ), 201    
         
 # update patient
-# @app.route('/patients/<int:patient_id>', methods=['PUT'])
-# def update_patient(patient_id):
-#     patient = Patient.query.filter_by(patient_ID=patient_id).first()
-#     if patient:
-#         data = request.get_json()
-#         if data['Patient_Full_Name']:
-#             patient.Patient_Full_Name = data['Patient_Full_Name']
-#         if data['Date_Of_Birth']:
-#             patient.Date_Of_Birth = data['Date_Of_Birth']
-#         if data['Gender']:
-#             patient.Gender = data['Gender']
-#         if data['Phone_Num']:
-#             patient.Phone_Num = data['Phone_Num'] 
-#         if data['Allergies']:
-#             patient.Allergies = data['Allergies'] 
-#         db.session.commit()
+@app.route('/patients/<int:patient_id>', methods=['PUT'])
+def update_patient(patient_id):
+    patient = Patient.query.filter_by(patient_id=patient_id).first()
+    if patient:
+        data = request.get_json()
+        if data['Patient_Full_Name']:
+            patient.patient_full_name = data['Patient_Full_Name']
+        if data['Date_Of_Birth']:
+            patient.date_of_birth = data['Date_Of_Birth']
+        if data['Gender']:
+            patient.gender = data['Gender']
+        if data['Phone_Num']:
+            patient.phone_num = data['Phone_Num'] 
+        if data['Allergies']:
+            patient.allergies = data['Allergies'] 
+        db.session.commit()
         
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": patient.json()
-#             }
-#         )
+        return jsonify(
+            {
+                "code": 200,
+                "data": patient.json()
+            }
+        )
         
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "data": {
-#                 "patient_id": patient_id
-#             },
-#             "message": "Patient not found."
-#         }
-#     ), 404
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "patient_id": patient_id
+            },
+            "message": "Patient not found."
+        }
+    ), 404
     
     
     
-#     if not patient:
-#         return {"error": "Patient not found"}, 404
+    if not patient:
+        return {"error": "Patient not found"}, 404
 
-#     data = request.get_json()
-#     patient.Patient_Full_Name = data.get('Patient_Full_Name', patient.Patient_Full_Name)
-#     patient.Date_Of_Birth = data.get('Date_Of_Birth', patient.Date_Of_Birth)
-#     patient.Gender = data.get('Gender', patient.Gender)
-#     patient.Phone_Num = data.get('Phone_Num', patient.Phone_Num)
-#     patient.Allergies = data.get('Allergies', patient.Allergies)
+    data = request.get_json()
+    patient.Patient_Full_Name = data.get('Patient_Full_Name', patient.Patient_Full_Name)
+    patient.Date_Of_Birth = data.get('Date_Of_Birth', patient.Date_Of_Birth)
+    patient.Gender = data.get('Gender', patient.Gender)
+    patient.Phone_Num = data.get('Phone_Num', patient.Phone_Num)
+    patient.Allergies = data.get('Allergies', patient.Allergies)
 
-#     db.session.commit()
-#     return {"message": "Patient record updated successfully"}, 200
+    db.session.commit()
+    return {"message": "Patient record updated successfully"}, 200
 
     
 @app.route('/patient/<int:patient_id>/allergies', methods=["GET"])
@@ -332,6 +333,48 @@ def get_patient_allergies(patient_id):
 ###################################################################################################################
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
+<<<<<<< Updated upstream
+=======
+@app.route('/create_diagnostic_test', methods=['POST'])
+def createDiagnosticTest2():
+    data = request.get_json()
+    
+    print (type(data))
+    print(data)
+    # json_data = json.dumps(data)
+    # print (json_data)
+    patient_id = data['patient_id']
+    test_datetime = data['test_datetime']
+    test_type = data["test_type"]
+    test_results = data["test_results"]
+    appt_datetime = data['appt_datetime']
+    
+    test_instance = DiagnosticTest(patient_id=patient_id, test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
+    print(db.session)
+    try:
+        db.session.add(test_instance)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "test_id": "error message in the except portion",
+                    "test_datetime": test_datetime,
+                    "test_type": test_type,
+                    "test_results": test_results,
+                },
+                "message": "An error occured creating the test instance"
+            }
+        ), 500
+    return jsonify(
+        {
+            "code": 201,
+            "data": test_instance.json(),
+            "message": "Donezo mina san"
+        }
+    ), 201
+>>>>>>> Stashed changes
 # @app.route('/create_diagnostic_test', methods=['POST'])
 # def createDiagnosticTest2():
 #     data = request.get_json()

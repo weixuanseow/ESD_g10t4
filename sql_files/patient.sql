@@ -37,7 +37,8 @@ INSERT INTO appointment_history (Appt_DateTime, Patient_ID, Diagnosis) VALUES
 ('2023-01-28 15:40:00', '000000002', 'Scoliosis'),
 ('2023-02-20 13:00:00', '000000001', 'Osteoarthritis'),
 ('2022-12-29 10:20:00', '000000003', 'Minnal inserted a disease for me'),
-('2023-03-11 16:30:00', '000000003', 'Fracture Union, No further treatment required');
+('2023-03-11 16:30:00', '000000003', 'Fracture Union, No further treatment required'),
+('2023-04-01 16:30:00', '000000003', 'tbd');
 COMMIT;
 
 
