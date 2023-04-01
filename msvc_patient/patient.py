@@ -9,8 +9,8 @@ import logging
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.logger.setLevel(logging.DEBUG)
@@ -19,22 +19,21 @@ CORS(app)
 
 import mysql.connector
 # Configure MySQL connection
-mysql_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'root',
-    'database': 'patient_records',
-    'port': 8889
-}
-
 # mysql_config = {
 #     'host': 'localhost',
 #     'user': 'root',
 #     'password': 'root',
 #     'database': 'patient_records',
 #     'port': 8889
-
 # }
+
+mysql_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'patient_records',
+    'port': 3306
+}
 conn = mysql.connector.connect(**mysql_config)
         
 class ApptHist(db.Model):
