@@ -88,7 +88,9 @@
     <div id="medicines">
         
     </div>
-    <div><h2>{{ top_up_message }}</h2></div>
+    <div id='topup'>
+        
+    </div>
     
     <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
         <!-- Font Awesome JS -->

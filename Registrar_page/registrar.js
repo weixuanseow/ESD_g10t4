@@ -16,12 +16,12 @@ const root = Vue.createApp({
             console.log(message)
             alert(message)
             this.top_up_message = message;
+            document.getElementById('topup').innerHTML='<h2>' + message+'</h2>'
         });
     },
     mounted() {
         date = new Date();
         date = date.toISOString().substring(0,10);
-        //date = "2023-02-20" //comment this out later!
         console.log(date, 'mounted')
         patient_id=document.getElementById("patient_id").value
         console.log(patient_id, 'mounted')
