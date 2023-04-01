@@ -58,16 +58,10 @@ document.getElementById('patient-id').setAttribute('value',pid)
 //     medicineLabel.htmlFor = "medicine-" + medicineCount;
 //     medicineLabel.innerHTML = "Medicine " + medicineCount + ":";
 
-<<<<<<< Updated upstream
-    var medicineInput = document.createElement("select");
-    medicineInput.id = "medicine-" + medicineCount;
-    medicineInput.name = "medicine[]";
-=======
 //     var medicineInput = document.createElement("input");
 //     medicineInput.type = "text";
 //     medicineInput.id = "medicine-" + medicineCount;
 //     medicineInput.name = "medicine[]";
->>>>>>> Stashed changes
 
 //     var frequencyLabel = document.createElement("label");
 //     frequencyLabel.htmlFor = "frequency-" + medicineCount;
@@ -192,18 +186,9 @@ const root = Vue.createApp({
             
         // },
         addMedicineFields() {
-<<<<<<< Updated upstream
-            this.medicinecount += 1
-            str = `
-            <p>lorem</p>
-            `
-            medicinefields = document.getElementById("medicine-fields").innerHTML
-            medicinefields += str
-=======
             event.preventDefault()
             console.log("add fields called")
             // this.medicinecount += 1
->>>>>>> Stashed changes
 
             // var medicinefields = document.getElementById("medicine-fields")
             // medicinefields.innerHTML += `
@@ -237,7 +222,7 @@ const root = Vue.createApp({
                 prescriptionDetails.push(medicine);
             }
             $.ajax({
-                url: "http://127.0.0.1:5101/prescribe_medicine",
+                url: "http://127.0.0.1:5101/prescribe_medicine/",
                 type: "POST",
                 data: JSON.stringify({
                     patient_id: patientId,
