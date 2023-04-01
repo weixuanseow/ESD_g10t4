@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 # specify the database URL. Here we use the mysql+mysqlconnector prefix to tell SQLAlchemy which database engine and connector we are using. 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/bookings'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/bookings'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/bookings'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #  disable modification tracking
@@ -21,9 +21,9 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    'password': 'root',
     'database': 'bookings',
-    'port': 3306
+    'port': 8889
 }
 # mysql_config = {
 #     'host': 'localhost',

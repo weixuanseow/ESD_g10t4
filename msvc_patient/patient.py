@@ -333,69 +333,69 @@ def get_patient_allergies(patient_id):
 ###################################################################################################################
 #################### DIAGNOSTIC TEST RELATED FUNCTIONS ############################################################
 # create diagnostic test for scenario 1
-@app.route('/create_diagnostic_test', methods=['POST'])
-def createDiagnosticTest2():
-    data = request.get_json()
-    print(data)
-    patient_id = data['patient_id']
-    test_datetime = data['test_datetime']
-    test_type = data["test_type"]
-    test_results = data["test_results"]
-    appt_datetime = data['appt_datetime']
-    
-    test_instance = DiagnosticTest(patient_id=patient_id, test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
-    print(db.session)
-    try:
-        db.session.add(test_instance)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "test_id": "error message in the except portion",
-                    "test_datetime": test_datetime,
-                    "test_type": test_type,
-                    "test_results": test_results,
-                },
-                "message": "An error occured creating the test instance"
-            }
-        ), 500
-    return jsonify(
-        {
-            "code": 201,
-            "data": test_instance.json(),
-            "message": "Donezo mina san"
-        }
-    ), 201
 # @app.route('/create_diagnostic_test', methods=['POST'])
-# def createDiagnosticTest():
+# def createDiagnosticTest2():
+#     data = request.get_json()
+#     print(data)
+#     patient_id = data['patient_id']
+#     test_datetime = data['test_datetime']
+#     test_type = data["test_type"]
+#     test_results = data["test_results"]
+#     appt_datetime = data['appt_datetime']
+    
+#     test_instance = DiagnosticTest(patient_id=patient_id, test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
+#     print(db.session)
 #     try:
-#         data = request.get_json()
-#         print(data)
-#         # pid = data['pid']
-#         pid = data['pid']
-#         from datetime import datetime
-#         now = datetime.now()
-#         test_datetime = now.strptime(data['bslot'], ' %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d %H:%M:%S')
-#         test_type = data["test_type"]
-#         test_results = "Broken brain cells"
-#         appt_datetime = data['appt']
+#         db.session.add(test_instance)
+#         db.session.commit()
+#     except:
+#         return jsonify(
+#             {
+#                 "code": 500,
+#                 "data": {
+#                     "test_id": "error message in the except portion",
+#                     "test_datetime": test_datetime,
+#                     "test_type": test_type,
+#                     "test_results": test_results,
+#                 },
+#                 "message": "An error occured creating the test instance"
+#             }
+#         ), 500
+#     return jsonify(
+#         {
+#             "code": 201,
+#             "data": test_instance.json(),
+#             "message": "Donezo mina san"
+#         }
+#     ), 201
+@app.route('/create_diagnostic_test', methods=['POST'])
+def createDiagnosticTest():
+    try:
+        data = request.get_json()
+        print(data)
+        # pid = data['pid']
+        pid = data['pid']
+        from datetime import datetime
+        now = datetime.now()
+        test_datetime = now.strptime(data['bslot'], ' %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d %H:%M:%S')
+        test_type = data["test_type"]
+        test_results = "Broken brain cells"
+        appt_datetime = data['appt']
         
-#         cursor = conn.cursor()
-#         sql = "INSERT INTO diagnostic_test (Test_DateTime, Test_Type, Test_Results, Patient_ID, Appt_DateTime) VALUES (%s, %s, %s, %s, %s)"
-#         val = (test_datetime, test_type, test_results, pid, appt_datetime)
-#         cursor.execute(sql, val)
+        cursor = conn.cursor()
+        sql = "INSERT INTO diagnostic_test (Test_DateTime, Test_Type, Test_Results, Patient_ID, Appt_DateTime) VALUES (%s, %s, %s, %s, %s)"
+        val = (test_datetime, test_type, test_results, pid, appt_datetime)
+        cursor.execute(sql, val)
             
-#         conn.commit()
-#         return jsonify({
-#             'code': 201,
-#             'message': 'Diagnostic test created successfully.'
-#             })
-#     except Exception as e:
-#         print(str(e))
-#         conn.rollback()
-#         return jsonify({'error': str(e)}), 500
+        conn.commit()
+        return jsonify({
+            'code': 201,
+            'message': 'Diagnostic test created successfully.'
+            })
+    except Exception as e:
+        print(str(e))
+        conn.rollback()
+        return jsonify({'error': str(e)}), 500
 
     # test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
     # print(db.session)

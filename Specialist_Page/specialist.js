@@ -47,8 +47,8 @@ const root = Vue.createApp({
             daynumber = tempstorage[0]
             monthnumber = this.month_to_number[tempstorage[1]]
             yearnumber = tempstorage[2]
-
-            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
+            newdate = now.strptime(date, ' %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d %H:%M:%S')
+            //newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
             console.log(newdate)
 
             sessionStorage.setItem('appt',newdate)
