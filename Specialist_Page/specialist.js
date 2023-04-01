@@ -42,14 +42,14 @@ const root = Vue.createApp({
             // console.log(date)
             console.log(this.something)
             tempdate = date.slice(6, date.length - 4)
-            console.log(tempdate)
+            // console.log(tempdate)
             tempstorage = tempdate.split(' ')
             daynumber = tempstorage[0]
             monthnumber = this.month_to_number[tempstorage[1]]
             yearnumber = tempstorage[2]
 
             newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
-            // console.log(newdate)
+            console.log(newdate)
 
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('pid',id)
