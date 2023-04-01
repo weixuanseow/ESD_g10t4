@@ -53,7 +53,7 @@ const root = Vue.createApp({
 
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('pid',id)
-            // window.location.href = "../booking/booking.html"
+            window.location.href = "../booking/booking.html"
         },
         prescribe(date,id) {
             // alert(`it works! this is the id: ${date} this is the id: ${id}`)
