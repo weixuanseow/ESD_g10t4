@@ -218,13 +218,20 @@
           booking_list = booking_details.split(',')
           let bid = booking_list[0]
           let bslot = booking_list[2]
-          data ={
-            'pid': pid,
-            'appt': appt,
-            'phone': phone,
-            'bid': bid,
-            'test_type': test_type,
-            'bslot': bslot,
+          //data ={
+          //  'pid': pid,
+          //  'appt': appt,
+          //  'phone': phone,
+          //  'bid': bid,
+          //  'test_type': test_type,
+          //  'bslot': bslot,
+          //}
+          data = {
+            "test_datetime": "2022-12-28 10:20:00",
+            "test_type": test_type,
+            "test_results": "praying for life",
+            "patient_id": pid,
+            "appt_datetime": appt
           }
           console.log('Function make_booking is invoked and data')
           console.log(data)
