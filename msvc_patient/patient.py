@@ -451,7 +451,7 @@ def viewDiagnosticTest():
 def check_prescription(patient_id, appt_date):
     print(patient_id,appt_date)
     print(type(patient_id),type(appt_date))
-    appt_date='2022-12-28' #need to remove this hardcode aft adding more data in!
+    #appt_date='2022-12-28' #need to remove this hardcode aft adding more data in!
     prescription = Prescription.query.filter(Prescription.patient_id == patient_id,func.DATE(Prescription.appt_datetime) == appt_date).first()
    
     if prescription:

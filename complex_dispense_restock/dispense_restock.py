@@ -16,10 +16,6 @@ CORS(app)
 
 @app.route("/get_medicines/<patient_id>/<appt_date>", methods=['GET'])
 def get_medicines(patient_id, appt_date):
-    # data = request.get_json()
-    # for key,value in data.items():
-    #     patient_id=key
-    #     appt_date=value
 
     url = f"http://127.0.0.1:5050/check_prescription/{patient_id}/{appt_date}"
     prescription_results = invoke_http(url, method='GET')
