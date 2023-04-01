@@ -41,8 +41,8 @@ const root = Vue.createApp({
     },
     methods: {
         booking(date,id){
-<<<<<<< Updated upstream
             console.log(date)
+            sessionStorage.clear()
             // console.log(this.something)
             // tempdate = date.slice(6, date.length - 4)
             // // console.log(tempdate)
@@ -55,42 +55,15 @@ const root = Vue.createApp({
             //newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
             const newdate = this.formatDate(date);
             console.log(newdate)
-=======
-            // console.log(date)
-            sessionStorage.clear()
-            console.log(this.something)
-            tempdate = date.slice(6, date.length - 4)
-            console.log(tempdate)
-            tempstorage = tempdate.split(' ')
-
-            if(tempstorage[0].length == 2) {
-                daynumber = tempstorage[0]
-            }
-            else {
-            daynumber = '0' + tempstorage[0]
-            }
-            monthnumber = this.month_to_number[tempstorage[1]]
-            yearnumber = tempstorage[2]
-
-            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
-            // console.log(newdate)
-
->>>>>>> Stashed changes
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('pid',id)
             // window.location.href = "../booking/booking.html"
         },
         prescribe(date,id) {
-<<<<<<< Updated upstream
-            alert(`it works! this is the id: ${date} this is the id: ${id}`)
-                        console.log(date)
-            console.log(date)
-=======
             // alert(`it works! this is the id: ${date} this is the id: ${id}`)
                         // console.log(date)
             // console.log(date)
             sessionStorage.clear()
->>>>>>> Stashed changes
             console.log(this.something)
             tempdate = date.slice(6, date.length - 4)
             console.log(tempdate)
@@ -98,14 +71,8 @@ const root = Vue.createApp({
             daynumber = tempstorage[0]
             monthnumber = this.month_to_number[tempstorage[1]]
             yearnumber = tempstorage[2]
-<<<<<<< Updated upstream
             const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
             console.log(newdate)
-=======
-   
-            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
-            // console.log(newdate)
->>>>>>> Stashed changes
 
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('id',id)
@@ -124,7 +91,6 @@ const root = Vue.createApp({
             console.log(this.date_time[0])
             
         },
-<<<<<<< Updated upstream
         formatDate(dateString) {
             const date = new Date(dateString);
             const year = date.getUTCFullYear();
@@ -137,26 +103,6 @@ const root = Vue.createApp({
             const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             return formattedDate;
           }
-=======
-        remove(id,pid) {
-            prompted = prompt('Enter The Diagnosis')
-            // diagnosis = {"diagnosis":prompted}
-            // console.log(diagnosis)
-            let appt = "2023-04-01T16:30:00"
-            url = "http://127.0.0.1:5010/find_by_date/" + pid + '/' + appt + '/' + prompted
-            // axios({
-            //     method: 'get',
-            //     url: "http://127.0.0.1:5010/find_by_date/" + pid + '/' + appt,
-            //     data: {
-            //         "diagnosis":prompted
-            //     }
-            //   });
-            axios.get(url)
-            .then(response =>(this.msg = response))
-            alert('Success!')
-            location.reload(true)
-        }
->>>>>>> Stashed changes
 
 
     },
