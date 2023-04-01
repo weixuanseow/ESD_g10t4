@@ -17,6 +17,8 @@ const root = Vue.createApp({
             months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 
             datetosearch: '',
+
+            month_to_number: {'Jan': 1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
         }
     },
     mounted() {
@@ -37,13 +39,38 @@ const root = Vue.createApp({
     },
     methods: {
         booking(date,id){
-            sessionStorage.setItem('appt',date)
+            // console.log(date)
+            console.log(this.something)
+            tempdate = date.slice(6, date.length - 4)
+            console.log(tempdate)
+            tempstorage = tempdate.split(' ')
+            daynumber = tempstorage[0]
+            monthnumber = this.month_to_number[tempstorage[1]]
+            yearnumber = tempstorage[2]
+
+            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
+            // console.log(newdate)
+
+            sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('pid',id)
-            window.location.href = "../booking/booking.html"
+            // window.location.href = "../booking/booking.html"
         },
         prescribe(date,id) {
             // alert(`it works! this is the id: ${date} this is the id: ${id}`)
-            sessionStorage.setItem('date',date)
+                        // console.log(date)
+            // console.log(date)
+            console.log(this.something)
+            tempdate = date.slice(6, date.length - 4)
+            console.log(tempdate)
+            tempstorage = tempdate.split(' ')
+            daynumber = tempstorage[0]
+            monthnumber = this.month_to_number[tempstorage[1]]
+            yearnumber = tempstorage[2]
+
+            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
+            // console.log(newdate)
+
+            sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('id',id)
             window.location.href = "../complex_prescribe_med/prescribe.html"
         },
