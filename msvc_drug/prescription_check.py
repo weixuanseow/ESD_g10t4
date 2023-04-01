@@ -35,14 +35,14 @@ def check_interaction():
                 data = response.json()
                 # print(data)
 
-                # Add the drug pair tuple
+                # Add drug pair tuple
                 if 'error' in data:
                     print("No interactions found")
                 else:
                     interactions.append((drug1, drug2))
 
 
-        # If interactions were found, return the drug pairs
+        # If interactions found, return the drug pairs
         if interactions:
              # convert list to string
             interaction_str = ', '.join([f'{drug1} and {drug2}' for drug1, drug2 in interactions])
