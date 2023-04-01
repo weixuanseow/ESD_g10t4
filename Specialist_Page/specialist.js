@@ -63,16 +63,12 @@ const root = Vue.createApp({
             // alert(`it works! this is the id: ${date} this is the id: ${id}`)
                         // console.log(date)
             // console.log(date)
-            sessionStorage.clear()
-            console.log(this.something)
             tempdate = date.slice(6, date.length - 4)
-            console.log(tempdate)
             tempstorage = tempdate.split(' ')
             daynumber = tempstorage[0]
             monthnumber = this.month_to_number[tempstorage[1]]
             yearnumber = tempstorage[2]
-            const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
-            console.log(newdate)
+            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
 
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('id',id)
@@ -102,7 +98,22 @@ const root = Vue.createApp({
           
             const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             return formattedDate;
-          }
+          },
+        remove(id,pid) {
+            prompted = prompt('Enter The Diagnosis')
+            tempdate = id.slice(6, id.length - 4)
+            tempstorage = tempdate.split(' ')
+            daynumber = tempstorage[0]
+            monthnumber = this.month_to_number[tempstorage[1]]
+            yearnumber = tempstorage[2]
+            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + 'T' + tempstorage[3]
+ 
+            url = "http://127.0.0.1:5010/find_by_date/" + pid + '/' + newdate + '/' + prompted
+            axios.get(url)
+            .then(response =>(this.msg = response))
+            alert('Success!')
+            location.reload(true)
+        }
 
 
     },
