@@ -39,26 +39,27 @@ const root = Vue.createApp({
     },
     methods: {
         booking(date,id){
-            // console.log(date)
-            console.log(this.something)
-            tempdate = date.slice(6, date.length - 4)
-            // console.log(tempdate)
-            tempstorage = tempdate.split(' ')
-            daynumber = tempstorage[0]
-            monthnumber = this.month_to_number[tempstorage[1]]
-            yearnumber = tempstorage[2]
-            newdate = now.strptime(date, ' %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d %H:%M:%S')
+            console.log(date)
+            // console.log(this.something)
+            // tempdate = date.slice(6, date.length - 4)
+            // // console.log(tempdate)
+            // tempstorage = tempdate.split(' ')
+            // daynumber = tempstorage[0]
+            // monthnumber = this.month_to_number[tempstorage[1]]
+            // yearnumber = tempstorage[2]
+            // const dateObj = new Date(date);
+            // const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
             //newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
+            const newdate = this.formatDate(date);
             console.log(newdate)
-
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('pid',id)
             window.location.href = "../booking/booking.html"
         },
         prescribe(date,id) {
-            // alert(`it works! this is the id: ${date} this is the id: ${id}`)
-                        // console.log(date)
-            // console.log(date)
+            alert(`it works! this is the id: ${date} this is the id: ${id}`)
+                        console.log(date)
+            console.log(date)
             console.log(this.something)
             tempdate = date.slice(6, date.length - 4)
             console.log(tempdate)
@@ -66,9 +67,8 @@ const root = Vue.createApp({
             daynumber = tempstorage[0]
             monthnumber = this.month_to_number[tempstorage[1]]
             yearnumber = tempstorage[2]
-
-            newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
-            // console.log(newdate)
+            const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
+            console.log(newdate)
 
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('id',id)
@@ -125,6 +125,18 @@ const root = Vue.createApp({
 
             
         },
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            const year = date.getUTCFullYear();
+            const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+            const day = date.getUTCDate().toString().padStart(2, '0');
+            const hours = date.getUTCHours().toString().padStart(2, '0');
+            const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+            const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+          
+            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            return formattedDate;
+          }
 
 
     },

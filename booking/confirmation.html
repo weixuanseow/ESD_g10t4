@@ -69,10 +69,12 @@
             </ul>
         </div>
     </nav>
-    
+    <div id="main"> </div>
+
     <div class = "container px-5 pt-5 text-center" id="main-container">
-        <a href="../Specialist_Page/specialist_page.php"><button class="btn btn-outline-primary px-5 my-5">Back to Home</button></a>
+        <a href="../Specialist_Page/specialist_page.php"><button id="buttonToClear" class="btn btn-outline-primary px-5 my-5">Back to Home</button></a>
     </div> 
+
 
      <!-- Footer -->
      <footer class="py-2 mt-auto border-top-1 border">
@@ -93,5 +95,16 @@
         <!-- bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
 </body>
+<script>
+    data = JSON.parse(sessionStorage.getItem('data'))
+    $('#main').append("<h1>Booking for "+ data['pid'] +  " test</h1>")
+    console.log(data)
+    buttonToClear = document.getElementById('buttonToClear')
+
+    buttontoClear.addEventListener('click',buttontoClear)
+    function buttontoClear(){
+        sessionStorage.clear()
+    }
+</script>
 </html>            
 

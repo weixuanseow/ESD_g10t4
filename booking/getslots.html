@@ -108,6 +108,8 @@
         console.log(test_type)
         let pid = sessionStorage.getItem("pid")
         console.log(pid)
+        let appt = sessionStorage.getItem("appt")
+        console.log(appt)
         
 
         $('#headertext').append("<h1>Book a "+ test_type+ " test</h1>")
@@ -130,7 +132,7 @@
         $(async() => {           
             // Change serviceURL to your own
             let test_type = sessionStorage.getItem("test_type")
-            let newdate = sessionStorage.getItem("appt")
+            let appt = sessionStorage.getItem("appt")
 
             console.log(test_type)
             var URL = "http://127.0.0.1:5000/"+ test_type + "/available_slots";
@@ -218,21 +220,21 @@
           booking_list = booking_details.split(',')
           let bid = booking_list[0]
           let bslot = booking_list[2]
-          //data ={
-          //  'pid': pid,
-          //  'appt': appt,
-          //  'phone': phone,
-          //  'bid': bid,
-          //  'test_type': test_type,
-          //  'bslot': bslot,
-          //}
-          data = {
-            "test_datetime": "2022-12-28 10:20:00",
-            "test_type": test_type,
-            "test_results": "praying for life",
-            "patient_id": pid,
-            "appt_datetime": appt
+          data ={
+            'pid': pid,
+            'appt': appt,
+            'phone': phone,
+            'bid': bid,
+            'test_type': test_type,
+            'bslot': bslot,
           }
+          // data = {
+          //   "test_datetime": "2022-12-28 10:20:00",
+          //   "test_type": test_type,
+          //   "test_results": "praying for life",
+          //   "patient_id": pid,
+          //   "appt_datetime": appt
+          // }
           console.log('Function make_booking is invoked and data')
           console.log(data)
           let url = "http://127.0.0.1:5055/book_test1" 
@@ -247,7 +249,9 @@
             .then(data => {
               console.log(data)
               if (data['code']==200){
-                sessionStorage.clear()
+                // data = JSON.stringify(data)
+                // console.log(data)
+                // sessionStorage.setItem('data', data)
                 window.location.href= "confirmation.html"
               }
 
