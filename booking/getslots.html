@@ -130,6 +130,8 @@
         $(async() => {           
             // Change serviceURL to your own
             let test_type = sessionStorage.getItem("test_type")
+            let newdate = sessionStorage.getItem("appt")
+
             console.log(test_type)
             var URL = "http://127.0.0.1:5000/"+ test_type + "/available_slots";
     
