@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from invokes import invoke_http #Used for the invocation of other microservices
+from flask_socketio import SocketIO
 
 import os, sys
 import amqp_setup
@@ -11,13 +12,14 @@ import pickle
 
 app = Flask(__name__)
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 #Routes
 
 @app.route("/get_medicines/<patient_id>/<appt_date>", methods=['GET'])
 def get_medicines(patient_id, appt_date):
 
-    url = f"http://127.0.0.1:5050/check_prescription/{patient_id}/{appt_date}"
+    url = f"http://127.0.0.1:5051/check_prescription/{patient_id}/{appt_date}"
     prescription_results = invoke_http(url, method='GET')
     ###print (prescription_results)
     
@@ -29,7 +31,7 @@ def get_medicines(patient_id, appt_date):
             new_data[key] = int(value[0][0])
 
         # Call the /update_inventory endpoint in inventory.py and pass the medicine data as input
-        inventory_url = f"http://127.0.0.1:5210/update_inventory"
+        inventory_url = f"http://127.0.0.1:5211/update_inventory"
         inventory_results = invoke_http(inventory_url, method='PUT', json=new_data)
         print(inventory_results)
         print (type(inventory_results))
@@ -54,8 +56,19 @@ def get_medicines(patient_id, appt_date):
 
     
     return prescription_results # will be displayed on UI
+    
+@app.route('/receive_message', methods=['POST'])
+def receive_message():
+    message = request.json.get('message')
+    print("Received message:", message)
+    if message:
+        # Emit the message as an event to all connected clients
+        socketio.emit('top_up_message', message, namespace='/')
+        return 'OK', 200
+    else:
+        return 'Bad Request', 400
 
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " for dispensing medicine...")
-    app.run(host="0.0.0.0", port=5203, debug=True)
+    app.run(host="0.0.0.0", port=5204, debug=True)

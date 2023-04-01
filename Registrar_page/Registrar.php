@@ -1,28 +1,6 @@
 <?php
     session_start();
     $username = $_SESSION["username"]
-
-    // $connection = new AMQPConnection(array(
-    //     'host' => 'localhost',
-    //     'port' => 5672,
-    //     'login' => 'guest',
-    //     'password' => 'guest'
-    // ));
-    
-    // $connection->connect();
-    
-    // $channel = new AMQPChannel($connection);
-    
-    // $queue = new AMQPQueue($channel);
-    // $queue->setName('approve_order');
-    
-    // while (true) {
-    //     $queue->consume(function($message) {
-    //         echo $message->getBody();
-    //     }, AMQP_AUTOACK);
-    // }
-    
-    // $connection->disconnect();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,15 +19,13 @@
     <!-- bootstrap css -->
     <link href="/css/main.min.css" rel="stylesheet">
 
-    <!-- external js file
-    <script type="module" src="#"></script> -->
-
     <!-- vue script -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     
     <!-- Axios -->
     <script src='https://unpkg.com/axios/dist/axios.js'></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
 
     <title>Registrar Page</title>
     
@@ -104,14 +80,15 @@
     -->
     <h1 style="margin: 20px">To be Dispensed</h1>
     <div id="dispense" style="padding:0px 20px">
-        <!-- <form method="GET" action="/get_medicines/"> -->
-        Please enter incoming patient ID: <input type="text" id="patient_id"><br>
-        <button class="btn btn-primary" id="prescription" @click="get_medicines(this.patient_id)" type="submit">Get Prescription Details</button>
+        <!-- <form id="my_form"> -->
+            Please enter incoming patient ID: <input type="text" id="patient_id"><br>
+            <button class="btn btn-primary" id="prescription" @click="get_medicines()" type="submit">Get Prescription Details</button>
         <!-- </form> -->
     </div>
     <div id="medicines">
         
     </div>
+    <div><h2>{{ top_up_message }}</h2></div>
     
     <!-- START OF JS IMPORTS (DO NOT ADD ANYTHING BELOW THIS LINE!) ---------------------------------------------------------------------------------------------- -->
         <!-- Font Awesome JS -->
