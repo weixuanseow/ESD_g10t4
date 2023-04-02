@@ -65,17 +65,32 @@ booktest:
   ports:
     - "5055:5055"
 
-    #################################
-  # notification - Simple microservice
-  #################################
+#################################
+# get_appointments - Simple microservice
+#################################
 get_appointments:
     build: 
       context: ./
       dockerfile: get_appointments.dockerfile
-    image: dockerid/notification
+    image: dockerid/get_appointments
     restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ESD_T1
       PYTHONUNBUFFERED: 1
     ports:
       - "5010:5010"
+
+#################################
+# appointment - Simple microservice im high
+#################################
+# appointment:
+#     build: 
+#       context: ./
+#       dockerfile: appointment.dockerfile
+#     image: dockerid/appointment
+#     restart: always
+#     environment:
+#       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ESD_T1
+#       PYTHONUNBUFFERED: 1
+#     ports:
+#       - "5000:5000"
