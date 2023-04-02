@@ -265,7 +265,7 @@ def mark_slot_available_xray(bid):
     db.session.commit()
     return jsonify({
     'code': 200,
-    'message': 'Booking slot updated to unavailable'
+    'message': 'Booking slot updated to available'
     })
 
 @app.route('/bloodtest/mark_available/<int:bid>', methods=['PUT'])
@@ -278,7 +278,7 @@ def mark_slot_available_bloodtest(bid):
     db.session.commit()
     return jsonify({
     'code': 200,
-    'message': 'Booking slot updated to unavailable'
+    'message': 'Booking slot updated to available'
     })
 
 @app.route('/ctscan/mark_available/<int:bid>', methods=['PUT'])
@@ -291,7 +291,7 @@ def mark_slot_available_ctscan(bid):
     db.session.commit()
     return jsonify({
     'code': 200,
-    'message': 'Booking slot updated to unavailable'
+    'message': 'Booking slot updated to available'
     })
 #------------------------------------------------------------------------------------------------------------------------
 # Query available booking slot from current time 

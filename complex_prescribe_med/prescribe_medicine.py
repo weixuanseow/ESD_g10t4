@@ -85,6 +85,7 @@ class PrescriptionMedicine(db.Model):
 PATIENT_MICROSERVICE_URL = "http://127.0.0.1:5050"
 DRUG_MICROSERVICE_URL = "http://127.0.0.1:5002"
 
+#creates prescription record 
 @app.route('/prescribe_medicine', methods=["POST"])
 def prescribe_medicine(): 
     data = request.get_json()
