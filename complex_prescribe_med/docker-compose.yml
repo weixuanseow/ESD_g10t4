@@ -9,7 +9,7 @@ services:
     container_name: patient
     restart: always
     ports:
-      - "5050:5050"
+      - "5051:5051"
 
   #################################
   # Drug: The Drug microservice

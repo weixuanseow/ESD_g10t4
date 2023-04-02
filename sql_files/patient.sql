@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS patient (
 );
 
 INSERT INTO patient (Patient_Full_Name, Date_Of_Birth, Gender, Phone_Num, Allergies) VALUES
-('Alex Broth', '1988-03-27', 'male', '92345678', 'aspirin'),
+('Alex Broth', '1988-03-27', 'male', '92345678', 'Aspirin'),
 ('Brit Mayers', '2023-03-01', 'female', '83456789', NULL),
-('Charlie Puth', '2000-07-01', 'male', '94567890', 'penicillin');
+('Charlie Puth', '2000-07-01', 'male', '94567890', 'Penicillin');
 COMMIT;
 
 

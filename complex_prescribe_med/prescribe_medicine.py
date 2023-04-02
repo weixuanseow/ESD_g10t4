@@ -82,7 +82,7 @@ class PrescriptionMedicine(db.Model):
         }
     
 # Route
-PATIENT_MICROSERVICE_URL = "http://127.0.0.1:5050"
+PATIENT_MICROSERVICE_URL = "http://127.0.0.1:5051"
 DRUG_MICROSERVICE_URL = "http://127.0.0.1:5002"
 
 #creates prescription record 
@@ -91,6 +91,7 @@ def prescribe_medicine():
     data = request.get_json()
     patient_id = data['patient_id']
     prescription_details = data['prescription_details']
+    appt_date = data['appt_date']
     print(prescription_details)
     
     # invoke patient microservice
@@ -107,12 +108,10 @@ def prescribe_medicine():
     # invoke drug microservice
     response = invoke_http(DRUG_MICROSERVICE_URL + '/check-interaction', method='GET', json=drug_service_payload)
     error_code = response['code']
-    # response from drug service
-    # drug_service_result = response.json()
     
     if error_code == 400:
         # patient is allergic to a medicine or there are harmful interactions
-        # send message to UI to prompt the doctor to re-enter medicine details
+        # send message to UI to prompt doctor to re-enter medicine details
         error_message = response['message']
         return jsonify(
             {
@@ -130,8 +129,9 @@ def prescribe_medicine():
         # no harmful interactions, update prescription history in patient microservice
         prescription_payload = {
             'patient_id': patient_id,
-            # appt_datetime from homepage, hardcoded for now
-            'appt_datetime': '2023-03-11 16:30:00',
+            # appt_datetime from homepage , hardcoded for now for patient 3
+            # 'appt_datetime': '2023-03-11 16:30:00',
+            'appt_datetime': appt_date
         }
         response = requests.put(f"{PATIENT_MICROSERVICE_URL}/update-prescription-history", json=prescription_payload)
         prescription_id = response.json()['prescription_id']

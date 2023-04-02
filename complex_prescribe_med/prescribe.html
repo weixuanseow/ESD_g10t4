@@ -76,38 +76,38 @@
     </div>
 </nav>
     <h1>Prescription Form</h1>
-<div id="prescription">
-        <label for="patient-id">Patient ID:</label>
-        <input type="text" id="patient-id" name="patient-id" ><br>
-      
-        <!-- <div id="medicine-fields">
-          <div class="medicine-field">
-            <label for="medicine-1">Medicine:</label>
-            <select id="medicine-1" v-model="selected_drug">
-                <option value="'" disabled selected>Choose Drug</option>
-                <option v-for="drug in drugs" v-bind:value="drug" >{{ drug }}</option>
-             </select><br>
-            <label for="frequency-1">Frequency:</label>
-            <input type="text" id="frequency-1" name="frequency[]"><br>
-      
-            <label for="amount-1">Amount:</label>
-            <input type="text" id="amount-1" name="amount[]"><br>
-          </div>
-        </div>
-   --> 
-    
-        <div id="medicine-fields">
-            <div class="medicine-field" v-for="(medicine, index) in medicines" :key="medicine.id">
-                <medicine-field :medicine="medicine" :index="index" :drugs="drugs" @remove-medicine="removeMedicineFields(index)" />
+    <div id="prescription">
+        <form>
+            <label for="patient-id">Patient ID:&nbsp;</label>
+            <input v-model="patient_id" type="text" id="patient-id">
+            <br><br>
+
+            <div v-for="(medicine, index) in prescription_details" :key="index">
+                <label>Medicine {{ index + 1 }}:&nbsp;</label>
+        
+                <select v-model="medicine.med_name">
+                    <option v-for="drug in drugs" :key="drug" :value="drug">{{ drug }}</option>
+                </select>
+                &nbsp;&nbsp;
+                <input type="text" placeholder="Frequency" v-model="medicine.frequency">
+                &nbsp;&nbsp;
+                <input type="text" placeholder="Dosage Amount" v-model="medicine.amount">
+                &nbsp;
+                <button type="button" class="btn btn-danger" @click="removeMedicine(index)">Remove</button>
+                <br>
             </div>
-        </div>
-    
-  <button class="btn btn-primary m-3" value="Add Medicine" v-on:click="addMedicineFields()">Add Medicine</button>
-  <button class="btn btn-primary m-3" value="Submit" v-on:click="prescribeMedicine()">Submit</button>
-</div>
 
-      <div id="error-messages"></div>
+            <button type="button" class="btn btn-warning" @click="addMedicine()">Add Medicine</button>
+            <br>
+            <br>
+            <br>
+            <button type="button" class="btn btn-success" style='width:100%' @click="prescribeMedicine()">Prescribe Medicine</button>
 
-  <script src="./prescribe.js"></script>
+        </form>
+    </div>
+
+    <div id="error-messages"></div>
+
+    <script src="./prescribe.js"></script>
 </body>
 </html>

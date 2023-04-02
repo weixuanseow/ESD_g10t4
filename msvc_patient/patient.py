@@ -10,7 +10,7 @@ import json
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -31,9 +31,9 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    # 'password': 'root',
     'database': 'patient_records',
-    'port': 8889
+    'port': 3306
 }
 conn = mysql.connector.connect(**mysql_config)
         
@@ -447,7 +447,7 @@ def check_prescription(patient_id, appt_date):
 def update_prescription_history():
     data = request.get_json()
     # appt_datetime need to retrieve from homepage, hardcode first
-    appt_datetime = '2022-12-28 10:20:00'
+    appt_datetime = data['appt_datetime']
     patient_id = data['patient_id']
     
     prescription = Prescription(appt_datetime=appt_datetime, patient_id=patient_id)
