@@ -37,6 +37,7 @@ const root = Vue.createApp({
         console.log(year)
         this.datetosearch += day + ' ' + month + ' ' + year
 
+        console.log(this.something)
 
     },
     methods: {
@@ -73,7 +74,7 @@ const root = Vue.createApp({
             // yearnumber = tempstorage[2]
             // const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
             console.log(newdate)
-            sessionStorage.setItem('appt',newdate)
+            sessionStorage.setItem('date',newdate)
             sessionStorage.setItem('id',id)
             window.location.href = "../complex_prescribe_med/prescribe.html"
         },
