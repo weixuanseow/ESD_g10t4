@@ -31,11 +31,7 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-<<<<<<< Updated upstream
     # 'password': 'root',
-=======
-    'password': 'root',
->>>>>>> Stashed changes
     'database': 'patient_records',
     'port': 3306
 }
