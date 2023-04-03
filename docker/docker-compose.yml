@@ -3,18 +3,19 @@ version: "3.8"
 volumes:
   rabbitmq_data:
 
+services:
 ####################################
 # RabbitMQ: Message broker 
 ####################################
-rabbitmq:
-  image: rabbitmq:3-management
-  hostname: esd-rabbit
-  restart: always
-  ports:
-    - "5672:5672"
-    - "15672:15672"
-  volumes: 
-    - rabbitmq_data:/var/lib/rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: esd-rabbit
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes: 
+      - rabbitmq_data:/var/lib/rabbitmq
 
   #################################
   # booking - Simple microservice
