@@ -25,7 +25,7 @@ services:
         dockerfile: booking.Dockerfile
       restart: always
       environment:
-        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/bookings
+        dbURL: mysql+mysqlconnector://root:@host.docker.internal:3306/bookings
         PYTHONUNBUFFERED: 1
       ports:
         - "5000:5000"
@@ -38,7 +38,7 @@ services:
         dockerfile: notification.Dockerfile
       restart: always
       environment:
-        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/bookings
+        dbURL: mysql+mysqlconnector://root:@host.docker.internal:3306/bookings
         PYTHONUNBUFFERED: 1
       ports:
         - "5008:5008"
@@ -71,7 +71,7 @@ services:
         dockerfile: get_appointments.Dockerfile 
       restart: always
       environment:
-        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+        dbURL: mysql+mysqlconnector://root:@host.docker.internal:3306/patient_records
         PYTHONUNBUFFERED: 1
       ports:
         - "5010:5010"
@@ -100,7 +100,7 @@ services:
     container_name: patient
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+      dbURL: mysql+mysqlconnector://root:@host.docker.internal:3306/patient_records
       PYTHONUNBUFFERED: 1
     ports:
       - "5051:5051"
@@ -114,7 +114,7 @@ services:
     container_name: drug
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/inventory
+      dbURL: mysql+mysqlconnector://root:@host.docker.internal:3306/inventory
       PYTHONUNBUFFERED: 1
     ports:
       - "5002:5002"
@@ -127,7 +127,7 @@ services:
     container_name: prescribe
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+      dbURL: mysql+mysqlconnector://root:@host.docker.internal:3306/patient_records
       PYTHONUNBUFFERED: 1
     ports:
       - "5101:5101"
