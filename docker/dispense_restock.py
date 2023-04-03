@@ -15,7 +15,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 #Routes
 
-@app.route("/get_medicines/<patient_id>/<appt_date>", methods=['GET'])
+@app.route("/get_medicines/<string:patient_id>/<string:appt_date>", methods=['GET'])
 def get_medicines(patient_id, appt_date):
 
     url = f"http://127.0.0.1:5051/check_prescription/{patient_id}/{appt_date}"
