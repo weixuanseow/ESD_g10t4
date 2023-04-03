@@ -22,11 +22,10 @@ services:
   #################################
   booking:
       build:
-        context: ./docker
         dockerfile: booking.Dockerfile
       restart: always
       environment:
-        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/bookings
+        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/bookings
         PYTHONUNBUFFERED: 1
       ports:
         - "5000:5000"
@@ -36,11 +35,10 @@ services:
     #################################
   notification:
       build:
-        context: ./docker
-        dockerfile: notification.dockerfile
+        dockerfile: notification.Dockerfile
       restart: always
       environment:
-        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/bookings
+        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/bookings
         PYTHONUNBUFFERED: 1
       ports:
         - "5008:5008"
@@ -50,8 +48,7 @@ services:
   ###############################################
   booktest:
     build: 
-      context: ./docker
-      dockerfile: booktest.dockerfile
+      dockerfile: booktest.Dockerfile
     restart: always
     depends_on:
       - booking
@@ -59,6 +56,9 @@ services:
       - notification
     environment:
       # do i have to list out the links ?
+      bookingURL: http://bookings:5000/bookings
+      patientURL: http://patient:5051/patient
+      notificationURL: http://notification:5008/notification
       PYTHONUNBUFFERED: 1
     ports:
       - "5055:5055"
@@ -68,11 +68,10 @@ services:
   #################################
   get_appointments:
       build:
-        context: ./docker
-        dockerfile: get_appointments.dockerfile 
+        dockerfile: get_appointments.Dockerfile 
       restart: always
       environment:
-        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
+        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
         PYTHONUNBUFFERED: 1
       ports:
         - "5010:5010"
@@ -97,12 +96,11 @@ services:
   #################################
   patient:
     build:
-      context: ./docker
       dockerfile: patient.Dockerfile
     container_name: patient
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
       PYTHONUNBUFFERED: 1
     ports:
       - "5051:5051"
@@ -112,12 +110,11 @@ services:
   #################################
   prescription_check:
     build:
-      context: ./docker
-      dockerfile: drug.dockerfile
+      dockerfile: drug.Dockerfile
     container_name: drug
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/inventory
       PYTHONUNBUFFERED: 1
     ports:
       - "5002:5002"
@@ -126,12 +123,11 @@ services:
   ###############################################
   prescribe:  
     build:
-      context: ./docker
-      dockerfile: prescribe_medicine.dockerfile
+      dockerfile: prescribe_medicine.Dockerfile
     container_name: prescribe
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
       PYTHONUNBUFFERED: 1
     ports:
       - "5101:5101"
