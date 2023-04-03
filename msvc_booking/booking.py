@@ -10,6 +10,7 @@ app = Flask(__name__)
 # specify the database URL. Here we use the mysql+mysqlconnector prefix to tell SQLAlchemy which database engine and connector we are using. 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/bookings'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/bookings'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/bookings'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #  disable modification tracking
@@ -18,20 +19,24 @@ CORS(app)
 
 import mysql.connector
 # Configure MySQL connection
-mysql_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'bookings',
-    'port': 3306
-}
 # mysql_config = {
 #     'host': 'localhost',
 #     'user': 'root',
-#     'password': '',
+#     'password': 'root',
 #     'database': 'bookings',
-#     'port': 3306
+#     'port': 8889
 # }
+mysql_config = {
+    'host': 'localhost',
+    'user': 'root',
+<<<<<<< Updated upstream:msvc_booking/booking.py
+    'password': '',
+=======
+    'password': '',
+>>>>>>> Stashed changes:booking/booking.py
+    'database': 'bookings',
+    'port': 3306
+}
 conn = mysql.connector.connect(**mysql_config)
 
 # --------------------------- object classes------------------------------------------------------------------------
@@ -425,7 +430,7 @@ def get_unavailable_slots_mri():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."
@@ -451,7 +456,7 @@ def get_unavailable_slots_xray():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."
@@ -477,7 +482,7 @@ def get_unavailable_slots_bloodtest():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."
@@ -503,7 +508,7 @@ def get_unavailable_slots_ctscan():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."

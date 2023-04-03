@@ -29,7 +29,7 @@
     <script src='https://unpkg.com/axios/dist/axios.js'></script>
 
 
-    <title>Login Page</title>
+    <title>Specialist Home Page</title>
     
 </head>
 
@@ -108,6 +108,7 @@
                     <button class="btn btn-success m-2"  @click="remove(obj.appt_datetime, obj.patient_id)">Complete Consult</button>
                 </td>
             </tr>
+        </table>
         </div>
     </div>
     

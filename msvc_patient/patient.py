@@ -31,7 +31,11 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
+<<<<<<< Updated upstream
     # 'password': 'root',
+=======
+    'password': 'root',
+>>>>>>> Stashed changes
     'database': 'patient_records',
     'port': 3306
 }
@@ -193,7 +197,7 @@ def get_all():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no booking slot."
+            "message": "There are no patients."
         }
     ), 404
 
@@ -270,16 +274,16 @@ def update_patient(patient_id):
     patient = Patient.query.filter_by(patient_id=patient_id).first()
     if patient:
         data = request.get_json()
-        if data['Patient_Full_Name']:
-            patient.patient_full_name = data['Patient_Full_Name']
-        if data['Date_Of_Birth']:
-            patient.date_of_birth = data['Date_Of_Birth']
-        if data['Gender']:
-            patient.gender = data['Gender']
-        if data['Phone_Num']:
-            patient.phone_num = data['Phone_Num'] 
-        if data['Allergies']:
-            patient.allergies = data['Allergies'] 
+        if data['patient_full_name']:
+            patient.patient_full_name = data['patient_full_name']
+        if data['date_of_birth']:
+            patient.date_of_birth = data['date_of_birth']
+        if data['gender']:
+            patient.gender = data['gender']
+        if data['phone_num']:
+            patient.phone_num = data['phone_num'] 
+        if data['allergies']:
+            patient.allergies = data['allergies'] 
         db.session.commit()
         
         return jsonify(
