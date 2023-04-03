@@ -8,6 +8,10 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 # specify the database URL. Here we use the mysql+mysqlconnector prefix to tell SQLAlchemy which database engine and connector we are using. 
+<<<<<<< Updated upstream:msvc_booking/booking.py
+=======
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/bookings'
+>>>>>>> Stashed changes:booking/booking.py
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/bookings'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/bookings'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -28,7 +32,11 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
+<<<<<<< Updated upstream:msvc_booking/booking.py
     'password': '',
+=======
+    'password': 'root',
+>>>>>>> Stashed changes:booking/booking.py
     'database': 'bookings',
     'port': 3306
 }
@@ -425,7 +433,7 @@ def get_unavailable_slots_mri():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."
@@ -451,7 +459,7 @@ def get_unavailable_slots_xray():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."
@@ -477,7 +485,7 @@ def get_unavailable_slots_bloodtest():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."
@@ -503,7 +511,7 @@ def get_unavailable_slots_ctscan():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no unavailable booking slot."
