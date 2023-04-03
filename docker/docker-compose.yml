@@ -10,7 +10,6 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     hostname: esd-rabbit
-    restart: always
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -23,7 +22,6 @@ services:
   booking:
       build: 
         dockerfile: booking.Dockerfile
-      restart: always
       environment:
         dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/bookings
         PYTHONUNBUFFERED: 1
@@ -36,7 +34,6 @@ services:
   notification:
       build:   
         dockerfile: notification.Dockerfile
-      restart: always
       environment:
         dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/bookings
         PYTHONUNBUFFERED: 1
@@ -49,7 +46,6 @@ services:
   booktest:
     build: 
       dockerfile: booktest.Dockerfile
-    restart: always
     depends_on:
       - booking
       - patient
@@ -68,8 +64,7 @@ services:
   #################################
   get_appointments:
       build:
-        dockerfile: get_appointments.Dockerfile 
-      restart: always
+        dockerfile: get_appointments.Dockerfile
       environment:
         dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
         PYTHONUNBUFFERED: 1
@@ -98,7 +93,6 @@ services:
     build:
       dockerfile: patient.Dockerfile
     container_name: patient
-    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
       PYTHONUNBUFFERED: 1
@@ -112,7 +106,6 @@ services:
     build:
       dockerfile: drug.Dockerfile
     container_name: drug
-    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory
       PYTHONUNBUFFERED: 1
@@ -125,7 +118,6 @@ services:
     build:
       dockerfile: prescribe_medicine.Dockerfile
     container_name: prescribe
-    restart: always
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
       PYTHONUNBUFFERED: 1
