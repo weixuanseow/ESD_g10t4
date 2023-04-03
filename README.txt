@@ -105,9 +105,6 @@ Scenario 2: Prescribing Medicine and Checking for Drug Interactions:
 
 Scenario 3: Dispensing Medicine and Restocking Medicine:
 1) Head to ../Registrar/Registrar.php  (Registrar UI)
-2) Look for the latest email sent by “hawkermeetsyou@gmail.com”, copy and paste the stripe payment link on a new google chrome tab, 
-	i.e. https://buy.stripe.com/test_eVa7uGcjX8rmeOI2cG
-3) For payment failure, use any email, 4000 0000 0000 0002, any future date, CVC and name and click “Pay”
-4) For payment success, use any email, 4242 4242 4242 4242, any future date, CVC and name and click “Pay”
-5) A successful payment will redirect you to the microservices/payment/success.html page.
-	(At this point the payment_status for customer_order in database should be changed to “PAID”)
+2) Key in a Patient ID (1, 2, or 3 – database is set up for these values)
+3) Click the "Get Prescription Details" button. The prescription that needs to be given to the patient today will then appear on the page.
+4) If the amount of medicine left in the in-clinic inventory drops below the threshold amount once this patient's prescription is dispensed, an alert will pop up to notify the registrar to put in an order for more medicine.
