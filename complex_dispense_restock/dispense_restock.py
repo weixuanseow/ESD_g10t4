@@ -8,7 +8,6 @@ import amqp_setup
 import pika
 import json
 import requests
-import pickle
 
 app = Flask(__name__)
 CORS(app)

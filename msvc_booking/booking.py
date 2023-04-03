@@ -317,7 +317,7 @@ def get_available_slots_mri():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no booking slot."
@@ -344,7 +344,7 @@ def get_available_slots_xray():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no booking slot."
@@ -371,7 +371,7 @@ def get_available_slots_bloodtest():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no booking slot."
@@ -398,7 +398,7 @@ def get_available_slots_ctscan():
                     }
                 }
             )
-        return jsonify(
+    return jsonify(
             {
                 "code": 404,
                 "message": "There are no booking slot."
