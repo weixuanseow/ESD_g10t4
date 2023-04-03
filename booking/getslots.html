@@ -21,7 +21,6 @@
  
     <link rel="stylesheet" href="../css/general.css">
     <link rel="stylesheet" href="../bookimg/booking.css">
-    </script>
   </head>
 
 <body class="u-body u-xl-mode d-flex flex-column min-vh-100">
@@ -209,7 +208,7 @@
             })
             .then(data => {
               console.log(data)
-              if (data['code']==200){
+              if (data['status']==200){
                 // data = JSON.stringify(data)
                 // console.log(data)
                 // sessionStorage.setItem('data', data)
