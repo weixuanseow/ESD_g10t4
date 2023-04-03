@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS prescription (
   FOREIGN KEY (Patient_ID, Appt_DateTime) REFERENCES appointment_history(Patient_ID, Appt_DateTime),
   INDEX (Prescription_ID)
 );
-
+ALTER TABLE prescription MODIFY Prescription_ID INT UNSIGNED ZEROFILL AUTO_INCREMENT=800000019;
 INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID) VALUES
 ('2022-12-28 10:20:00', '000000003', '800000001'), /* ok */
 ('2023-01-28 15:40:00', '000000002', '800000002'), /* ok */
