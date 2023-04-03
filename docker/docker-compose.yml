@@ -158,6 +158,8 @@ services:
     container_name: dispense_restock
     restart: always
     environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory
       PYTHONUNBUFFERED: 1
     ports:
