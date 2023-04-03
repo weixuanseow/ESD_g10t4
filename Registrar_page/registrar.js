@@ -38,6 +38,7 @@ const root = Vue.createApp({
             axios.get(url)
             .then(response => {
                 const prescriptions = response.data.data;
+                if (response.data.code == '250' ) {
                 let FISH = '<table><tr><th>Medicine</th><th>Amount</th></tr>';
                 for (let prescription in prescriptions) {
                     console.log(prescription);
@@ -45,7 +46,11 @@ const root = Vue.createApp({
                     FISH += '<tr><td>' + prescription + '</td><td>' + prescriptions[prescription] + '</td></tr>';
                 }
                 FISH += '</table>';
-                document.getElementById("medicines").innerHTML = FISH;
+                document.getElementById("medicines").innerHTML = FISH;}
+
+                else {
+                    document.getElementById("medicines").innerHTML="<h2>There are no prescriptions found for this patient today.</h2>"
+                }
             })
             .catch(error => {
                 console.log('error');

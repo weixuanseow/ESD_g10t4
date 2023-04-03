@@ -49,24 +49,24 @@ import os, sys
 import requests
 
 Database setup: 
-With reference to the “database” folder, load the “ESD_T1.sql” script into your MySQL software, ensuring that the path stated inside the “load data in file” statements of “ESD_T1.sql” is changed.
-The file path should be pointing towards the respective .txt files inside of the “data” folder located inside the “database” folder. 
-Once changed, run the script to load “ESD_T1” into your MySQL database.
-Running Project HawkerMeetsYou
+With reference to the “sql_files” folder, load the “booking.sql”, "inventory.sql" and "patient.sql" script into your MySQL software, and load 3 databases into your MySQL database.
+Running Project Eevee Specialist Clinic 
 
 Ports:
-1. order.py (port 5000)
-2. customer.py (port 5900)
-3. hawker (GoLang) (port 5902)
-4. driver.py (port 5901)
-5. find_driver.py (port 5101)
-6. place_order.py (port 5100)
-7. prepare_order.py (port 5102)
-8. payment.py (port 5001)
-9. SendEmail.py (no port)
-10. AMQP_setup.py (no port)
+1. booking.py (port 5000)
+2. patient.py (port 5051)
+3. get_appointments.py (port 5010)
+4. notification.py (port 5008)
+5. booktest.py (port 5055)
+6. prescription_check.py (port 5002)
+7. prescribe_medicine.py (port 5101)
+8. openfda.py (no port)
+9. inventory.py (port 5211)
+10. amqp_setup.py (no port)
 11. invokes.py (no port)
+12. dispense_restock.py (port 5204)
 12. RabbitMQ (5672 and 15672)
+
 
 Using Docker Compose: 
 1) Start your MAMP/WAMP Servers 
@@ -78,34 +78,33 @@ Using Docker Compose:
 7) To stop the project from running, run the following command:
 8) docker-compose down
 
-Eevee Specialist Clinic Step by Step:
+==================================================== Eevee Specialist Clinic Step by Step: =================================================================
 
 Pre-setups:
 1) Ensure that Eevee Specialist Clinic Setup is completed (above)
-2) Ensure that database is setup with the correct path inside ESD_T1.sql
+2) Ensure that databases is setup with the correct path inside the sql files. 
 3) Ensure that <dockerid> inside docker-compose.yml is changed to the user’s dockerid
 
 Step by Step Walkthrough:
-Booking a Diagnostic Test:
-1) Head to /templates/index.html (Specialist UI)
-2) Choose a hawker to purchase from by clicking on one of the images
-3) Select hawker food to purchase by clicking on “add to cart”
-4) Once satisfied with the items, click on “Cart” on the top right corner
-5) Click on “Go to checkout”, now a delivery order will be sent to the Driver UI for Drivers to Accept
-	(At this point a new order will be added to customer_order in the database)
+Scenario 1: Booking a Diagnostic Test:
+Pre database setup: Run the stored procedures in the sql database "delete_expired_bookings" and "create_booking_slots" to create the fresh appointment slots for the day.
+1) Head to ../Specialist_Page/specialist_page.php (Specialist UI), there will be a table displaying the booked appointment slots for the day
+2) For the selected timeslot (row), click on "Book a Test" to book a test
+3) Select the test_type for the test and click "Search" button (patient's phone number is retreived).
+4) If there are available slots, it will be displayed on the UI page with their timings and bookingID.
+5) For the selected timeslot, Click on “Book Test”, now a booking will be made and a message will be sent to the patient's phone.
+	(At this point a diagnostic test will be added to diagnostic_history in the patient_records database, and timeslot in the booking database is marked unavailable)
 
-Prescribing Medicine and Checking for Drug Interactions:
-1) Head to /templates/driverUI.html (Specialist UI)
-2) Click on “Accept Delivery” and “ok”. (Please wait for at least 3 seconds before clicking the next button)
-	(At this point the order_status for customer_order in database should be changed to “DELIVERING” and driver_id should be updated from NULL)
-3) Click on “Order Delivered” and “ok”. Once an order is delivered, the payment link will be sent to the customer’s email address.
-	(At this point the order_status for customer_order in database should be changed to “DELIVERED”)
+Scenario 2: Prescribing Medicine and Checking for Drug Interactions:
+1) Head to ../Specialist_Page/specialist_page.php (Specialist UI), there will be a table displaying the booked appointment slots for the day
+2) For the selected timeslot (row), click on "Prescribe Medicine" to prescribe medicine
+3) Create prescription by selecting the medicine name, and inputting frequency and dosage amount. Click on "Add medicine" to add more medicine and "Remove" to delete medicine prescription
+4) Click on "Prescribe Medicine” and a message will be displayed if there is a problem with the medicine interaction. If not, it will lead the user back to home page. 
+(At this point, the "prescription history" will be updated with the patient's prescription information)
+5) Click on "Complete Consult" to complete the patient's consult (The appointment slot will be deleted from the appointment history table in patient_records)
 
-Dispensing Medicine and Restocking Medicine:
-1) Head to /templates/driverUI.html (Registrar UI)
-2) Look for the latest email sent by “hawkermeetsyou@gmail.com”, copy and paste the stripe payment link on a new google chrome tab, 
-	i.e. https://buy.stripe.com/test_eVa7uGcjX8rmeOI2cG
-3) For payment failure, use any email, 4000 0000 0000 0002, any future date, CVC and name and click “Pay”
-4) For payment success, use any email, 4242 4242 4242 4242, any future date, CVC and name and click “Pay”
-5) A successful payment will redirect you to the microservices/payment/success.html page.
-	(At this point the payment_status for customer_order in database should be changed to “PAID”)
+Scenario 3: Dispensing Medicine and Restocking Medicine:
+1) Head to ../Registrar/Registrar.php  (Registrar UI)
+2) Key in a Patient ID (1, 2, or 3 – database is set up for these values)
+3) Click the "Get Prescription Details" button. The prescription that needs to be given to the patient today will then appear on the page.
+4) If the amount of medicine left in the in-clinic inventory drops below the threshold amount once this patient's prescription is dispensed, an alert will pop up to notify the registrar to put in an order for more medicine.

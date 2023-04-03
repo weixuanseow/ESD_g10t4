@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy import func
+from os import environ
 
 import logging
 import json
@@ -11,7 +12,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/patient_records'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL') or 'mysql+mysqlconnector://root@localhost:3306/patient_records'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -29,14 +30,14 @@ import mysql.connector
 #     'port': 8889
 # }
 
-mysql_config = {
-    'host': 'localhost',
-    'user': 'root',
-    # 'password': 'root',
-    'database': 'patient_records',
-    'port': 3306
-}
-conn = mysql.connector.connect(**mysql_config)
+# mysql_config = {
+#     'host': 'localhost',
+#     'user': 'root',
+#     # 'password': 'root',
+#     'database': 'patient_records',
+#     'port': 3306
+# }
+# conn = mysql.connector.connect(**mysql_config)
         
 class ApptHist(db.Model):
     __tablename__ = 'appointment_history'
