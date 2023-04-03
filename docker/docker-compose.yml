@@ -19,6 +19,124 @@ rabbitmq:
   #################################
   # booking - Simple microservice
   #################################
+  booking:
+      build:
+        context: ./docker
+        dockerfile: booking.Dockerfile
+      restart: always
+      environment:
+        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/bookings
+        PYTHONUNBUFFERED: 1
+      ports:
+        - "5000:5000"
+
+    #################################
+    # notification - Simple microservice
+    #################################
+  notification:
+      build:
+        context: ./docker
+        dockerfile: notification.dockerfile
+      restart: always
+      environment:
+        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/bookings
+        PYTHONUNBUFFERED: 1
+      ports:
+        - "5008:5008"
+
+  ###############################################
+  # booktest - Complex Microservice
+  ###############################################
+  booktest:
+    build: 
+      context: ./docker
+      dockerfile: booktest.dockerfile
+    restart: always
+    depends_on:
+      - booking
+      - patient
+      - notification
+    environment:
+      # do i have to list out the links ?
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5055:5055"
+
+  #################################
+  # get_appointments - Simple microservice
+  #################################
+  get_appointments:
+      build:
+        context: ./docker
+        dockerfile: get_appointments.dockerfile 
+      restart: always
+      environment:
+        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
+        PYTHONUNBUFFERED: 1
+      ports:
+        - "5010:5010"
+
+  #################################
+  # appointment - Simple microservice im high
+  #################################
+  # appointment:
+  #     build: 
+  #       context: ./
+  #       dockerfile: appointment.dockerfile
+  #     image: dockerid/appointment
+  #     restart: always
+  #     environment:
+  #       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ESD_T1
+  #       PYTHONUNBUFFERED: 1
+  #     ports:
+  #       - "5000:5000"
+
+  #################################
+  # Patient: The Patient microservice
+  #################################
+  patient:
+    build:
+      context: ./docker
+      dockerfile: patient.Dockerfile
+    container_name: patient
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5051:5051"
+
+  #################################
+  # Drug: The Drug microservice
+  #################################
+  prescription_check:
+    build:
+      context: ./docker
+      dockerfile: drug.dockerfile
+    container_name: drug
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5002:5002"
+  ###############################################
+  # prescribe_med: The prescribe_medicine.py program
+  ###############################################
+  prescribe:  
+    build:
+      context: ./docker
+      dockerfile: prescribe_medicine.dockerfile
+    container_name: prescribe
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/patient_records
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5101:5101"
+    depends_on:
+      - patient
+      - prescription_check
 booking:
     build: 
       context: ./
