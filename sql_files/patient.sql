@@ -38,7 +38,9 @@ INSERT INTO appointment_history (Appt_DateTime, Patient_ID, Diagnosis) VALUES
 ('2023-02-20 13:00:00', '000000001', 'Osteoarthritis'),
 ('2022-12-29 10:20:00', '000000003', 'Minnal inserted a disease for me'),
 ('2023-03-11 16:30:00', '000000003', 'Fracture Union, No further treatment required'),
-('2023-04-01 16:30:00', '000000003', 'tbd');
+('2023-04-03 16:30:00', '000000003', 'tbd');
+('2023-04-03 16:30:00', '000000002', 'tbd');
+('2023-04-03 16:30:00', '000000001', 'tbd');
 COMMIT;
 
 
@@ -103,25 +105,6 @@ INSERT INTO diagnostic_test (Test_DateTime, Test_Type, Test_Results, Patient_ID,
 ('2023-02-20 13:18:00', 'MRI', 'Monoarticular Osteoarthritis at the knee', '000000001', '2023-02-20 13:00:00'),
 ('2023-03-11 16:35:00', 'X-ray', 'No signs of abnormality', '000000003', '2023-03-11 16:30:00');
 COMMIT;
-
-INSERT INTO appointment_history (Patient_ID, Appt_DateTime, Diagnosis)
-VALUES
-  ('000000001', '2023-04-01 09:00:00', 'Fever'),
-  ('000000001', '2023-04-02 10:30:00', 'Common cold'),
-  ('000000001', '2023-04-03 14:15:00', 'Migraine'),
-  ('000000001', '2023-04-04 11:00:00', 'Sinusitis'),
-  ('000000001', '2023-04-05 15:30:00', 'Allergies'),
-  ('000000002', '2023-04-01 08:45:00', 'High blood pressure'),
-  ('000000002', '2023-04-02 13:00:00', 'Diabetes'),
-  ('000000002', '2023-04-03 16:45:00', 'Depression'),
-  ('000000002', '2023-04-04 09:30:00', 'Arthritis'),
-  ('000000002', '2023-04-05 11:30:00', 'Asthma'),
-  ('000000003', '2023-04-01 12:30:00', 'Pneumonia'),
-  ('000000003', '2023-04-02 16:00:00', 'Anxiety'),
-  ('000000003', '2023-04-03 13:15:00', 'Back pain'),
-  ('000000003', '2023-04-04 14:30:00', 'Gastroenteritis'),
-  ('000000003', '2023-04-05 10:45:00', 'Urinary tract infection');
-  COMMIT;
 
 INSERT INTO prescription (Appt_DateTime, Patient_ID, Prescription_ID)
 VALUES
