@@ -22,11 +22,11 @@ rabbitmq:
 booking:
     build: 
       context: ./
-      dockerfile: booking.dockerfile
+      dockerfile: booking.Dockerfile
     image: dockerid/booking
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/ESD_T1
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/bookings
       PYTHONUNBUFFERED: 1
     ports:
       - "5000:5000"
@@ -37,7 +37,7 @@ booking:
 notification:
     build: 
       context: ./
-      dockerfile: notification.dockerfile
+      dockerfile: notification.Dockerfile
     image: dockerid/notification
     restart: always
     environment:
@@ -52,7 +52,7 @@ notification:
 booktest:
   build: 
     context: ./
-    dockerfile: booktest.dockerfile 
+    dockerfile: booktest.Dockerfile 
   image: dockerid/booktest
   restart: always
   depends_on:
