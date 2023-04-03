@@ -8,7 +8,7 @@ const root = Vue.createApp({
   data() {
       return {
           drugs: ["Acetaminophen",
-          "aspirin",
+          "Aspirin",
           "Atorvastatin",
           "Ciprofloxacin",
           "Codeine",
@@ -38,14 +38,6 @@ const root = Vue.createApp({
           "Venlafaxine",
           "Warfarin",
           "Zolpidem"],
-
-      //     date_time: [],
-      //     patients: [],
-      //     rows: [],
-      //     months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      //     datetosearch: '',
-      //     medicine_fields: [],
-      // }
 
       patient_id: pid,
       appt_date: pdate,
@@ -89,6 +81,7 @@ const root = Vue.createApp({
                   else if (response.code === 200){
                       var showMessage = response.message;
                       $("#error-messages").html(showMessage);
+                      window.location.href = "../Specialist_page/specialist_page.php"
                   }
               },
               error: function(error) {
