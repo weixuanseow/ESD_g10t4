@@ -21,7 +21,7 @@ services:
   # booking - Simple microservice
   #################################
   booking:
-      build:
+      build: 
         dockerfile: booking.Dockerfile
       restart: always
       environment:
@@ -34,7 +34,7 @@ services:
     # notification - Simple microservice
     #################################
   notification:
-      build:
+      build:   
         dockerfile: notification.Dockerfile
       restart: always
       environment:
