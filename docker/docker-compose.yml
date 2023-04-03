@@ -16,6 +16,8 @@ services:
       - "15672:15672"
     volumes: 
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - scenario3
 
   #################################
   # booking - Simple microservice
@@ -29,6 +31,9 @@ services:
         PYTHONUNBUFFERED: 1
       ports:
         - "5000:5000"
+      networks:
+        - scenario1
+        - scenario3
 
     #################################
     # notification - Simple microservice
@@ -42,6 +47,8 @@ services:
         PYTHONUNBUFFERED: 1
       ports:
         - "5008:5008"
+      networks:
+        - scenario1
 
   ###############################################
   # booktest - Complex Microservice
@@ -62,6 +69,8 @@ services:
       PYTHONUNBUFFERED: 1
     ports:
       - "5055:5055"
+    networks:
+      - scenario1
 
   #################################
   # get_appointments - Simple microservice
@@ -75,6 +84,9 @@ services:
         PYTHONUNBUFFERED: 1
       ports:
         - "5010:5010"
+      networks:
+        - scenario1
+        - scenario2
 
   #################################
   # appointment - Simple microservice im high
@@ -104,6 +116,10 @@ services:
       PYTHONUNBUFFERED: 1
     ports:
       - "5051:5051"
+    networks:
+        - scenario1
+        - scenario2
+        - scenario3
 
   #################################
   # Drug: The Drug microservice
@@ -118,6 +134,8 @@ services:
       PYTHONUNBUFFERED: 1
     ports:
       - "5002:5002"
+    networks:
+        - scenario2
   ###############################################
   # prescribe_med: The prescribe_medicine.py program
   ###############################################
@@ -134,6 +152,8 @@ services:
     depends_on:
       - patient
       - prescription_check
+    networks:
+        - scenario2
   
   ############################################################
   # inventory.py program #####################################
@@ -148,6 +168,8 @@ services:
       PYTHONUNBUFFERED: 1
     ports:
       - "5211:5211"
+    networks:
+        - scenario3
 
   ############################################################
   # dispense_restock.py program ##############################
@@ -168,3 +190,10 @@ services:
       - patient
       - inventory
       - rabbitmq
+    networks:
+        - scenario3
+
+networks:
+  network1:
+  network2:
+  network3:
