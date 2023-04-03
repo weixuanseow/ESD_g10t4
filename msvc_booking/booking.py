@@ -29,11 +29,7 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-<<<<<<< Updated upstream:msvc_booking/booking.py
     'password': '',
-=======
-    'password': '',
->>>>>>> Stashed changes:booking/booking.py
     'database': 'bookings',
     'port': 3306
 }
