@@ -10,7 +10,7 @@ import json
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/patient_records'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -31,7 +31,11 @@ import mysql.connector
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
+<<<<<<< Updated upstream
     # 'password': 'root',
+=======
+    'password': 'root',
+>>>>>>> Stashed changes
     'database': 'patient_records',
     'port': 3306
 }
@@ -405,7 +409,7 @@ def viewDiagnosticTest():
     return jsonify(
         {
             "code": 404,
-            "message": "There are no booking slot."
+            "message": "There are no diagnostic test slot."
         }
     ), 404
     
