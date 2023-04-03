@@ -126,3 +126,33 @@ services:
     depends_on:
       - patient
       - prescription_check
+  
+  ############################################################
+  # inventory.py program #####################################
+  ############################################################
+  inventory:
+    build:
+      dockerfile: inventory.Dockerfile
+    container_name: inventory
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5211:5211"
+
+  ############################################################
+  # dispense_restock.py program ##############################
+  ############################################################
+  dispense_restock:
+    build:
+      dockerfile: dispense_restock.Dockerfile
+    container_name: dispense_restock
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5204:5204"
+    depends_on:
+      - patient
+      - inventory
+      - rabbitmq

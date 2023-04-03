@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from os import environ
 
 # Query available booking slot from current time 
 from datetime import datetime, timedelta
@@ -10,7 +11,7 @@ import requests
 app = Flask(__name__)
 # specify the database URL. Here we use the mysql+mysqlconnector prefix to tell SQLAlchemy which database engine and connector we are using. 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:8889/bookings'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL') or 'mysql+mysqlconnector://root@localhost:3306/patient_records'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/patient_records'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #  disable modification tracking
@@ -19,13 +20,6 @@ CORS(app)
 
 import mysql.connector
 # Configure MySQL connection
-mysql_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'patient_records',
-    'port': 3306
-}
 # mysql_config = {
 #     'host': 'localhost',
 #     'user': 'root',
@@ -33,7 +27,14 @@ mysql_config = {
 #     'database': 'patient_records',
 #     'port': 3306
 # }
-conn = mysql.connector.connect(**mysql_config)
+# mysql_config = {
+#     'host': 'localhost',
+#     'user': 'root',
+#     'password': '',
+#     'database': 'patient_records',
+#     'port': 3306
+# }
+# conn = mysql.connector.connect(**mysql_config)
 
 class AppointmentHistory(db.Model):
     __tablename__ = 'appointment_history'
