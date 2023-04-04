@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: null
+  name: esd-g10t4-scenario1
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              io.kompose.network/esd-g10t4-scenario1: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/esd-g10t4-scenario1: "true"

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: get-appointments
+  name: get-appointments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: get-appointments
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/esd-g10t4-scenario1: "true"
+        io.kompose.network/esd-g10t4-scenario2: "true"
+        io.kompose.service: get-appointments
+    spec:
+      containers:
+        - env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: dbURL
+              value: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+          image: get-appointments
+          name: get-appointments
+          ports:
+            - containerPort: 5010
+          resources: {}
+      restartPolicy: Always
+status: {}

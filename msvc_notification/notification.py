@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Define the Twilio account SID and auth token
 account_sid = "AC1b140afde89af017b88424de796e6aad"
-auth_token = "cfc52acce48384a98ec3a6f258599253"
+auth_token = "46481dd25f3f0243f706ceb373189c01"
 
 print("Notification.py is now running------------------")
 

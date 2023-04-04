@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: notification
+  name: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: notification
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/esd-g10t4-scenario1: "true"
+        io.kompose.service: notification
+    spec:
+      containers:
+        - env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: dbURL
+              value: mysql+mysqlconnector://root@host.docker.internal:3306/bookings
+          image: notification
+          name: notification
+          ports:
+            - containerPort: 5008
+          resources: {}
+      restartPolicy: Always
+status: {}
