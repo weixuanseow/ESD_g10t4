@@ -557,4 +557,4 @@ def get_unavailable_slots_ctscan():
 
 # We run our application behind an if guard. 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

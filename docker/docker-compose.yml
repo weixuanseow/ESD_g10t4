@@ -194,6 +194,6 @@ services:
         - scenario3
 
 networks:
-  network1:
-  network2:
-  network3:
+  scenario1:
+  scenario2:
+  scenario3:
