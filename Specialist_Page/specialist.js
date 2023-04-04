@@ -36,7 +36,6 @@ const root = Vue.createApp({
         console.log(day)
         console.log(year)
         this.datetosearch += day + ' ' + month + ' ' + year
-
         console.log(this.something)
 
     },
@@ -58,7 +57,11 @@ const root = Vue.createApp({
             console.log(newdate)
             sessionStorage.setItem('appt',newdate)
             sessionStorage.setItem('pid',id)
-            window.location.href = "../booking/booking.html"
+            tester1 = sessionStorage.getItem('appt')
+            tester2 = sessionStorage.getItem('pid')
+            // console.log(tester1)
+            // console.log(tester2)
+            window.location.href = "../msvc_booking/booking.html"
         },
         prescribe(date,id) {
             // alert(`it works! this is the id: ${date} this is the id: ${id}`)

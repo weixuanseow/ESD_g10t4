@@ -33,7 +33,7 @@ const root = Vue.createApp({
             patient_id=document.getElementById("patient_id").value
             console.log(typeof(patient_id))
             console.log(typeof(date))
-            const url = "http://127.0.0.1:5204/get_medicines/" + patient_id + "/" + date;
+            const url = "http://localhost:5204/get_medicines/" + patient_id + "/" + date;
 
             axios.get(url)
             .then(response => {

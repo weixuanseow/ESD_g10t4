@@ -66,7 +66,7 @@ const root = Vue.createApp({
           }
           console.log(data)
           $.ajax({
-              url: "http://127.0.0.1:5101/prescribe_medicine",
+              url: "http://localhost:5101/prescribe_medicine",
               type: "POST",
               data: JSON.stringify(data),
               contentType: "application/json",
