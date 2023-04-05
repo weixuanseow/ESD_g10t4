@@ -34,7 +34,6 @@ import mysql.connector
 #     'database': 'patient_records',
 #     'port': 3306
 # }
-# conn = mysql.connector.connect(**mysql_config)
 
 class AppointmentHistory(db.Model):
     __tablename__ = 'appointment_history'
@@ -81,9 +80,6 @@ def update_patient(patient_id,date,diagnosis):
     date_time = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S')
     appointment = AppointmentHistory.query.filter_by(appt_datetime=date_time,patient_id=patient_id).first()
     if appointment:
-        # data = request.get_json()
-        # if data['diagnosis']:
-        #     appointment.diagnosis= data['diagnosis']
         appointment.diagnosis=diagnosis
         db.session.commit()
         

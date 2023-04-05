@@ -71,12 +71,11 @@ Ports:
 Using Docker Compose: 
 1) Start your MAMP/WAMP Servers 
 2) Ensure that any rabbit-m containers are not running as it might conflict with the RabbitMQ container specified in the .yml file. 
-3) In a CMD window, change the directory to the “Microservices” folder which will contain the docker-compose.yml file. 
-4) Change all of the <dockerid> inside the docker-compose.yml file to your own Docker ID 
-5) In the same CMD window, run the following command: 
-6) docker-compose up -d
-7) To stop the project from running, run the following command:
-8) docker-compose down
+3) In a CMD window, change the directory to the highest parent folder which contains the docker-compose.yml file. 
+4) In the same CMD window, run the following command: 
+5) docker-compose up -d
+6) To stop the project from running, run the following command:
+7) docker-compose down
 
 ==================================================== Eevee Specialist Clinic Step by Step: =================================================================
 

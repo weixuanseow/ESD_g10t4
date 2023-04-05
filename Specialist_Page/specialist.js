@@ -43,16 +43,6 @@ const root = Vue.createApp({
         booking(date,id){
             console.log(date)
             sessionStorage.clear()
-            // console.log(this.something)
-            // tempdate = date.slice(6, date.length - 4)
-            // // console.log(tempdate)
-            // tempstorage = tempdate.split(' ')
-            // daynumber = tempstorage[0]
-            // monthnumber = this.month_to_number[tempstorage[1]]
-            // yearnumber = tempstorage[2]
-            // const dateObj = new Date(date);
-            // const newdate = `${yearnumber}-${monthnumber}-${daynumber} ${dateObj.toLocaleTimeString()}`;
-            //newdate =  yearnumber + '-' + monthnumber + '-' + daynumber + ' ' + tempstorage[3]
             const newdate = this.formatDate(date);
             console.log(newdate)
             sessionStorage.setItem('appt',newdate)
@@ -114,34 +104,7 @@ const root = Vue.createApp({
             location.reload(true)
         }
 
-
     },
-        // computed: {
-
-    //     say_bye() {
-    //         console.log("=== [START] say_bye() ===")
-    //         console.log("=== [END] say_bye() ===")
-    //         return Date.now()
-    //     },
-
-    //     make_fruit_string_again() {
-    //         console.log("=== [START] make_fruit_string_again() ===")
-    //         let str = ""
-
-    //         for(let i = 1; i <= this.fruits.length; i++) {
-    //             if( (i % 2) === 0 ) {
-    //                 // even number
-    //                 str += this.fruits[i-1].toUpperCase() + ", "
-    //             }
-    //             else {
-    //                 str += this.fruits[i-1].toLowerCase() + ", "
-    //             }
-    //         }
-    //         console.log("=== [END] make_fruit_string_again() ===")
-
-    //         return str.slice(0, -2)
-    //     }
-    // }
 
 })
 root.mount("#appointment")

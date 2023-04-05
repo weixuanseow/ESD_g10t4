@@ -379,33 +379,6 @@ def createDiagnosticTest():
                 "message": f"An error occurred creating the test: {str(e)}"
             }
         ), 500
-        
-    # test_instance = DiagnosticTest(test_datetime=test_datetime, test_type=test_type, test_results=test_results, appt_datetime=appt_datetime)
-    # print(db.session)
-    # # test_type=visit_type
-    # try:
-    #     db.session.add(test_instance)
-    #     db.session.commit()
-    # except:
-    #     return jsonify(
-    #         {
-    #             "code": 500,
-    #             "data": {
-    #                 "test_id": "error message in the except portion",
-    #                 "test_datetime": test_datetime,
-    #                 "test_type": test_type,
-    #                 "test_results": test_results,
-    #             },
-    #             "message": "An error occured creating the test instance"
-    #         }
-    #     ), 500
-    # return jsonify(
-    #     {
-    #         "code": 201,
-    #         "data": test_instance.json(),
-    #         "message": "Donezo mina san"
-    #     }
-    # ), 201
 
 # just to view diagnostic_test database, 'test' table
 @app.route('/view_diagnostic_test', methods=['GET'])
