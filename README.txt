@@ -49,8 +49,10 @@ import os, sys
 import requests
 
 Database setup: 
-With reference to the “sql_files” folder, load the “booking.sql”, "inventory.sql" and "patient.sql" script into your MySQL software, and load 3 databases into your MySQL database.
+- With reference to the “sql_files” folder, load the “booking.sql”, "inventory.sql" and "patient.sql" script into your MySQL software, and load 3 databases into your MySQL database.
 Running Project Eevee Specialist Clinic 
+- All files are configured to run on Windows, e.g. dbURL defined as `dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/bookings` in docker-compose.yml
+
 
 Ports:
 1. booking.py (port 5000)
@@ -83,6 +85,9 @@ Pre-setups:
 1) Ensure that Eevee Specialist Clinic Setup is completed (above)
 2) Ensure that databases is setup with the correct path inside the sql files. 
 3) Ensure that <dockerid> inside docker-compose.yml is changed to the user’s dockerid
+4) Note that this is a demonstration of our 3 scenarios. New appointments entries have to made after 5th April 2023
+in the appointment_history table of the patient_records database, with ApptDateTime having the date you are testing and 
+'tbd' as Diagnosis, according to the available patients in the patient table, for the upcoming doctor's appointment to show on the UI
 
 Step by Step Walkthrough:
 Scenario 1: Booking a Diagnostic Test:
