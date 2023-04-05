@@ -1,0 +1,227 @@
+version: "3.8"
+
+volumes:
+  rabbitmq_data:
+
+services:
+####################################
+# RabbitMQ: Message broker 
+####################################
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    hostname: esd-rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes: 
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - scenario3
+
+  #################################
+  # booking - Simple microservice
+  #################################
+  booking:
+      image: booking
+      build:
+        context: ./msvc_booking 
+        dockerfile: booking.Dockerfile
+      restart: always
+      environment:
+        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/bookings
+        PYTHONUNBUFFERED: 1
+      ports:
+        - "5000:5000"
+      networks:
+        - scenario1
+        - scenario3
+
+    #################################
+    # notification - Simple microservice
+    #################################
+  notification:
+      image: notification
+      build:
+        context: ./msvc_notification   
+        dockerfile: notification.Dockerfile
+      restart: always
+      environment:
+        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/bookings
+        PYTHONUNBUFFERED: 1
+      ports:
+        - "5008:5008"
+      networks:
+        - scenario1
+
+  ###############################################
+  # booktest - Complex Microservice
+  ###############################################
+  booktest:
+    image: booktest
+    build:
+      context: ./complex_book_test 
+      dockerfile: booktest.Dockerfile
+    restart: always
+    depends_on:
+      - booking
+      - patient
+      - notification
+    environment:
+      bookingURL: http://booking:5000/
+      patientURL: http://patient:5051/
+      notificationURL: http://notification:5008/
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5055:5055"
+    networks:
+      - scenario1
+
+  #################################
+  # get_appointments - Simple microservice
+  #################################
+  get_appointments:
+      image: get-appointment
+      build:
+        context: ./msvc_appt
+        dockerfile: get_appointments.Dockerfile
+      restart: always
+      environment:
+        dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+        PYTHONUNBUFFERED: 1
+      ports:
+        - "5010:5010"
+      networks:
+        - scenario1
+        - scenario2
+
+  #################################
+  # Patient: The Patient microservice
+  #################################
+  patient:
+    image: patient
+    build:
+      context: ./msvc_patient
+      dockerfile: patient.Dockerfile
+    container_name: patient
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5051:5051"
+    networks:
+        - scenario1
+        - scenario2
+        - scenario3
+
+  #################################
+  # Drug: The Drug microservice
+  #################################
+  drug:
+    image: drug
+    build:
+      context: ./msvc_drug
+      dockerfile: drug.Dockerfile
+    container_name: drug
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/inventory
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5002:5002"
+    networks:
+        - scenario2
+  ###############################################
+  # prescribe_med: The prescribe_medicine.py program
+  ###############################################
+  prescribe:  
+    image: prescribe
+    build:
+      context: ./complex_prescribe_med
+      dockerfile: prescribe_medicine.Dockerfile
+    container_name: prescribe
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+      patientURL: http://patient:5051/
+      drugURL: http://drug:5002/
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5101:5101"
+    depends_on:
+      - patient
+      - drug
+    networks:
+        - scenario2
+  
+  ############################################################
+  # inventory.py program #####################################
+  ############################################################
+  inventory:
+    image: inventory
+    build:
+      context: ./msvc_inventory
+      dockerfile: inventory.Dockerfile
+    container_name: inventory
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/inventory
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5211:5211"
+    networks:
+        - scenario3
+
+  ############################################################
+  # dispense_restock.py program ##############################
+  ############################################################
+  dispense_restock:
+    image: dispense-restock
+    build:
+      context: ./complex_dispense_restock
+      dockerfile: dispense_restock.Dockerfile
+    container_name: dispense_restock
+    restart: always
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/inventory
+      patientURL: http://patient:5051/
+      inventoryURL: http://inventory:5211/
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5204:5204"
+    depends_on:
+      - patient
+      - inventory
+      - rabbitmq
+    networks:
+        - scenario3
+
+  ##########################################################################################
+  # send_order.py ##########################################################################
+  ##########################################################################################
+  send_order:
+    image: send-order
+    build:
+      context: ./complex_dispense_restock
+      dockerfile: sendorder.Dockerfile
+    container_name: send_order
+    restart: always
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      PYTHONUNBUFFERED: "1"
+      dispenseURL: http://dispense_restock:5204/
+    depends_on:
+      - rabbitmq
+      - dispense_restock
+    networks:
+      - scenario3
+
+
+networks:
+  scenario1:
+  scenario2:
+  scenario3:
