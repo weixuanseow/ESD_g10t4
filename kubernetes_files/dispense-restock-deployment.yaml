@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dispense-restock
+  name: dispense-restock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: dispense-restock
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/esd-g10t4-scenario3: "true"
+        io.kompose.service: dispense-restock
+    spec:
+      containers:
+        - env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: dbURL
+              value: mysql+mysqlconnector://root@host.docker.internal:3306/inventory
+            - name: inventoryURL
+              value: http://inventory:5211/
+            - name: patientURL
+              value: http://patient:5051/
+            - name: rabbit_host
+              value: rabbitmq
+            - name: rabbit_port
+              value: "5672"
+          image: weixuan15/dispense-restock:1.0
+          name: dispense-restock
+          ports:
+            - containerPort: 5204
+          resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: prescribe
+  name: prescribe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: prescribe
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/esd-g10t4-scenario2: "true"
+        io.kompose.service: prescribe
+    spec:
+      containers:
+        - env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: dbURL
+              value: mysql+mysqlconnector://root@host.docker.internal:3306/patient_records
+            - name: drugURL
+              value: http://drug:5002/
+            - name: patientURL
+              value: http://patient:5051/
+          image: weixuan15/prescribe:1.0
+          name: prescribe
+          ports:
+            - containerPort: 5101
+          resources: {}
+      restartPolicy: Always
+status: {}

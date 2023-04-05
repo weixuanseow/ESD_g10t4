@@ -79,6 +79,12 @@ Using Docker Compose:
 6) To stop the project from running, run the following command:
 7) docker-compose down
 
+Using Kubernetes:
+1) Go to the `kubernetes_files` directory in your Command Prompt
+2) Run `kubectl apply -f .` => The services will load up
+3) Run `kubectl get all` to check if all services are running.
+4) To stop all services, run the following commands in order: `kubectl delete deployments --all`, `kubectl delete services --all`, `kubectl delete pods --all`, `kubectl delete hpa --all`, `kubectl delete serviceacount --all`
+
 ==================================================== Eevee Specialist Clinic Step by Step: =================================================================
 
 Pre-setups:

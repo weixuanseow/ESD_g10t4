@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: patient
+  name: patient
+spec:
+  ports:
+    - name: "5051"
+      port: 5051
+      targetPort: 5051
+  selector:
+    io.kompose.service: patient
+  type: LoadBalancer
+status:
+  loadBalancer: {}
